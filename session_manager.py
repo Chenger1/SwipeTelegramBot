@@ -1,5 +1,7 @@
 from aiohttp import ClientSession
 
+from typing import Tuple
+
 
 class BaseSessionManager:
     def __init__(self):
@@ -16,7 +18,7 @@ class BaseSessionManager:
 
 
 class SessionManager(BaseSessionManager):
-    async def get(self, path: str, data: dict = None):
+    async def get(self, path: str, data: dict = None) -> Tuple[int, dict]:
         absolute_url = await self._prepare_url(path)
         async with self._session.get(absolute_url, data=data) as resp:
             return resp.status, await resp.json()
