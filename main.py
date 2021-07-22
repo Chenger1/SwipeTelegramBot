@@ -1,12 +1,13 @@
 from aiogram import executor
 
-from loader import dp
+from loader import dp, session_manager
 
 import handlers
 
-# CONST
-WEBHOOK_ENDPOINT = 'http://188.225.43.69:1337'
+
+async def on_shutdown():
+    session_manager.close()
 
 
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    executor.start_polling(dp, skip_updates=True, on_shutdown=on_shutdown)

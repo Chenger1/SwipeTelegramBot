@@ -1,10 +1,6 @@
-import aiohttp
-
 from aiogram import types
 
-from main import dp
-
-from utils import prepare_url
+from main import dp, session_manager
 
 
 @dp.message_handler(commands=['start'])
@@ -14,6 +10,5 @@ async def send_welcome(message: types.Message):
 
 @dp.message_handler()
 async def echo(message: types.Message):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(prepare_url('main/posts_public/')) as resp:
-            await message.reply(f'Status: {resp.status}. Data: {await resp.json()}')
+    status, resp = await session_manager.get('main/posts_public/')
+    await message.reply(f'Status: {status}. Data: {resp}')
