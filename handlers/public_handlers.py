@@ -16,10 +16,17 @@ async def send_welcome(message: types.Message):
 
 @dp.callback_query_handler(DETAIL_CB.filter(action='detail'))
 async def process_callback_post(callback_query: types.CallbackQuery, callback_data: dict):
+    """
+        Get detail info about post object
+    """
     logging.info(callback_data)
     pk = callback_data['pk']
     await bot.answer_callback_query(callback_query.id)
-    await bot.send_message(callback_query.from_user.id, f'pk {pk}')
+    url = f'{REL_URLS["posts_public"]}{pk}/'
+    resp = await session_manager.get(url)
+    data = await post_agent.one_iteration(resp)
+    await bot.send_message(callback_query.from_user.id, 'Подробнее об объявлении')
+    await bot.send_message(callback_query.from_user.id, data.data)
 
 
 @dp.message_handler(commands=['public_posts'])
