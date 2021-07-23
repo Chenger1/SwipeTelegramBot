@@ -1,6 +1,6 @@
 from aiohttp import ClientSession
 
-from typing import Tuple
+from typing import Dict
 
 
 class BaseSessionManager:
@@ -18,10 +18,10 @@ class BaseSessionManager:
 
 
 class SessionManager(BaseSessionManager):
-    async def get(self, path: str, data: dict = None) -> Tuple[int, dict]:
+    async def get(self, path: str, data: dict = None) -> Dict[str, str]:
         absolute_url = await self._prepare_url(path)
         async with self._session.get(absolute_url, data=data) as resp:
-            return resp.status, await resp.json()
+            return await resp.json()
 
     async def close(self):
         await self._session.close()
