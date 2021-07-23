@@ -17,3 +17,4 @@ dp = Dispatcher(bot, storage=storage)
 session_manager = SessionManager()
 
 post_agent = representation.PostRepresentationAgent()
+house_agent = representation.HouseRepresentationAgent()
