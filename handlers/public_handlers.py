@@ -26,7 +26,7 @@ async def process_callback_post(callback_query: types.CallbackQuery, callback_da
     resp = await session_manager.get(url)
     data = await post_agent.one_iteration(resp)
     await bot.send_message(callback_query.from_user.id, 'Подробнее об объявлении')
-    await bot.send_message(callback_query.from_user.id, data.data)
+    await bot.send_message(callback_query.from_user.id, text=data.data, parse_mode=types.ParseMode.MARKDOWN)
 
 
 @dp.message_handler(commands=['public_posts'])
@@ -37,6 +37,6 @@ async def public_posts(message: types.Message):
     coros = []
     for item in data:
         keyboard = get_detail_keyboard(item.pk, 'Подробнее о публикации')
-        coros.append(message.answer(item.data,
-                                    reply_markup=keyboard))
+        coros.append(message.answer(text=item.data,
+                                    reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN))
     await asyncio.gather(*coros)
