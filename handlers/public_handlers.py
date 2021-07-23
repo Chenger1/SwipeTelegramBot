@@ -6,7 +6,7 @@ import logging
 from main import dp, session_manager, post_agent, house_agent, bot
 
 from utils.url_dispatcher import REL_URLS
-from utils.keyboards import get_detail_keyboard, DETAIL_CB
+from utils.keyboards import get_detail_keyboard, get_house_keyboard, DETAIL_CB
 
 
 @dp.message_handler(commands=['start'])
@@ -66,6 +66,6 @@ async def public_houses(message: types.Message):
     data = await house_agent.objects_repr(resp)
     coros = []
     for item in data:
-        keyboard = get_detail_keyboard(item.pk, 'Подробнее о доме', action='house_detail')
+        keyboard = get_house_keyboard(item.pk)
         coros.append(message.reply(text=item.data, reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN))
     await asyncio.gather(*coros)
