@@ -17,5 +17,5 @@ async def public_posts(message: types.Message):
     """ This public apis don`t require  auth tokens """
     resp = await session_manager.get(REL_URLS['posts_public'])
     data = await post_agent.posts_repr(resp)
-    coros = [message.reply(item) for item in data]
+    coros = [message.answer(item) for item in data]
     await asyncio.gather(*coros)
