@@ -28,8 +28,10 @@ async def process_callback_post(callback_query: types.CallbackQuery, callback_da
     url = f'{REL_URLS["posts_public"]}{pk}/'
     resp = await session_manager.get(url)
     data = await post_agent.one_iteration(resp)
+    keyboard = keyboards.get_detail_keyboard(resp['flat_info']['id'], 'Подробнее о квартире', action='flat_detail')
     await bot.send_message(callback_query.from_user.id, 'Подробнее об объявлении')
-    await bot.send_message(callback_query.from_user.id, text=data.data, parse_mode=types.ParseMode.MARKDOWN)
+    await bot.send_message(callback_query.from_user.id, text=data.data, parse_mode=types.ParseMode.MARKDOWN,
+                           reply_markup=keyboard)
 
 
 @dp.message_handler(commands=['public_posts'])
