@@ -31,7 +31,7 @@ class PostRepresentationAgent(BaseRepresentationAgent):
     async def one_iteration(self, data: Dict) -> namedtuple:
         PostData = namedtuple('PostData', 'pk data')
 
-        post_info = f'{bold("Квартира")}: №{1}, {data["flat_info"]["floor"]}.\n {bold("Город")}: {data["flat_info"]["city"]}\n' + \
+        post_info = f'{bold("Квартира")}: №{data["flat_info"]["number"]}, {data["flat_info"]["floor"]}.\n {bold("Город")}: {data["flat_info"]["city"]}\n' + \
                     f'{bold("Площадь")}: {data["flat_info"]["square"]}. {bold("Кухня")}: {data["flat_info"]["kitchen_square"]}\n' + \
                     f'{bold("Документы")}: {data["flat_info"]["foundation_doc"]}.\n {bold("Тип квартиры")}: {data["flat_info"]["type"]}\n' + \
                     f'{bold("Планировка")}: {data["flat_info"]["plan"]}.\n {bold("Территория")}: {data["flat_info"]["territory"]}\n' + \
@@ -93,3 +93,32 @@ class HouseRepresentationAgent(BaseRepresentationAgent):
                     f'{bold("Расстояние до моря")}: {data["distance_to_sea"]} м.'
         house_data = HouseData(data['id'], info_part)
         return house_data
+
+
+class FlatRepresentationAgent(BaseRepresentationAgent):
+    async def one_iteration(self, data: Dict) -> namedtuple:
+        FlatData = namedtuple('FlatData', 'pk data')
+        info_part = f'{bold("№")}: {data["number"]}\n' + \
+                    f'{bold("Площадь")}: {data["square"]}\n' + \
+                    f'{bold("Цена за квадратный метр")}" {data["price_per_metre"]} грн.\n' + \
+                    f'{bold("Цена")}: {data["price"]} грн.\n' + \
+                    f'{bold("Количество комнат")}: {data["number_of_rooms"]}\n' + \
+                    f'{bold("Состояние:")}: {data["state_display"]}\n' + \
+                    f'{bold("Тип")}: {data["type_display"]}\n' + \
+                    f'{bold("Планировка")}: {data["plan_display"]}\n' + \
+                    f'{bold("Балкон/Лоджия")}: {data["balcony_display"]}\n' + \
+                    f'{bold("Этаж")}: {data["floor_display"]}\n' + \
+                    f'{bold("Документ")}: {data["foundation_doc_display"]}\n'
+        flat_data = FlatData(data['id'], info_part)
+        return flat_data
+
+    async def one_iteration_many(self, data: Dict) -> namedtuple:
+        FlatData = namedtuple('FlatData', 'pk data')
+        info_part = f'{bold("№")}: {data["number"]}\n' + \
+                    f'{bold("Площадь")}: {data["square"]}\n' + \
+                    f'{bold("Цена")}: {data["price"]} грн.\n' + \
+                    f'{bold("Количество комнат")}: {data["number_of_rooms"]}\n' + \
+                    f'{bold("Состояние:")}: {data["state_display"]}\n' + \
+                    f'{bold("Этаж")}: {data["floor_display"]}\n'
+        flat_data = FlatData(data['id'], info_part)
+        return flat_data

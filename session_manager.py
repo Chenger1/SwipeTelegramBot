@@ -18,9 +18,9 @@ class BaseSessionManager:
 
 
 class SessionManager(BaseSessionManager):
-    async def get(self, path: str, data: dict = None) -> Dict[str, str]:
+    async def get(self, path: str, data: dict = None, params: dict = None) -> Dict[str, str]:
         absolute_url = await self._prepare_url(path)
-        async with self._session.get(absolute_url, data=data) as resp:
+        async with self._session.get(absolute_url, params=params, data=data) as resp:
             return await resp.json()
 
     async def close(self):

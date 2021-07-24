@@ -18,3 +18,4 @@ session_manager = SessionManager()
 
 post_agent = representation.PostRepresentationAgent()
 house_agent = representation.HouseRepresentationAgent()
+flat_agent = representation.FlatRepresentationAgent()
