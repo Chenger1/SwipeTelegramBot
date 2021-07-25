@@ -1,9 +1,15 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import (InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton, ReplyKeyboardMarkup,
+                           ReplyKeyboardRemove)
 from aiogram.utils.callback_data import CallbackData
 
 
 DETAIL_CB = CallbackData('detail', 'action', 'pk')
 LIST_CB = CallbackData('list', 'action', 'pk')
+
+
+contact_button = KeyboardButton(text='Отправить номер телефона', request_contact=True)
+contact_markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(contact_button)
+remove_reply = ReplyKeyboardRemove()
 
 
 def get_detail_keyboard(pk: int, title: str, action: str) -> InlineKeyboardMarkup:

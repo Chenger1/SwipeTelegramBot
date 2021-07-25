@@ -11,7 +11,8 @@ from utils import keyboards
 
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
-    await message.reply('Hi!. I`m Swipe Bot. Choose command in menu to get info.')
+    await message.reply('Поделитесь своим номером для регистрации в системе. '
+                        'Без регистрации у вас будут ограничены опции', reply_markup=keyboards.contact_markup)
 
 
 # POSTS
@@ -26,7 +27,7 @@ async def process_callback_post(callback_query: types.CallbackQuery, callback_da
     pk = callback_data['pk']
     await bot.answer_callback_query(callback_query.id)
     url = f'{REL_URLS["posts_public"]}{pk}/'
-    resp = await session_manager.get(url)
+    resp = await session_manager.get(url, user_id=callback_query.from_user.id)
     data = await post_agent.one_iteration(resp)
     keyboard = keyboards.get_detail_keyboard(resp['flat_info']['id'], 'Подробнее о квартире', action='flat_detail')
     await bot.send_message(callback_query.from_user.id, 'Подробнее об объявлении')
@@ -37,7 +38,7 @@ async def process_callback_post(callback_query: types.CallbackQuery, callback_da
 @dp.message_handler(commands=['public_posts'])
 async def public_posts(message: types.Message):
     """ This public apis don`t require  auth tokens """
-    resp = await session_manager.get(REL_URLS['posts_public'])
+    resp = await session_manager.get(REL_URLS['posts_public'], user_id=message.from_user.id)
     data = await post_agent.objects_repr(resp)
     coros = []
     for item in data:
@@ -55,7 +56,7 @@ async def process_callback_house(callback_query: types.CallbackQuery, callback_d
     pk = callback_data['pk']
     await bot.answer_callback_query(callback_query.id)
     url = f'{REL_URLS["houses_public"]}{pk}/'
-    resp = await session_manager.get(url)
+    resp = await session_manager.get(url, user_id=callback_query.from_user.id)
     data = await house_agent.one_iteration(resp)
     await bot.send_message(callback_query.from_user.id, 'Подробнее о доме')
     await bot.send_message(callback_query.from_user.id, text=data.data, parse_mode=types.ParseMode.MARKDOWN)
@@ -64,7 +65,7 @@ async def process_callback_house(callback_query: types.CallbackQuery, callback_d
 @dp.message_handler(commands=['public_houses'])
 async def public_houses(message: types.Message):
     """ This public apis don`t require auth token """
-    resp = await session_manager.get(REL_URLS['houses_public'])
+    resp = await session_manager.get(REL_URLS['houses_public'], user_id=message.from_user.id)
     data = await house_agent.objects_repr(resp)
     coros = []
     for item in data:
@@ -82,7 +83,7 @@ async def process_callback_flats_list_by_house(callback_query: types.CallbackQue
     await bot.answer_callback_query(callback_query.id)
     url = f'{REL_URLS["flats_public"]}'
     params = {'house__pk': pk}
-    resp = await session_manager.get(url, params=params)
+    resp = await session_manager.get(url, params=params, user_id=callback_query.from_user.id)
     data = await flat_agent.objects_repr(resp)
     coros = []
     await bot.send_message(callback_query.from_user.id, 'Список квартир в доме')
@@ -101,6 +102,19 @@ async def process_callback_flat_detail(callback_query: types.CallbackQuery, call
     pk = callback_data['pk']
     await bot.answer_callback_query(callback_query.id)
     url = f'{REL_URLS["flats_public"]}{pk}'
-    resp = await session_manager.get(url)
+    resp = await session_manager.get(url, user_id=callback_query.from_user.id)
     data = await flat_agent.one_iteration(resp)
     await bot.send_message(callback_query.from_user.id, text=data.data, parse_mode=types.ParseMode.MARKDOWN)
+
+
+# ECHO
+
+@dp.message_handler(content_types=['contact'])
+async def echo_handler(message: types.Message):
+    """ Handles user`s contact to authorize """
+    resp = await session_manager.authorize(REL_URLS['login'], params={'phone_number': message.contact.phone_number},
+                                           user_id=message.from_user.id)
+    if resp.get('auth'):
+        await message.reply('Вы успешно добавлены в систему', reply_markup=keyboards.remove_reply)
+    else:
+        await message.reply('Произошла ошибка. Введите команду /start ещё раз ')
