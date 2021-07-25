@@ -37,11 +37,25 @@ class SessionManager(BaseSessionManager):
         absolute_url = await self._prepare_url(path)
         headers = None
         if user_id:
-            headers = {'Authorization': await self._database.get_token(user_id)}
+            token = await self._database.get_token(user_id)
+            headers = {'Authorization': f'Bearer {token}'}
         async with self._session.get(absolute_url, params=params, data=data, headers=headers) as resp:
             if resp.headers.get('Authorization'):
                 await self._database.update_token(user_id, resp.headers.get('Authorization'))
             return await resp.json()
+
+    async def patch(self, path: str, data: dict = None, params: dict = None, user_id: int = None) -> Dict[str, str]:
+        absolute_url = await self._prepare_url(path)
+        header = None
+        if user_id:
+            token = await self._database.get_token(user_id)
+            headers = {'Authorization': f'Bearer {token}'}
+            async with self._session.patch(absolute_url, params=params, data=data, headers=headers) as resp:
+                if resp.headers.get('Authorization'):
+                    await self._database.update_token(user_id, resp.headers.get('Authorization'))
+                data = await resp.json()
+                return data
+        return {'Error': 'Нет id пользователя'}
 
     async def close(self):
         await self._session.close()

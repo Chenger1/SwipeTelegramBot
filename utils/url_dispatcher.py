@@ -2,7 +2,11 @@
 REL_URLS = {
     'login': 'auth/login/',
 
+    # PUBLIC - Don`t require auth token
     'posts_public': 'main/posts_public/',
     'houses_public': 'main/houses_public/',
     'flats_public': 'main/flats_public/',
+
+    # Auth token required
+    'like_dislike': 'main/like_dislike/{pk}/'
 }
