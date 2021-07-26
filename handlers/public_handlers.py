@@ -112,6 +112,9 @@ async def process_callback_flat_detail(callback_query: types.CallbackQuery, call
         await helper.process_getting_file(resp.get('schema'), callback_query.from_user.id)
     data = await flat_agent.one_iteration(resp)
     await bot.send_message(callback_query.from_user.id, text=data.data, parse_mode=types.ParseMode.MARKDOWN)
+    if resp.get('schema_in_house'):
+        await bot.send_message(callback_query.from_user.id, text='Общая схема этажа')
+        await helper.process_getting_file(resp.get('schema_in_house'), callback_query.from_user.id)
 
 
 # ECHO
