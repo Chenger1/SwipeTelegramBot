@@ -1,6 +1,6 @@
 from aiohttp import ClientSession
 
-from typing import Dict
+from typing import Dict, Optional
 
 from db import DB
 
@@ -19,6 +19,28 @@ class BaseSessionManager:
         """
         return f'{self._WEBHOOK_ENDPOINT}/{path}'
 
+    async def _get_authorization_header(self, user_id: int = None) -> Optional[Dict[str, str]]:
+        """
+            If user`s id is given - get token from db
+        :param user_id: Telegram user`s id
+        :return: Header dict with bearer token or None
+        """
+        headers = None
+        if user_id:
+            token = await self._database.get_token(user_id)
+            headers = {'Authorization': f'Bearer {token}'}
+        return headers
+
+    async def _process_authorization_token(self, user_id: Optional[int], token: Optional[str]):
+        """
+        If Bearer token has expire time, it will be updated after this is will end.
+        So, we have to update our token in db
+        :param user_id: Telegram user`s id
+        :param token: Bearer Token
+        """
+        if user_id and token:
+            await self._database.update_token(user_id, token)
+
 
 class SessionManager(BaseSessionManager):
     async def authorize(self, path: str, params: dict = None, user_id: int = None) -> Dict[str, str]:
@@ -35,26 +57,19 @@ class SessionManager(BaseSessionManager):
 
     async def get(self, path: str, data: dict = None, params: dict = None, user_id: int = None) -> Dict[str, str]:
         absolute_url = await self._prepare_url(path)
-        headers = None
-        if user_id:
-            token = await self._database.get_token(user_id)
-            headers = {'Authorization': f'Bearer {token}'}
+        headers = await self._get_authorization_header(user_id)
         async with self._session.get(absolute_url, params=params, data=data, headers=headers) as resp:
-            if resp.headers.get('Authorization'):
-                await self._database.update_token(user_id, resp.headers.get('Authorization'))
+            await self._process_authorization_token(user_id, resp.headers.get('Authorization'))
             return await resp.json()
 
     async def patch(self, path: str, data: dict = None, params: dict = None, user_id: int = None) -> Dict[str, str]:
         absolute_url = await self._prepare_url(path)
-        header = None
-        if user_id:
-            token = await self._database.get_token(user_id)
-            headers = {'Authorization': f'Bearer {token}'}
+        headers = await self._get_authorization_header(user_id)
+        if headers and headers.get('Authorization'):
+            # Only authorized users can change info
             async with self._session.patch(absolute_url, params=params, data=data, headers=headers) as resp:
-                if resp.headers.get('Authorization'):
-                    await self._database.update_token(user_id, resp.headers.get('Authorization'))
-                data = await resp.json()
-                return data
+                await self._process_authorization_token(user_id, resp.headers.get('Authorization'))
+                return await resp.json()
         return {'Error': 'Нет id пользователя'}
 
     async def close(self):
