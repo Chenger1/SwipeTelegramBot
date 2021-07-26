@@ -64,7 +64,7 @@ class SessionManager(BaseSessionManager):
         headers = await self._get_authorization_header(user_id)
         async with self._session.get(absolute_url, params=params, data=data, headers=headers) as resp:
             await self._process_authorization_token(user_id, resp.headers.get('Authorization'))
-            if resp.content_type in ('image/png', ):
+            if resp.content_type in ('image/png', 'image/jpeg', 'image/jpg'):
                 return {'filename': path.split('/')[-1], 'file': await resp.read()}
             else:
                 data = await resp.json()

@@ -60,6 +60,8 @@ async def process_callback_house(callback_query: types.CallbackQuery, callback_d
     await bot.answer_callback_query(callback_query.id)
     url = f'{REL_URLS["houses_public"]}{pk}/'
     resp = await session_manager.get(url, user_id=callback_query.from_user.id)
+    if resp.get('image'):
+        await helper.process_getting_file(resp.get('image'), callback_query.from_user.id)
     data = await house_agent.one_iteration(resp)
     await bot.send_message(callback_query.from_user.id, 'Подробнее о доме')
     await bot.send_message(callback_query.from_user.id, text=data.data, parse_mode=types.ParseMode.MARKDOWN)
@@ -106,6 +108,8 @@ async def process_callback_flat_detail(callback_query: types.CallbackQuery, call
     await bot.answer_callback_query(callback_query.id)
     url = f'{REL_URLS["flats_public"]}{pk}'
     resp = await session_manager.get(url, user_id=callback_query.from_user.id)
+    if resp.get('schema'):
+        await helper.process_getting_file(resp.get('schema'), callback_query.from_user.id)
     data = await flat_agent.one_iteration(resp)
     await bot.send_message(callback_query.from_user.id, text=data.data, parse_mode=types.ParseMode.MARKDOWN)
 
