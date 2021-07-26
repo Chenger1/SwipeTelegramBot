@@ -38,7 +38,7 @@ async def process_callback_post(callback_query: types.CallbackQuery, callback_da
                            reply_markup=keyboard)
 
 
-@dp.message_handler(commands=['public_posts'])
+@dp.message_handler(commands=['ads'])
 async def public_posts(message: types.Message):
     """ This public apis don`t require  auth tokens """
     resp = await session_manager.get(REL_URLS['posts_public'], user_id=message.from_user.id)
@@ -67,7 +67,7 @@ async def process_callback_house(callback_query: types.CallbackQuery, callback_d
     await bot.send_message(callback_query.from_user.id, text=data.data, parse_mode=types.ParseMode.MARKDOWN)
 
 
-@dp.message_handler(commands=['public_houses'])
+@dp.message_handler(commands=['houses'])
 async def public_houses(message: types.Message):
     """ This public apis don`t require auth token """
     resp = await session_manager.get(REL_URLS['houses_public'], user_id=message.from_user.id)
