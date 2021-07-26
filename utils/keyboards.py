@@ -2,6 +2,7 @@ from aiogram.types import (InlineKeyboardMarkup, InlineKeyboardButton, KeyboardB
                            ReplyKeyboardRemove)
 from aiogram.utils.callback_data import CallbackData
 
+import emoji
 
 DETAIL_CB = CallbackData('detail', 'action', 'pk')
 LIST_CB = CallbackData('list', 'action', 'pk')
@@ -35,7 +36,8 @@ def get_post_detail_keyboard(post_pk: int, flat_pk: int) -> InlineKeyboardMarkup
                              callback_data=DETAIL_CB.new(action='flat_detail',
                                                          pk=flat_pk))
     ).add(
-        InlineKeyboardButton('Like', callback_data=DETAIL_CB.new(action='like_post', pk=post_pk)),
-        InlineKeyboardButton('Dislike', callback_data=DETAIL_CB.new(action='dislike_post', pk=post_pk))
+        InlineKeyboardButton(emoji.emojize(':thumbs_up:'), callback_data=DETAIL_CB.new(action='like_post', pk=post_pk)),
+        InlineKeyboardButton(emoji.emojize(':thumbs_down:'), callback_data=DETAIL_CB.new(action='dislike_post',
+                                                                                         pk=post_pk))
     )
     return inline_markup
