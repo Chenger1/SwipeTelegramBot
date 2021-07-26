@@ -70,6 +70,9 @@ async def process_complaint(callback_query: types.CallbackQuery, callback_data: 
         if status == 201:
             await bot.send_message(callback_query.from_user.id,
                                    'Жалоба отправлена. Модератор в скором времени рассмотрит её')
+        elif status == 409:
+            await bot.send_message(callback_query.from_user.id,
+                                   'Вы уже отправили жалобу. Она на рассмотрении')
         else:
             logging.error(resp)
             await bot.send_message(callback_query.from_user.id,
@@ -90,6 +93,9 @@ async def process_saving_to_favorites(callback_query: types.CallbackQuery, callb
     if status == 201:
         await bot.send_message(callback_query.from_user.id,
                                'Объявление добавлено в список избранного')
+    elif status == 409:
+        await bot.send_message(callback_query.from_user.id,
+                               'Это объявление уже в вашем списке избранного')
     else:
         logging.error(resp)
         await bot.send_message(callback_query.from_user.id,
