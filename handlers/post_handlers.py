@@ -51,3 +51,28 @@ async def process_dislike_post(callback_query: types.CallbackQuery, callback_dat
     await bot.send_message(callback_query.from_user.id, 'Подробнее об объявлении')
     await bot.send_message(callback_query.from_user.id, text=data.data, parse_mode=types.ParseMode.MARKDOWN,
                            reply_markup=keyboard)
+
+
+@dp.callback_query_handler(keyboards.COMPLAINT_CB.filter(action='complaint'))
+async def process_complaint(callback_query: types.CallbackQuery, callback_data: dict):
+    """
+        If callback_data contains - 'type' key - uses this type to create new complaint.
+        Otherwise, create inline keyboard with complaint types for user.
+    """
+    logging.info(callback_data)
+    pk = callback_data['pk']
+    await bot.answer_callback_query(callback_query.id)
+    if callback_data.get('type') != '_':
+        resp, status = await session_manager.post(REL_URLS['complaint'],
+                                                  data={'post': pk, 'type': callback_data.get('type')},
+                                                  user_id=callback_query.from_user.id)
+        if status == 201:
+            await bot.send_message(callback_query.from_user.id,
+                                   'Жалоба отправлена. Модератор в скором времени рассмотрит её')
+        else:
+            logging.error(resp)
+            await bot.send_message(callback_query.from_user.id,
+                                   'Произошла ошибка. Повторите попытку')
+    else:
+        keyboard = await keyboards.get_post_complaint_types(post_pk=pk)
+        await bot.send_message(callback_query.from_user.id, 'Укажите причину жалобы', reply_markup=keyboard)

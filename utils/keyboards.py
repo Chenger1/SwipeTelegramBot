@@ -6,6 +6,7 @@ import emoji
 
 DETAIL_CB = CallbackData('detail', 'action', 'pk')
 LIST_CB = CallbackData('list', 'action', 'pk')
+COMPLAINT_CB = CallbackData('complaint', 'action', 'pk', 'type')
 
 contact_button = KeyboardButton(text='Отправить номер телефона', request_contact=True)
 contact_markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(contact_button)
@@ -39,5 +40,25 @@ async def get_post_detail_keyboard(post_pk: int, flat_pk: int) -> InlineKeyboard
         InlineKeyboardButton(emoji.emojize(':thumbs_up:'), callback_data=DETAIL_CB.new(action='like_post', pk=post_pk)),
         InlineKeyboardButton(emoji.emojize(':thumbs_down:'), callback_data=DETAIL_CB.new(action='dislike_post',
                                                                                          pk=post_pk))
+    ).row(
+        InlineKeyboardButton('Пожаловаться', callback_data=COMPLAINT_CB.new(action='complaint', pk=post_pk,
+                                                                            type='_'))
+    )
+    return inline_markup
+
+
+async def get_post_complaint_types(post_pk: int) -> InlineKeyboardMarkup:
+    inline_markup = InlineKeyboardMarkup().row(
+        InlineKeyboardButton('Неккоректная цена', callback_data=COMPLAINT_CB.new(action='complaint',
+                                                                                 pk=post_pk,
+                                                                                 type='PRICE'))
+    ).row(
+        InlineKeyboardButton('Неккоректное фото', callback_data=COMPLAINT_CB.new(action='complaint',
+                                                                                 pk=post_pk,
+                                                                                 type='PHOTO'))
+    ).row(
+        InlineKeyboardButton('Неккоректное описание', callback_data=COMPLAINT_CB.new(action='complaint',
+                                                                                     pk=post_pk,
+                                                                                     type='DESC'))
     )
     return inline_markup

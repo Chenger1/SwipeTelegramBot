@@ -7,6 +7,9 @@ REL_URLS = {
     'houses_public': 'main/houses_public/',
     'flats_public': 'main/flats_public/',
 
+    # COMPLAINT
+    'complaint': 'main/complaints/',
+
     # Auth token required
     'like_dislike': 'main/like_dislike/{pk}/'
 }
