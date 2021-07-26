@@ -10,6 +10,9 @@ REL_URLS = {
     # COMPLAINT
     'complaint': 'main/complaints/',
 
+    # FAVORITES
+    'favorites': 'main/favorites_posts/',
+
     # Auth token required
     'like_dislike': 'main/like_dislike/{pk}/'
 }

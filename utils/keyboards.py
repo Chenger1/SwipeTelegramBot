@@ -41,6 +41,7 @@ async def get_post_detail_keyboard(post_pk: int, flat_pk: int) -> InlineKeyboard
         InlineKeyboardButton(emoji.emojize(':thumbs_down:'), callback_data=DETAIL_CB.new(action='dislike_post',
                                                                                          pk=post_pk))
     ).row(
+        InlineKeyboardButton('В избранное', callback_data=DETAIL_CB.new(action='save_to_favorites', pk=post_pk)),
         InlineKeyboardButton('Пожаловаться', callback_data=COMPLAINT_CB.new(action='complaint', pk=post_pk,
                                                                             type='_'))
     )
