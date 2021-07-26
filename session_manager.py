@@ -2,14 +2,16 @@ from aiohttp import ClientSession
 
 from typing import Dict, Optional
 
-from db import DB
+import re
 
 
 class BaseSessionManager:
-    def __init__(self):
+    def __init__(self, db):
         self._session = ClientSession()
-        self._database = DB()
+        self._database = db
         self._WEBHOOK_ENDPOINT = 'http://188.225.43.69:1337'
+        self._wrong_hook_pattern = re.compile('http:\/\/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}\/')
+        # wrong pattern is 'http://188.225.43.69' without port
 
     async def _prepare_url(self, path: str) -> str:
         """
@@ -17,6 +19,8 @@ class BaseSessionManager:
         :param path: relative
         :return: str - absolute path
         """
+        if self._wrong_hook_pattern.findall(path):
+            path = self._wrong_hook_pattern.split(path)[-1]
         return f'{self._WEBHOOK_ENDPOINT}/{path}'
 
     async def _get_authorization_header(self, user_id: int = None) -> Optional[Dict[str, str]]:
@@ -60,7 +64,11 @@ class SessionManager(BaseSessionManager):
         headers = await self._get_authorization_header(user_id)
         async with self._session.get(absolute_url, params=params, data=data, headers=headers) as resp:
             await self._process_authorization_token(user_id, resp.headers.get('Authorization'))
-            return await resp.json()
+            if resp.content_type in ('image/png', ):
+                return {'filename': path.split('/')[-1], 'file': await resp.read()}
+            else:
+                data = await resp.json()
+            return data
 
     async def patch(self, path: str, data: dict = None, params: dict = None, user_id: int = None) -> Dict[str, str]:
         absolute_url = await self._prepare_url(path)

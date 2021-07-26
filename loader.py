@@ -7,6 +7,7 @@ from config import BOT_TOKEN
 
 from session_manager import SessionManager
 from utils import representation
+from db import DB
 
 
 logging.basicConfig(level=logging.INFO)
@@ -14,7 +15,8 @@ logging.basicConfig(level=logging.INFO)
 bot = Bot(token=BOT_TOKEN, parse_mode=types.ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
-session_manager = SessionManager()
+database = DB()
+session_manager = SessionManager(database)
 
 post_agent = representation.PostRepresentationAgent()
 house_agent = representation.HouseRepresentationAgent()

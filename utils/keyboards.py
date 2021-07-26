@@ -30,7 +30,7 @@ def get_house_keyboard(pk: int, ) -> InlineKeyboardMarkup:
     return inline_markup
 
 
-def get_post_detail_keyboard(post_pk: int, flat_pk: int) -> InlineKeyboardMarkup:
+async def get_post_detail_keyboard(post_pk: int, flat_pk: int) -> InlineKeyboardMarkup:
     inline_markup = InlineKeyboardMarkup().row(
         InlineKeyboardButton('Подробнее о квартире',
                              callback_data=DETAIL_CB.new(action='flat_detail',
