@@ -91,15 +91,18 @@ async def process_callback_flats_list_by_house(callback_query: types.CallbackQue
     url = f'{REL_URLS["flats_public"]}'
     params = {'house__pk': pk}
     resp = await session_manager.get(url, params=params, user_id=callback_query.from_user.id)
-    data = await flat_agent.objects_repr(resp)
-    coros = []
-    await bot.send_message(callback_query.from_user.id, 'Список квартир в доме')
-    for item in data:
-        keyboard = keyboards.get_detail_keyboard(item.pk, 'Подробнее о квартире', action='flat_detail')
-        coros.append(bot.send_message(callback_query.from_user.id,
-                                      text=item.data, reply_markup=keyboard,
-                                      parse_mode=types.ParseMode.MARKDOWN))
-    await asyncio.gather(*coros)
+    if resp:
+        data = await flat_agent.objects_repr(resp)
+        coros = []
+        await bot.send_message(callback_query.from_user.id, 'Список квартир в доме')
+        for item in data:
+            keyboard = keyboards.get_detail_keyboard(item.pk, 'Подробнее о квартире', action='flat_detail')
+            coros.append(bot.send_message(callback_query.from_user.id,
+                                          text=item.data, reply_markup=keyboard,
+                                          parse_mode=types.ParseMode.MARKDOWN))
+        await asyncio.gather(*coros)
+    else:
+        await bot.send_message(callback_query.from_user.id, 'Нет информации о квартирах этого дома')
 
 
 @dp.callback_query_handler(keyboards.DETAIL_CB.filter(action='flat_detail'))
