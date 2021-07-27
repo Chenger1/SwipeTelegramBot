@@ -13,6 +13,9 @@ REL_URLS = {
     # FAVORITES
     'favorites': 'main/favorites_posts/',
 
+    #NEWS
+    'news': 'main/news/',
+
     # Auth token required
     'like_dislike': 'main/like_dislike/{pk}/'
 }

@@ -27,6 +27,9 @@ def get_house_keyboard(pk: int, ) -> InlineKeyboardMarkup:
     inline_markup = InlineKeyboardMarkup().add(
         InlineKeyboardButton('Подробнее о доме', callback_data=DETAIL_CB.new(action='house_detail', pk=pk)),
         InlineKeyboardButton('Список квартир', callback_data=LIST_CB.new(action='house_flats_list', pk=pk))
+    ).row(
+        InlineKeyboardButton('Новости дома', callback_data=LIST_CB.new(action='news_list', pk=pk)),
+        InlineKeyboardButton('Документы', callback_data=LIST_CB.new(action='documents_list', pk=pk))
     )
     return inline_markup
 

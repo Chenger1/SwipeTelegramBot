@@ -1,7 +1,7 @@
 from aiogram import executor
 
 from loader import dp, session_manager, bot, database
-from loader import post_agent, house_agent, flat_agent
+from loader import post_agent, house_agent, flat_agent, news_agent
 
 import handlers
 

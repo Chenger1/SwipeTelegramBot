@@ -122,3 +122,16 @@ class FlatRepresentationAgent(BaseRepresentationAgent):
                     f'{bold("Этаж")}: {data["floor_display"]}\n'
         flat_data = FlatData(data['id'], info_part)
         return flat_data
+
+
+class NewsRepresentationAgent(BaseRepresentationAgent):
+    async def one_iteration(self, data: Iterable) -> namedtuple:
+        pass
+
+    async def one_iteration_many(self, data: Dict) -> namedtuple:
+        NewsData = namedtuple('NewsData', 'pk data')
+        info_part = f'{bold(data["title"])}\n' + \
+                    f'{data["text"]}\n' + \
+                    f'{data["created"]}'
+        news_data = NewsData(data['id'], info_part)
+        return news_data
