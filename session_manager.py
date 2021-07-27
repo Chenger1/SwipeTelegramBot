@@ -97,5 +97,14 @@ class SessionManager(BaseSessionManager):
                 return await resp.json(), resp.status
         return {'Error': 'Нет id пользователя'}, 400
 
+    async def delete(self, path: str, user_id: int = None) -> Tuple[Dict[str, str], int]:
+        absolute_url = await self._prepare_url(path)
+        headers = await self._get_authorization_header(user_id)
+        if headers and headers.get('Authorization'):
+            async with self._session.delete(absolute_url, headers=headers) as resp:
+                await self._process_authorization_token(user_id, resp.headers.get('Authorization'))
+                return {}, resp.status
+        return {'Error': 'Нет id пользователя'}, 400
+
     async def close(self):
         await self._session.close()

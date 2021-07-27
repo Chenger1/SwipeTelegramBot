@@ -13,7 +13,7 @@ contact_markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=Tru
 remove_reply = ReplyKeyboardRemove()
 
 
-def get_detail_keyboard(pk: int, title: str, action: str) -> InlineKeyboardMarkup:
+async def get_detail_keyboard(pk: int, title: str, action: str) -> InlineKeyboardMarkup:
     """ Generate one button which includes primary key of object """
     inline_markup = InlineKeyboardMarkup().add(
         InlineKeyboardButton(title,
@@ -23,7 +23,7 @@ def get_detail_keyboard(pk: int, title: str, action: str) -> InlineKeyboardMarku
     return inline_markup
 
 
-def get_house_keyboard(pk: int, ) -> InlineKeyboardMarkup:
+async def get_house_keyboard(pk: int, ) -> InlineKeyboardMarkup:
     inline_markup = InlineKeyboardMarkup().add(
         InlineKeyboardButton('Подробнее о доме', callback_data=DETAIL_CB.new(action='house_detail', pk=pk)),
         InlineKeyboardButton('Список квартир', callback_data=LIST_CB.new(action='house_flats_list', pk=pk))
@@ -52,6 +52,14 @@ async def get_post_detail_keyboard(post_pk: int, flat_pk: int) -> InlineKeyboard
         InlineKeyboardButton('В избранное', callback_data=DETAIL_CB.new(action='save_to_favorites', pk=post_pk)),
         InlineKeyboardButton('Пожаловаться', callback_data=COMPLAINT_CB.new(action='complaint', pk=post_pk,
                                                                             type='_'))
+    )
+    return inline_markup
+
+
+async def get_post_favorite_keyboard(post_pk: int) -> InlineKeyboardMarkup:
+    inline_markup = InlineKeyboardMarkup().add(
+        InlineKeyboardButton('Убрать из избранного', callback_data=DETAIL_CB.new(action='delete_from_favorites',
+                                                                                 pk=post_pk))
     )
     return inline_markup
 

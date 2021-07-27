@@ -3,7 +3,7 @@ import asyncio
 
 import logging
 
-from main import dp, session_manager, post_agent, bot
+from main import dp, session_manager, post_agent, bot, favorite_post_agent
 
 from utils.url_dispatcher import REL_URLS
 from utils import keyboards
@@ -109,10 +109,25 @@ async def favorites_message_handler(message: types.Message):
     if not resp:
         await message.reply(text='Нет сохраненных объявлений')
     else:
-        resp = [elem['post'] for elem in resp]
-        data = await post_agent.objects_repr(resp)
+        # resp = [elem['post'] for elem in resp]
+        data = await favorite_post_agent.objects_repr(resp)
         coros = []
         for item in data:
-            keyboard = keyboards.get_house_keyboard(item.pk)
-            coros.append(message.reply(text=item.data, reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN))
+            keyboard = await keyboards.get_detail_keyboard(item[1], 'Удалить из избранного', 'delete_from_favorites')
+            coros.append(message.reply(text=item[0].data, reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN))
         await asyncio.gather(*coros)
+
+
+@dp.callback_query_handler(keyboards.DETAIL_CB.filter(action='delete_from_favorites'))
+async def process_delete_from_favorites(callback_query: types.CallbackQuery, callback_data: dict):
+    """ Delete given post from user`s favorites list """
+    logging.info(callback_data)
+    pk = callback_data['pk']
+    await bot.answer_callback_query(callback_query.id)
+    url = f'{REL_URLS["favorites"]}{pk}/'
+    resp, status = await session_manager.delete(url, callback_query.from_user.id)
+    if status == 204:
+        await bot.send_message(callback_query.from_user.id, 'Запись удалена')
+    else:
+        logging.error(resp)
+        await bot.send_message(callback_query.from_user.id, 'Произошла ошибка. Попробуйте снова')

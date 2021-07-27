@@ -6,7 +6,7 @@ import asyncio
 
 from collections import namedtuple
 
-from typing import Iterable, List, Dict
+from typing import Iterable, List, Dict, Tuple
 
 
 class BaseRepresentationAgent(ABC):
@@ -51,6 +51,12 @@ class PostRepresentationAgent(BaseRepresentationAgent):
                     f'{underline("Посмотрели")}: {data["views"]}. {underline("Оценили")}: {data["likes"]} \n'
         post_data = PostData(data['id'], post_info)
         return post_data
+
+
+class FavoritesPostRepresentationAgent(PostRepresentationAgent):
+    async def one_iteration_many(self, data: Dict) -> Tuple[namedtuple, int]:
+        post_data = await super().one_iteration_many(data['post'])
+        return post_data, data['id']
 
 
 class HouseRepresentationAgent(BaseRepresentationAgent):

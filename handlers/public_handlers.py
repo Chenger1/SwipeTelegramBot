@@ -45,7 +45,7 @@ async def public_posts(message: types.Message):
     data = await post_agent.objects_repr(resp)
     coros = []
     for item in data:
-        keyboard = keyboards.get_detail_keyboard(item.pk, 'Подробнее о публикации', action='post_detail')
+        keyboard = await keyboards.get_detail_keyboard(item.pk, 'Подробнее о публикации', action='post_detail')
         coros.append(message.answer(text=item.data,
                                     reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN))
     await asyncio.gather(*coros)
@@ -76,7 +76,7 @@ async def public_houses(message: types.Message):
     data = await house_agent.objects_repr(resp)
     coros = []
     for item in data:
-        keyboard = keyboards.get_house_keyboard(item.pk)
+        keyboard = await keyboards.get_house_keyboard(item.pk)
         coros.append(message.reply(text=item.data, reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN))
     await asyncio.gather(*coros)
 
