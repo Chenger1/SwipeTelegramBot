@@ -6,6 +6,12 @@ import re
 
 
 class BaseSessionManager:
+    available_file_types = ('image/png', 'image/jpeg', 'image/jpg', 'application/msword',
+                            'application/pdf', 'application/vnd.ms-powerpoint', 'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
     def __init__(self, db):
         self._session = ClientSession()
         self._database = db
@@ -64,8 +70,9 @@ class SessionManager(BaseSessionManager):
         headers = await self._get_authorization_header(user_id)
         async with self._session.get(absolute_url, params=params, data=data, headers=headers) as resp:
             await self._process_authorization_token(user_id, resp.headers.get('Authorization'))
-            if resp.content_type in ('image/png', 'image/jpeg', 'image/jpg'):
-                return {'filename': path.split('/')[-1], 'file': await resp.read()}
+            if resp.content_type in self.available_file_types:
+                return {'filename': path.split('/')[-1], 'file': await resp.read(),
+                        'file_type': resp.content_type}
             else:
                 data = await resp.json()
             return data

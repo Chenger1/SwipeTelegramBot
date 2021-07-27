@@ -63,8 +63,10 @@ async def process_callback_house(callback_query: types.CallbackQuery, callback_d
     if resp.get('image'):
         await helper.process_getting_file(resp.get('image'), callback_query.from_user.id)
     data = await house_agent.one_iteration(resp)
+    keyboard = await keyboards.get_house_detail_keyboard(pk)
     await bot.send_message(callback_query.from_user.id, 'Подробнее о доме')
-    await bot.send_message(callback_query.from_user.id, text=data.data, parse_mode=types.ParseMode.MARKDOWN)
+    await bot.send_message(callback_query.from_user.id, text=data.data, parse_mode=types.ParseMode.MARKDOWN,
+                           reply_markup=keyboard)
 
 
 @dp.message_handler(commands=['houses'])
