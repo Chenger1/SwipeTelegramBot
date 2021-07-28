@@ -7,7 +7,9 @@ import handlers
 
 
 async def on_shutdown():
-    session_manager.close()
+    await session_manager.close()
+    await dp.storage.close()
+    await dp.storage.wait_closed()
 
 
 if __name__ == '__main__':
