@@ -3,11 +3,13 @@ from aiogram import types
 import asyncio
 import logging
 
-from main import dp, session_manager, post_agent, house_agent, flat_agent, bot, database
+from main import dp, session_manager, post_agent, house_agent, flat_agent, bot
 
 from utils.url_dispatcher import REL_URLS
 from utils import keyboards
 from utils import helper
+
+from handlers import states
 
 
 @dp.message_handler(commands=['start'])
@@ -41,14 +43,20 @@ async def process_callback_post(callback_query: types.CallbackQuery, callback_da
 @dp.message_handler(commands=['ads'])
 async def public_posts(message: types.Message):
     """ This public apis don`t require  auth tokens """
+    common_keyboard = await keyboards.get_single_default_keyboard('Фильтр объявлений')
+
     resp = await session_manager.get(REL_URLS['posts_public'], user_id=message.from_user.id)
-    data = await post_agent.objects_repr(resp)
-    coros = []
-    for item in data:
-        keyboard = await keyboards.get_detail_keyboard(item.pk, 'Подробнее о публикации', action='post_detail')
-        coros.append(message.answer(text=item.data,
-                                    reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN))
-    await asyncio.gather(*coros)
+    if resp:
+        data = await post_agent.objects_repr(resp)
+        coros = []
+        await message.answer(text='Список публикаций', reply_markup=common_keyboard)
+        for item in data:
+            keyboard = await keyboards.get_detail_keyboard(item.pk, 'Подробнее о публикации', action='post_detail')
+            coros.append(message.answer(text=item.data,
+                                        reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN))
+        await asyncio.gather(*coros)
+    else:
+        await message.answer(text='Публикаций нет')
 
 
 # HOUSES
@@ -72,13 +80,19 @@ async def process_callback_house(callback_query: types.CallbackQuery, callback_d
 @dp.message_handler(commands=['houses'])
 async def public_houses(message: types.Message):
     """ This public apis don`t require auth token """
+
     resp = await session_manager.get(REL_URLS['houses_public'], user_id=message.from_user.id)
-    data = await house_agent.objects_repr(resp)
-    coros = []
-    for item in data:
-        keyboard = await keyboards.get_house_keyboard(item.pk)
-        coros.append(message.reply(text=item.data, reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN))
-    await asyncio.gather(*coros)
+    if resp:
+        data = await house_agent.objects_repr(resp)
+        coros = []
+        await message.answer(text='Список домов',
+                             reply_markup=keyboards.remove_reply)
+        for item in data:
+            keyboard = await keyboards.get_house_keyboard(item.pk)
+            coros.append(message.reply(text=item.data, reply_markup=keyboard, parse_mode=types.ParseMode.MARKDOWN))
+        await asyncio.gather(*coros)
+    else:
+        await message.answer(text='Домов нет')
 
 
 # FLATS
@@ -96,7 +110,7 @@ async def process_callback_flats_list_by_house(callback_query: types.CallbackQue
         coros = []
         await bot.send_message(callback_query.from_user.id, 'Список квартир в доме')
         for item in data:
-            keyboard = keyboards.get_detail_keyboard(item.pk, 'Подробнее о квартире', action='flat_detail')
+            keyboard = await keyboards.get_detail_keyboard(item.pk, 'Подробнее о квартире', action='flat_detail')
             coros.append(bot.send_message(callback_query.from_user.id,
                                           text=item.data, reply_markup=keyboard,
                                           parse_mode=types.ParseMode.MARKDOWN))

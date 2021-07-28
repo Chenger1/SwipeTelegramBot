@@ -79,3 +79,9 @@ async def get_post_complaint_types(post_pk: int) -> InlineKeyboardMarkup:
                                                                                      type='DESC'))
     )
     return inline_markup
+
+
+async def get_single_default_keyboard(title: str) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(resize_keyboard=True).add(
+        KeyboardButton(text=title)
+    )
