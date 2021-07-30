@@ -10,6 +10,7 @@ from utils.db_api.models import User, AdminToken
 from utils.session.url_dispatcher import REL_URLS
 
 from keyboards.default import defaults
+from keyboards.default.admin_keyboards import keyboard_dispatcher
 
 
 async def authorize_user(user: User = None,) -> User:
@@ -33,7 +34,8 @@ async def cancel(message: types.Message, state: FSMContext):
     data = await state.get_data()
     user = await authorize_user(data.get('user'))
     if user:
-        await message.answer('Вы успешно зарегестрированы в системе', reply_markup=defaults.remove_markup)
+        await message.answer('Вы успешно зарегестрированы в системе',
+                             reply_markup=await keyboard_dispatcher(user.is_admin))
         await state.finish()
     else:
         await message.answer('Произошла ошибка. Нажмите /start снова', reply_markup=defaults.remove_markup)
@@ -51,7 +53,8 @@ async def phone_number(message: types.Message, state: FSMContext):
         result = authorize_user(user)
         if result:
             await message.answer('Вы вошли в систему как администратор')
-            await message.answer('Вы успешно зарегестрированы в системе')
+            await message.answer('Вы успешно зарегестрированы в системе',
+                                 reply_markup=await keyboard_dispatcher(user.is_admin))
             await state.finish()
         else:
             await message.answer('Произошла ошибка. Нажмите /start снова')
@@ -73,7 +76,8 @@ async def check_admin_token(message: types.Message, state: FSMContext):
         user.is_admin = True
         result = await authorize_user(user)
         if result:
-            await message.answer('Вы успешно зарегестрированы в системе')
+            await message.answer('Вы успешно зарегестрированы в системе',
+                                 reply_markup=await keyboard_dispatcher(user.is_admin))
             await state.finish()
         else:
             await message.answer('Произошла ошибка. Нажмите /start снова')
