@@ -130,3 +130,7 @@ dmypy.json
 .idea
 config.py
 main.sqlite3
+db.sqlite3-shm
+db.sqlite3-wal
+aerich.ini
+migrations
