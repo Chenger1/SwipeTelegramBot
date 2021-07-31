@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-07-31 15:22+0300\n"
+"POT-Creation-Date: 2021-07-31 16:06+0300\n"
 "PO-Revision-Date: 2021-07-31 15:07+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -60,6 +60,22 @@ msgstr "Send phone number"
 #: keyboards/default/defaults.py:14
 msgid "Пропустить"
 msgstr "Skip"
+
+#: keyboards/default/user_keyboards.py:8
+msgid "Список публикаций"
+msgstr "List ads"
+
+#: keyboards/default/user_keyboards.py:9
+msgid "Список домов"
+msgstr "List houses"
+
+#: keyboards/default/user_keyboards.py:11
+msgid "Избранное"
+msgstr "Favorites"
+
+#: keyboards/default/user_keyboards.py:13
+msgid "Настройки"
+msgstr "Settings"
 
 #: utils/set_bot_commands.py:9
 msgid "Запустить бота"

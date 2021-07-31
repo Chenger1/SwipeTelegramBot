@@ -86,7 +86,7 @@ async def phone_number(message: types.Message, state: FSMContext):
     else:
         await state.set_data({'user': user})
         await message.answer(_('Вы можете ввести токен администратора или нажать "/cancel"'),
-                             reply_markup=await defaults.get_skip_button())
+                             reply_markup=defaults.remove_markup)
         await StartState.CHECK_TOKEN.set()
 
 
