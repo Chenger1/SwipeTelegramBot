@@ -79,3 +79,27 @@ async def post_detail(call: types.CallbackQuery, callback_data: dict):
                                                                  resp.get('flat_info')['id'])
     await call.message.edit_text(text=inst.data, reply_markup=keyboard)
     await call.answer()
+
+
+@dp.callback_query_handler(user_callback.LIKE_DISLIKE_CB.filter(action='like_post'))
+async def list_post(call: types.CallbackQuery, callback_data: dict):
+    logging.info(callback_data)
+    pk = callback_data['pk']
+    url = REL_URLS['like_dislike'].format(pk=pk)
+    data = {'action': callback_data.get('type')}
+    resp = await Conn.patch(url, data=data, user_id=call.from_user.id)
+    if data.get('action') == 'like':
+        await call.answer(text=_('Лайк поставлен'))
+    else:
+        await call.answer(text=_('Дизлайк поставлен'))
+
+    url_detail = f'{REL_URLS["posts_public"]}{pk}/'
+    resp_detail = await Conn.get(url_detail, user_id=call.from_user.id)
+    inst = await post_des.for_detail(resp_detail)
+    if resp.get('main_image'):
+        pass
+    page = callback_data.get('page')
+    keyboard = await user_keyboards.get_keyboard_for_post_detail(page, pk,
+                                                                 resp_detail.get('flat_info')['id'])
+    await call.message.edit_text(text=inst.data, reply_markup=keyboard)
+    await call.answer()

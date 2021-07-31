@@ -53,11 +53,16 @@ async def get_keyboard_for_post_detail(page: str, pk: int, flat_pk: int) -> Inli
                              callback_data=user_callback.get_detail_callback(action='post_detail',
                                                                              pk=flat_pk))
     ).add(
-        InlineKeyboardButton(emoji.emojize(':thumbs_up:'), callback_data=user_callback.DETAIL_CB.new(action='like_post',
-                                                                                                     pk=pk)),
+        InlineKeyboardButton(emoji.emojize(':thumbs_up:'),
+                             callback_data=user_callback.LIKE_DISLIKE_CB.new(action='like_post',
+                                                                             pk=pk,
+                                                                             type='like',
+                                                                             page=page)),
         InlineKeyboardButton(emoji.emojize(':thumbs_down:'),
-                             callback_data=user_callback.DETAIL_CB.new(action='dislike_post',
-                                                                       pk=pk))
+                             callback_data=user_callback.LIKE_DISLIKE_CB.new(action='like_post',
+                                                                             pk=pk,
+                                                                             type='dislike',
+                                                                             page=page))
     ).row(
         InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback('post_list',
                                                                                        page)),

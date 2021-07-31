@@ -5,6 +5,7 @@ LANG_CB = CallbackData('lang', 'action', 'lang')
 DETAIL_WITH_PAGE_CB = CallbackData('detail', 'action', 'pk', 'page', sep=';')
 DETAIL_CB = CallbackData('detail', 'action', 'pk')
 COMPLAINT_CB = CallbackData('complaint', 'action', 'pk', 'type')
+LIKE_DISLIKE_CB = CallbackData('detail', 'action', 'pk', 'type', 'page')
 
 LIST_CB = CallbackData('list', 'action', 'page', sep=';')
 
