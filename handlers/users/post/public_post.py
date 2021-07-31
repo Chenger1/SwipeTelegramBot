@@ -1,3 +1,4 @@
+import logging
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.utils.exceptions import MessageNotModified
@@ -13,17 +14,21 @@ from keyboards.callbacks import user_callback
 
 from typing import Union, Tuple, Coroutine
 
+from utils.helpers import get_page
+
 post_des = PostDeserializer()
 
 
 async def get_post_list(page: str, message: Union[types.Message, types.CallbackQuery],
                         params: dict = None, data: dict = None) -> Tuple[str, Coroutine]:
     """ List of all posts """
-    resp = await Conn.get(page, user_id=message.from_user.id, params=params, data=data)
+    url = f'{REL_URLS["posts_public"]}?page={page}'
+    resp = await Conn.get(url, user_id=message.from_user.id, params=params, data=data)
     pages = {
-        'next': resp.get('next') or f'{REL_URLS["posts_public"]}?page=last',
-        'prev': resp.get('previous') or f'{REL_URLS["posts_public"]}?page=1',
-        'first': f'{REL_URLS["posts_public"]}?page=1'
+        'next': await get_page(resp.get('next')) or 'last',
+        'prev': await get_page(resp.get('previous')) or '1',
+        'first': '1',
+        'current': page
     }
     if resp:
         data = await post_des.make_list(resp)
@@ -47,17 +52,30 @@ async def handle_posts(message: Union[types.Message, types.CallbackQuery], *args
             await message.answer()
         except MessageNotModified:
             await message.answer(text='Больше публикаций нет', show_alert=True)
-            # await message.bot.answer_callback_query(callback_query_id=message.from_user.id,
-            #                                         )
 
 
 @dp.message_handler(Text(equals=['Список публикаций', 'List ads']))
 async def public_post(message: types.Message):
-    url = f'{REL_URLS["posts_public"]}?page=1'
-    await handle_posts(message, url)
+    await handle_posts(message, '1')
 
 
 @dp.callback_query_handler(user_callback.LIST_CB.filter(action='post_list'))
-async def post_detail(call: types.CallbackQuery, callback_data: dict):
+async def post_list(call: types.CallbackQuery, callback_data: dict):
     page = callback_data.get('page')
     await handle_posts(call, page)
+
+
+@dp.callback_query_handler(user_callback.DETAIL_WITH_PAGE_CB.filter(action='post_detail'))
+async def post_detail(call: types.CallbackQuery, callback_data: dict):
+    logging.info(callback_data)
+    page = callback_data.get('page')
+    pk = callback_data['pk']
+    url = f'{REL_URLS["posts_public"]}{pk}/'
+    resp = await Conn.get(url, user_id=call.from_user.id)
+    inst = await post_des.for_detail(resp)
+    if resp.get('main_image'):
+        pass
+    keyboard = await user_keyboards.get_keyboard_for_post_detail(page, pk,
+                                                                 resp.get('flat_info')['id'])
+    await call.message.edit_text(text=inst.data, reply_markup=keyboard)
+    await call.answer()
