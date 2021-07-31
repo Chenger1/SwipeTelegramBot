@@ -50,7 +50,7 @@ async def phone_number(message: types.Message, state: FSMContext):
 
     user, created = await User.get_or_create(user_id=message.from_user.id, phone_number=message.contact.phone_number)
     if user.is_admin:
-        result = authorize_user(user)
+        result = await authorize_user(user)
         if result:
             await message.answer('Вы вошли в систему как администратор')
             await message.answer('Вы успешно зарегестрированы в системе',
