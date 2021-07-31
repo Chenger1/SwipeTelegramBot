@@ -19,8 +19,8 @@ class BaseDeserializer(ABC):
     async def async_for_loop(self, coros: Iterable) -> Iterable:
         return await asyncio.gather(*coros)
 
-    async def make_list(self, response: List[dict]) -> Iterable[List[str]]:
-        coros = [self.for_list(data) for data in response]
+    async def make_list(self, response: Dict) -> Iterable[List[str]]:
+        coros = [self.for_list(data) for data in response.get('results', [])]
         res = await self.async_for_loop(coros)
         return res
 
