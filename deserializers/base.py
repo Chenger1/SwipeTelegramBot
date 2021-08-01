@@ -24,6 +24,6 @@ class BaseDeserializer(ABC):
         res = await self.async_for_loop(coros)
         return res
 
-    async def get_namedtuple(self, obj_id: int, data: str) -> namedtuple:
-        Inst = namedtuple('Inst', 'pk data')
-        return Inst(obj_id, data)
+    async def get_namedtuple(self, obj_id: int, data: str, extra: str = None) -> namedtuple:
+        Inst = namedtuple('Inst', 'pk data extra')
+        return Inst(obj_id, data, extra)

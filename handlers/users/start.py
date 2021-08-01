@@ -22,6 +22,7 @@ async def authorize_user(user: User = None,) -> User:
                                 user_id=user.user_id)
     if data.get('auth'):
         user.token = data.get('auth')
+        user.swipe_id = data.get('id')
         await user.save()
         return user
 

@@ -8,7 +8,6 @@ DETAIL_CB = CallbackData('detail', 'action', 'pk')
 COMPLAINT_CB = CallbackData('complaint', 'action', 'pk', 'type')
 LIKE_DISLIKE_CB = CallbackData('detail', 'action', 'pk', 'type', 'page', 'key')
 LIST_CB = CallbackData('list', 'action', 'page', 'key')
-DELETE_FROM_FAVORITES_CB = CallbackData('list', 'action', 'page', 'key', 'pk')
 
 
 def get_detail_callback_with_page(action: str, pk: int, page: str, key: str) -> str:

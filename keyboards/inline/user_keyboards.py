@@ -50,7 +50,8 @@ async def get_keyboard_for_post(items: Iterable, pages: dict, key: str) -> Inlin
     return markup
 
 
-async def get_keyboard_for_post_detail(page: str, pk: int, flat_pk: int, key: str) -> InlineKeyboardMarkup:
+async def get_keyboard_for_post_detail(page: str, pk: int, flat_pk: int, key: str,
+                                       user_id: int = None, favorites: list = None) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     markup.add(
         InlineKeyboardButton(text=_('О квартире'),
@@ -75,12 +76,19 @@ async def get_keyboard_for_post_detail(page: str, pk: int, flat_pk: int, key: st
                 InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='post_list_new',
                                                                                                page=page,
                                                                                                key=key)),
-                InlineKeyboardButton(_('В избранное'),
-                                     callback_data=user_callback.DETAIL_CB.new(action='save_to_favorites',
-                                                                               pk=pk)),
                 InlineKeyboardButton(_('Пожаловаться'), callback_data=user_callback.COMPLAINT_CB.new(action='complaint', pk=pk,
                                                                                                      type='_'))
                 )
+        if user_id in favorites:
+            markup.insert(InlineKeyboardButton(_('Убрать из избранного'),
+                                               callback_data=user_callback.get_detail_callback_with_page(action='delete_from_favorites',
+                                                                                                         pk=pk,
+                                                                                                         key=key,
+                                                                                                         page=page)))
+        else:
+            markup.insert(InlineKeyboardButton(_('В избранное'),
+                                               callback_data=user_callback.DETAIL_CB.new(action='save_to_favorites',
+                                                                                         pk=pk)))
     elif key == 'favorites':
         markup.row(
                 InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='post_list_new',
@@ -90,9 +98,9 @@ async def get_keyboard_for_post_detail(page: str, pk: int, flat_pk: int, key: st
                                                                                                      type='_'))
                 ).row(
                 InlineKeyboardButton(_('Убрать из избранного'),
-                                     callback_data=user_callback.DELETE_FROM_FAVORITES_CB.new(action='delete_from_favorites',
-                                                                                              page=page,
-                                                                                              key=key,
-                                                                                              pk=pk))
+                                     callback_data=user_callback.get_detail_callback_with_page(action='delete_from_favorites',
+                                                                                               pk=pk,
+                                                                                               key=key,
+                                                                                               page=page))
         )
     return markup

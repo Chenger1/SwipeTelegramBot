@@ -8,6 +8,7 @@ class User(Model):
     phone_number = fields.CharField(max_length=30, unique=True)
     is_admin = fields.BooleanField(default=False)
     language = fields.CharField(max_length=5, null=True)
+    swipe_id = fields.IntField(null=True)
 
 
 class File(Model):

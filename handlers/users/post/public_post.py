@@ -15,7 +15,8 @@ from keyboards.callbacks import user_callback
 from typing import Union, Tuple, Coroutine
 
 from utils.helpers import get_page
-from utils.db_api.models import File
+from utils.db_api.models import File, User
+
 
 post_des = PostDeserializer()
 
@@ -96,9 +97,12 @@ async def post_detail(call: types.CallbackQuery, callback_data: dict):
     url = f'{REL_URLS["posts_public"]}{pk}/'
     resp = await Conn.get(url, user_id=call.from_user.id)
     inst = await post_des.for_detail(resp)
+    user = await User.get(user_id=call.from_user.id)
     keyboard = await user_keyboards.get_keyboard_for_post_detail(page, pk,
                                                                  resp.get('flat_info')['id'],
-                                                                 key=key)
+                                                                 key=key,
+                                                                 user_id=user.swipe_id,
+                                                                 favorites=resp.get('in_favorites'))
     if resp.get('main_image'):
         file_path = resp.get('main_image')
         filename = file_path.split('/')[-1]
@@ -165,7 +169,7 @@ async def public_post(message: types.Message):
     await handle_posts(message, page='1', key='favorites')
 
 
-@dp.callback_query_handler(user_callback.DELETE_FROM_FAVORITES_CB.filter(action='delete_from_favorites'))
+@dp.callback_query_handler(user_callback.DETAIL_WITH_PAGE_CB.filter(action='delete_from_favorites'))
 async def delete_from_favorites(call: types.CallbackQuery, callback_data: dict):
     logging.info(callback_data)
     pk = callback_data['pk']
@@ -174,7 +178,7 @@ async def delete_from_favorites(call: types.CallbackQuery, callback_data: dict):
     url = f'{REL_URLS["favorites"]}{pk}/'
     resp, status = await Conn.delete(url, call.from_user.id)
     if status == 204:
-        await handle_posts(call, page=page, key=key)
+        await handle_posts(call, page=page, key=key, new=True)
     else:
         logging.error(resp)
         await call.answer(_('Произошла ошибка. Попробуйте снова'))
