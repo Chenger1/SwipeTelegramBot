@@ -24,29 +24,33 @@ async def get_detail_keyboard(action: str, title: str, pk: int) -> InlineKeyboar
     return markup
 
 
-async def get_keyboard_for_post(items: Iterable, pages: dict) -> InlineKeyboardMarkup:
+async def get_keyboard_for_post(items: Iterable, pages: dict, key: str) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup(row_width=4)
     for index, item in enumerate(items, start=1):
         markup.insert(
             InlineKeyboardButton(text=f'{index}',
                                  callback_data=user_callback.get_detail_callback_with_page(action='post_detail',
                                                                                            pk=item.pk,
-                                                                                           page=pages.get('current')))
+                                                                                           page=pages.get('current'),
+                                                                                           key=key))
         )
     markup.add(
         InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.get_list_callback(action='post_list',
-                                                                                            page=pages.get('prev'))),
+                                                                                            page=pages.get('prev'),
+                                                                                            key=key)),
         InlineKeyboardButton(text=_('Новое'),
                              callback_data=user_callback.get_list_callback(action='post_list',
-                                                                           page=pages.get('first'))),
+                                                                           page=pages.get('first'),
+                                                                           key=key)),
         InlineKeyboardButton(text=_('Вперед'), callback_data=user_callback.get_list_callback(action='post_list',
-                                                                                             page=pages.get('next')))
+                                                                                             page=pages.get('next'),
+                                                                                             key=key))
     )
 
     return markup
 
 
-async def get_keyboard_for_post_detail(page: str, pk: int, flat_pk: int) -> InlineKeyboardMarkup:
+async def get_keyboard_for_post_detail(page: str, pk: int, flat_pk: int, key: str) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     markup.add(
         InlineKeyboardButton(text=_('О квартире'),
@@ -57,18 +61,38 @@ async def get_keyboard_for_post_detail(page: str, pk: int, flat_pk: int) -> Inli
                              callback_data=user_callback.LIKE_DISLIKE_CB.new(action='like_post',
                                                                              pk=pk,
                                                                              type='like',
-                                                                             page=page)),
+                                                                             page=page,
+                                                                             key=key)),
         InlineKeyboardButton(emoji.emojize(':thumbs_down:'),
                              callback_data=user_callback.LIKE_DISLIKE_CB.new(action='like_post',
                                                                              pk=pk,
                                                                              type='dislike',
-                                                                             page=page))
-    ).row(
-        InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback('post_list_new',
-                                                                                       page)),
-        InlineKeyboardButton(_('В избранное'), callback_data=user_callback.DETAIL_CB.new(action='save_to_favorites',
-                                                                                         pk=pk)),
-        InlineKeyboardButton(_('Пожаловаться'), callback_data=user_callback.COMPLAINT_CB.new(action='complaint', pk=pk,
-                                                                                             type='_'))
+                                                                             page=page,
+                                                                             key=key))
     )
+    if key == 'posts_public':
+        markup.row(
+                InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='post_list_new',
+                                                                                               page=page,
+                                                                                               key=key)),
+                InlineKeyboardButton(_('В избранное'),
+                                     callback_data=user_callback.DETAIL_CB.new(action='save_to_favorites',
+                                                                               pk=pk)),
+                InlineKeyboardButton(_('Пожаловаться'), callback_data=user_callback.COMPLAINT_CB.new(action='complaint', pk=pk,
+                                                                                                     type='_'))
+                )
+    elif key == 'favorites':
+        markup.row(
+                InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='post_list_new',
+                                                                                               page=page,
+                                                                                               key=key)),
+                InlineKeyboardButton(_('Пожаловаться'), callback_data=user_callback.COMPLAINT_CB.new(action='complaint', pk=pk,
+                                                                                                     type='_'))
+                ).row(
+                InlineKeyboardButton(_('Убрать из избранного'),
+                                     callback_data=user_callback.DELETE_FROM_FAVORITES_CB.new(action='delete_from_favorites',
+                                                                                              page=page,
+                                                                                              key=key,
+                                                                                              pk=pk))
+        )
     return markup

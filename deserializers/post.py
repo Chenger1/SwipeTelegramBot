@@ -2,12 +2,23 @@ from deserializers.base import BaseDeserializer
 
 from collections import namedtuple
 
-from typing import Dict
+from typing import Dict, Iterable, List
 
 from middlewares import _
 
 
 class PostDeserializer(BaseDeserializer):
+    async def make_list(self, response: Dict) -> Iterable[List[str]]:
+        coros = []
+        for data in response.get('results'):
+            if data.get('post'):
+                coros.append(self.for_list(data.get('post')))
+            else:
+                coros.append(self.for_list(data))
+
+        res = await self.async_for_loop(coros)
+        return res
+
     async def for_detail(self, data: Dict) -> namedtuple:
         post_info = _('<b>Квартира:</b> №{number}\n').format(number=data['flat_info']['number']) + \
                     _('<b>Город:</b> {city}\n').format(city=data['flat_info']['city']) + \

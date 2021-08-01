@@ -21,9 +21,11 @@ post_des = PostDeserializer()
 
 
 async def get_post_list(page: str, message: Union[types.Message, types.CallbackQuery],
-                        params: dict = None, data: dict = None) -> Tuple[str, Coroutine]:
+                        params: dict = None, data: dict = None,
+                        key: str = None) -> Tuple[str, Coroutine]:
     """ List of all posts """
-    url = f'{REL_URLS["posts_public"]}?page={page}'
+    # url = f'{REL_URLS["posts_public"]}?page={page}'
+    url = f'{REL_URLS[key]}?page={page}'
     resp = await Conn.get(url, user_id=message.from_user.id, params=params, data=data)
     pages = {
         'next': await get_page(resp.get('next')) or 'last',
@@ -36,43 +38,53 @@ async def get_post_list(page: str, message: Union[types.Message, types.CallbackQ
         text = ''
         for index, item in enumerate(data, start=1):
             text += f'{index}. {item.data}\n'
-        return text, user_keyboards.get_keyboard_for_post(data, pages)
+        return text, user_keyboards.get_keyboard_for_post(data, pages, key)
     else:
-        return _('Публикаций нет'), user_keyboards.get_keyboard_for_post([], pages)
+        return _('Публикаций нет'), user_keyboards.get_keyboard_for_post([], pages, key)
 
 
-async def handle_posts(message: Union[types.Message, types.CallbackQuery], *args, **kwargs):
-    text, keyboard_cor = await get_post_list(args[0], message)
+async def handle_posts(message: Union[types.Message, types.CallbackQuery], **kwargs):
+    text, keyboard_cor = await get_post_list(kwargs.get('page'), message, key=kwargs.get('key'))
     if isinstance(message, types.Message):
-        await message.answer(text=_('Список публикаций'))
-        await message.answer(text=text, reply_markup=await keyboard_cor)
+        if text:
+            await message.answer(text=_('Список публикаций'))
+            await message.answer(text=text, reply_markup=await keyboard_cor)
+        else:
+            keyboard_cor.close()
+            await message.answer(text=_('Публикаций нет'))
 
     if isinstance(message, types.CallbackQuery):
-        if kwargs.get('new'):
-            await message.message.answer(text=text, reply_markup=await keyboard_cor)
+        if text:
+            if kwargs.get('new'):
+                await message.message.answer(text=text, reply_markup=await keyboard_cor)
+            else:
+                try:
+                    await message.message.edit_text(text=text, reply_markup=await keyboard_cor)
+                    await message.answer()
+                except MessageNotModified:
+                    await message.answer(text='Больше публикаций нет', show_alert=True)
         else:
-            try:
-                await message.message.edit_text(text=text, reply_markup=await keyboard_cor)
-                await message.answer()
-            except MessageNotModified:
-                await message.answer(text='Больше публикаций нет', show_alert=True)
+            keyboard_cor.close()
+            await message.message.answer(text=_('Публикаций нет'))
 
 
 @dp.message_handler(Text(equals=['Список публикаций', 'List ads']))
 async def public_post(message: types.Message):
-    await handle_posts(message, '1')
+    await handle_posts(message, page='1', key='posts_public')
 
 
 @dp.callback_query_handler(user_callback.LIST_CB.filter(action='post_list'))
 async def post_list(call: types.CallbackQuery, callback_data: dict):
     page = callback_data.get('page')
-    await handle_posts(call, page)
+    key = callback_data.get('key')
+    await handle_posts(call, page=page, key=key)
 
 
 @dp.callback_query_handler(user_callback.LIST_CB.filter(action='post_list_new'))
 async def post_list(call: types.CallbackQuery, callback_data: dict):
     page = callback_data.get('page')
-    await handle_posts(call, page, new=True)
+    key = callback_data.get('key')
+    await handle_posts(call, page=page, new=True, key=key)
 
 
 @dp.callback_query_handler(user_callback.DETAIL_WITH_PAGE_CB.filter(action='post_detail'))
@@ -80,11 +92,13 @@ async def post_detail(call: types.CallbackQuery, callback_data: dict):
     logging.info(callback_data)
     page = callback_data.get('page')
     pk = callback_data['pk']
+    key = callback_data.get('key')
     url = f'{REL_URLS["posts_public"]}{pk}/'
     resp = await Conn.get(url, user_id=call.from_user.id)
     inst = await post_des.for_detail(resp)
     keyboard = await user_keyboards.get_keyboard_for_post_detail(page, pk,
-                                                                 resp.get('flat_info')['id'])
+                                                                 resp.get('flat_info')['id'],
+                                                                 key=key)
     if resp.get('main_image'):
         file_path = resp.get('main_image')
         filename = file_path.split('/')[-1]
@@ -111,6 +125,7 @@ async def post_detail(call: types.CallbackQuery, callback_data: dict):
 async def list_post(call: types.CallbackQuery, callback_data: dict):
     logging.info(callback_data)
     pk = callback_data['pk']
+    key = callback_data.get('pk')
     url = REL_URLS['like_dislike'].format(pk=pk)
     data = {'action': callback_data.get('type')}
     resp = await Conn.patch(url, data=data, user_id=call.from_user.id)
@@ -122,6 +137,44 @@ async def list_post(call: types.CallbackQuery, callback_data: dict):
         pass
     page = callback_data.get('page')
     keyboard = await user_keyboards.get_keyboard_for_post_detail(page, pk,
-                                                                 resp_detail.get('flat_info')['id'])
+                                                                 resp_detail.get('flat_info')['id'],
+                                                                 key=key)
     await call.message.edit_caption(caption=inst.data, reply_markup=keyboard)
     await call.answer(text=_('Успешно'))
+
+
+@dp.callback_query_handler(user_callback.DETAIL_CB.filter(action='save_to_favorites'))
+async def save_to_favorites(call: types.CallbackQuery, callback_data: dict):
+    logging.info(callback_data)
+    pk = callback_data['pk']
+    resp, status = await Conn.post(REL_URLS['favorites'], data={'post': pk},
+                                   user_id=call.from_user.id)
+    if status == 201:
+        await call.answer(text=_('Добавлено'), show_alert=True)
+    elif status == 409:
+        await call.answer(text=_('Это объявление уже в вашем списке избранного'),
+                          show_alert=True)
+    else:
+        logging.error(resp)
+        await call.answer(text=_('Произошла ошибка. Попробуйте еще раз'),
+                          show_alert=True)
+
+
+@dp.message_handler(Text(equals=['Избранное', 'Favorites']))
+async def public_post(message: types.Message):
+    await handle_posts(message, page='1', key='favorites')
+
+
+@dp.callback_query_handler(user_callback.DELETE_FROM_FAVORITES_CB.filter(action='delete_from_favorites'))
+async def delete_from_favorites(call: types.CallbackQuery, callback_data: dict):
+    logging.info(callback_data)
+    pk = callback_data['pk']
+    page = callback_data['page']
+    key = callback_data['key']
+    url = f'{REL_URLS["favorites"]}{pk}/'
+    resp, status = await Conn.delete(url, call.from_user.id)
+    if status == 204:
+        await handle_posts(call, page=page, key=key)
+    else:
+        logging.error(resp)
+        await call.answer(_('Произошла ошибка. Попробуйте снова'))
