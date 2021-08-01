@@ -64,7 +64,7 @@ async def get_keyboard_for_post_detail(page: str, pk: int, flat_pk: int) -> Inli
                                                                              type='dislike',
                                                                              page=page))
     ).row(
-        InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback('post_list',
+        InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback('post_list_new',
                                                                                        page)),
         InlineKeyboardButton(_('В избранное'), callback_data=user_callback.DETAIL_CB.new(action='save_to_favorites',
                                                                                          pk=pk)),

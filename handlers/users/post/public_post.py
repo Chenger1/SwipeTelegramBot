@@ -15,6 +15,7 @@ from keyboards.callbacks import user_callback
 from typing import Union, Tuple, Coroutine
 
 from utils.helpers import get_page
+from utils.db_api.models import File
 
 post_des = PostDeserializer()
 
@@ -47,11 +48,14 @@ async def handle_posts(message: Union[types.Message, types.CallbackQuery], *args
         await message.answer(text=text, reply_markup=await keyboard_cor)
 
     if isinstance(message, types.CallbackQuery):
-        try:
-            await message.message.edit_text(text=text, reply_markup=await keyboard_cor)
-            await message.answer()
-        except MessageNotModified:
-            await message.answer(text='Больше публикаций нет', show_alert=True)
+        if kwargs.get('new'):
+            await message.message.answer(text=text, reply_markup=await keyboard_cor)
+        else:
+            try:
+                await message.message.edit_text(text=text, reply_markup=await keyboard_cor)
+                await message.answer()
+            except MessageNotModified:
+                await message.answer(text='Больше публикаций нет', show_alert=True)
 
 
 @dp.message_handler(Text(equals=['Список публикаций', 'List ads']))
@@ -65,6 +69,12 @@ async def post_list(call: types.CallbackQuery, callback_data: dict):
     await handle_posts(call, page)
 
 
+@dp.callback_query_handler(user_callback.LIST_CB.filter(action='post_list_new'))
+async def post_list(call: types.CallbackQuery, callback_data: dict):
+    page = callback_data.get('page')
+    await handle_posts(call, page, new=True)
+
+
 @dp.callback_query_handler(user_callback.DETAIL_WITH_PAGE_CB.filter(action='post_detail'))
 async def post_detail(call: types.CallbackQuery, callback_data: dict):
     logging.info(callback_data)
@@ -73,11 +83,26 @@ async def post_detail(call: types.CallbackQuery, callback_data: dict):
     url = f'{REL_URLS["posts_public"]}{pk}/'
     resp = await Conn.get(url, user_id=call.from_user.id)
     inst = await post_des.for_detail(resp)
-    if resp.get('main_image'):
-        pass
     keyboard = await user_keyboards.get_keyboard_for_post_detail(page, pk,
                                                                  resp.get('flat_info')['id'])
-    await call.message.edit_text(text=inst.data, reply_markup=keyboard)
+    if resp.get('main_image'):
+        file_path = resp.get('main_image')
+        filename = file_path.split('/')[-1]
+        file_data = await File.get_or_none(filename=filename, parent_id=pk)
+        if not file_data:
+            resp_file = await Conn.get(file_path, user_id=call.from_user.id)
+            msg = await call.bot.send_photo(chat_id=call.from_user.id,
+                                            photo=resp_file.get('file'), caption=inst.data,
+                                            reply_markup=keyboard)
+            await File.create(filename=filename, parent_id=pk,
+                              file_id=msg.photo[-1].file_id)
+        else:
+            await call.bot.send_photo(chat_id=call.from_user.id,
+                                      photo=file_data.file_id, caption=inst.data,
+                                      reply_markup=keyboard)
+    else:
+        await call.bot.send_message(chat_id=call.from_user.id,
+                                    text=inst.data, reply_markup=keyboard)
     await call.answer()
 
 
