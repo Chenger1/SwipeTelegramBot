@@ -102,7 +102,8 @@ async def post_detail(call: types.CallbackQuery, callback_data: dict):
                                       reply_markup=keyboard)
     else:
         await call.bot.send_message(chat_id=call.from_user.id,
-                                    text=inst.data, reply_markup=keyboard)
+                                    text=_('Невалидная публикация. Пожалуйста, сообщите администрации'),
+                                    reply_markup=keyboard)
     await call.answer()
 
 
@@ -113,10 +114,6 @@ async def list_post(call: types.CallbackQuery, callback_data: dict):
     url = REL_URLS['like_dislike'].format(pk=pk)
     data = {'action': callback_data.get('type')}
     resp = await Conn.patch(url, data=data, user_id=call.from_user.id)
-    if data.get('action') == 'like':
-        await call.answer(text=_('Лайк поставлен'))
-    else:
-        await call.answer(text=_('Дизлайк поставлен'))
 
     url_detail = f'{REL_URLS["posts_public"]}{pk}/'
     resp_detail = await Conn.get(url_detail, user_id=call.from_user.id)
@@ -126,5 +123,5 @@ async def list_post(call: types.CallbackQuery, callback_data: dict):
     page = callback_data.get('page')
     keyboard = await user_keyboards.get_keyboard_for_post_detail(page, pk,
                                                                  resp_detail.get('flat_info')['id'])
-    await call.message.edit_text(text=inst.data, reply_markup=keyboard)
-    await call.answer()
+    await call.message.edit_caption(caption=inst.data, reply_markup=keyboard)
+    await call.answer(text=_('Успешно'))
