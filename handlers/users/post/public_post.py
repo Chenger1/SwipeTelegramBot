@@ -182,3 +182,28 @@ async def delete_from_favorites(call: types.CallbackQuery, callback_data: dict):
     else:
         logging.error(resp)
         await call.answer(_('Произошла ошибка. Попробуйте снова'))
+
+
+@dp.callback_query_handler(user_callback.COMPLAINT_CB.filter(action='complaint'))
+async def complaint(call: types.CallbackQuery, callback_data: dict):
+    """
+        If callback_data contains - 'type' key - uses this type to create new complaint.
+        Otherwise, create inline keyboard with complaint types for user.
+    """
+    logging.info(callback_data)
+    pk = callback_data['pk']
+    if callback_data.get('type') != '_':
+        resp, status = await Conn.post(REL_URLS['complaint'],
+                                       data={'post': pk, 'type': callback_data.get('type')},
+                                       user_id=call.from_user.id)
+        if status == 201:
+            await call.answer(_('Жалоба отправлена'), show_alert=True)
+        elif status == 409:
+            await call.answer(_('Вы уже отправили жалобу.'), show_alert=True)
+        else:
+            logging.error(resp)
+            await call.answer(_('Произошла ошибка. Повторите попытку'))
+    else:
+        keyboard = await user_keyboards.get_post_complaint_types(post_pk=pk)
+        await call.message.answer(text=_('Укажите причину жалобы'), reply_markup=keyboard)
+        await call.answer()

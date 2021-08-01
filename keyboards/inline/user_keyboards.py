@@ -94,7 +94,8 @@ async def get_keyboard_for_post_detail(page: str, pk: int, flat_pk: int, key: st
                 InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='post_list_new',
                                                                                                page=page,
                                                                                                key=key)),
-                InlineKeyboardButton(_('Пожаловаться'), callback_data=user_callback.COMPLAINT_CB.new(action='complaint', pk=pk,
+                InlineKeyboardButton(_('Пожаловаться'), callback_data=user_callback.COMPLAINT_CB.new(action='complaint',
+                                                                                                     pk=pk,
                                                                                                      type='_'))
                 ).row(
                 InlineKeyboardButton(_('Убрать из избранного'),
@@ -104,3 +105,20 @@ async def get_keyboard_for_post_detail(page: str, pk: int, flat_pk: int, key: st
                                                                                                page=page))
         )
     return markup
+
+
+async def get_post_complaint_types(post_pk: int) -> InlineKeyboardMarkup:
+    inline_markup = InlineKeyboardMarkup().row(
+        InlineKeyboardButton(_('Неккоректная цена'), callback_data=user_callback.COMPLAINT_CB.new(action='complaint',
+                                                                                                  pk=post_pk,
+                                                                                                  type='PRICE'))
+    ).row(
+        InlineKeyboardButton(_('Неккоректное фото'), callback_data=user_callback.COMPLAINT_CB.new(action='complaint',
+                                                                                                  pk=post_pk,
+                                                                                                  type='PHOTO'))
+    ).row(
+        InlineKeyboardButton(_('Неккоректное описание'), callback_data=user_callback.COMPLAINT_CB.new(action='complaint',
+                                                                                                      pk=post_pk,
+                                                                                                      type='DESC'))
+    )
+    return inline_markup
