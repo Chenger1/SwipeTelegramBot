@@ -10,9 +10,9 @@ from utils.db_api.models import User, AdminToken
 from utils.session.url_dispatcher import REL_URLS
 
 from keyboards.default import defaults
-from keyboards.default.admin_keyboards import keyboard_dispatcher
 from keyboards.callbacks.user_callback import LANG_CB
 from keyboards.inline.user_keyboards import lang_markup
+from keyboards.default.dispatcher import dispatcher
 
 from middlewares import _
 
@@ -53,9 +53,11 @@ async def cancel(message: types.Message, state: FSMContext):
     data = await state.get_data()
     user = await authorize_user(data.get('user'))
     if user:
+        keyboard, path = await dispatcher('LEVEL_1', message.from_user.id)
         await message.answer(_('Вы успешно зарегестрированы в системе'),
-                             reply_markup=await keyboard_dispatcher(user.is_admin))
+                             reply_markup=keyboard)
         await state.finish()
+        await state.update_data(path=path)
     else:
         await message.answer(_('Произошла ошибка. Нажмите /start снова'), reply_markup=defaults.remove_markup)
         await state.reset_state()
@@ -76,11 +78,13 @@ async def phone_number(message: types.Message, state: FSMContext):
         if result:
             await message.answer(_('Вы вошли в систему как администратор'))
             if created:
+                keyboard, path = await dispatcher('LEVEL_1', message.from_user.id)
                 await message.answer(_('Вы успешно зарегестрированы в системе'),
-                                     reply_markup=await keyboard_dispatcher(user.is_admin))
+                                     reply_markup=keyboard)
+                await state.finish()
+                await state.update_data(path=path)
             else:
                 await message.answer(_('Вы уже в системе. Добро пожаловать'))
-            await state.finish()
         else:
             await message.answer('Произошла ошибка. Нажмите /start снова')
             await state.reset_state()
@@ -101,9 +105,11 @@ async def check_admin_token(message: types.Message, state: FSMContext):
         user.is_admin = True
         result = await authorize_user(user)
         if result:
+            keyboard, path = await dispatcher('LEVEL_1', message.from_user.id)
             await message.answer(_('Вы успешно зарегестрированы в системе'),
-                                 reply_markup=await keyboard_dispatcher(user.is_admin))
+                                 reply_markup=keyboard)
             await state.finish()
+            await state.update_data(path=path)
         else:
             await message.answer(_('Произошла ошибка. Нажмите /start снова'))
             await state.reset_state()

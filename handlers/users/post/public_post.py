@@ -1,6 +1,7 @@
 import logging
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
+from aiogram.dispatcher import FSMContext
 from aiogram.utils.exceptions import MessageNotModified
 
 from loader import dp, Conn
@@ -11,6 +12,7 @@ from middlewares import _
 
 from keyboards.inline import user_keyboards
 from keyboards.callbacks import user_callback
+from keyboards.default.dispatcher import dispatcher, back_button, get_menu_label
 
 from typing import Union, Tuple, Coroutine
 
@@ -48,7 +50,10 @@ async def handle_posts(message: Union[types.Message, types.CallbackQuery], **kwa
     text, keyboard_cor = await get_post_list(kwargs.get('page'), message, key=kwargs.get('key'))
     if isinstance(message, types.Message):
         if text:
-            await message.answer(text=_('Список публикаций'))
+            if kwargs.get('keyboard'):
+                await message.answer(text=_('Список публикаций'), reply_markup=kwargs.get('keyboard'))
+            else:
+                await message.answer(text=_('Список публикаций'))
             await message.answer(text=text, reply_markup=await keyboard_cor)
         else:
             keyboard_cor.close()
@@ -70,8 +75,10 @@ async def handle_posts(message: Union[types.Message, types.CallbackQuery], **kwa
 
 
 @dp.message_handler(Text(equals=['Список публикаций', 'List ads']))
-async def public_post(message: types.Message):
-    await handle_posts(message, page='1', key='posts_public')
+async def public_post(message: types.Message, state: FSMContext):
+    keyboard, path = await dispatcher('LEVEL_2_POSTS', message.from_user.id)
+    await handle_posts(message, page='1', key='posts_public', keyboard=keyboard)
+    await state.update_data(path=path)
 
 
 @dp.callback_query_handler(user_callback.LIST_CB.filter(action='post_list'))
@@ -207,3 +214,11 @@ async def complaint(call: types.CallbackQuery, callback_data: dict):
         keyboard = await user_keyboards.get_post_complaint_types(post_pk=pk)
         await call.message.answer(text=_('Укажите причину жалобы'), reply_markup=keyboard)
         await call.answer()
+
+
+@dp.message_handler(Text(equals=['Вернуться', 'Back']))
+async def back(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    keyboard, path = await back_button(data.get('path'), message.from_user.id)
+    await message.answer(text=await get_menu_label(path), reply_markup=keyboard)
+    await state.update_data(path=path)

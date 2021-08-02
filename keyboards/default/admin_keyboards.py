@@ -2,8 +2,6 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 from keyboards.default.user_keyboards import get_user_keyboard
 
-from typing import Coroutine
-
 
 async def get_admin_keyboard() -> ReplyKeyboardMarkup:
     markup = await get_user_keyboard()
