@@ -28,17 +28,30 @@ async def back(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(Text(equals=['Сохранить фильтр', 'Save filter']), state=FilterPost)
-async def save_filter(message: types.Message, state: FSMContext):
+async def save_filter_name(message: types.Message, state: FSMContext):
     data = await state.get_data()
     if data.get('path'):
         data.pop('path')
     if not data:
         await message.answer(_('Нет выбранных опций'))
         return
+    await message.answer(_('Добавьте имя для фильтра'))
+    await FilterPost.SAVE_FILTER.set()
+
+
+@dp.message_handler(state=FilterPost.SAVE_FILTER)
+async def save_filter(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    if data.get('path'):
+        data.pop('path')
+    data['name'] = message.text
     resp, status = await Conn.post(REL_URLS['filters'], user_id=message.from_user.id,
                                    data=data)
     if status == 201:
         await message.answer(_('Фильтры успешно сохранены'))
+        data = await state.get_data()
+        await state.finish()
+        await state.update_data(**data)
     else:
         logging.error(resp)
         await message.answer(_('Произошла ошибка. Попробуйте снова'))

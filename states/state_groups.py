@@ -15,3 +15,4 @@ class FilterPost(StatesGroup):
     PLAN = State()
     TERR = State()
     FILTERING = State()
+    SAVE_FILTER = State()  # Optional

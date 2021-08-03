@@ -2,7 +2,7 @@ import logging
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
-from aiogram.utils.exceptions import MessageNotModified
+from aiogram.utils.exceptions import MessageNotModified, MessageTextIsEmpty
 
 from loader import dp, Conn
 from utils.session.url_dispatcher import REL_URLS
@@ -99,7 +99,10 @@ async def handle_filters(message: Union[types.Message, types.CallbackQuery]):
     if isinstance(message, types.Message):
         await message.answer(text, reply_markup=await keyboard_cor)
     elif isinstance(message, types.CallbackQuery):
-        await message.message.edit_text(text, reply_markup=await keyboard_cor)
+        try:
+            await message.message.edit_text(text, reply_markup=await keyboard_cor)
+        except (MessageTextIsEmpty, MessageNotModified):
+            await message.message.edit_text(_('Фильтров нет'))
     else:
         keyboard_cor.close()
 
