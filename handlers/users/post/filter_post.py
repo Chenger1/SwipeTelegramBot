@@ -13,6 +13,8 @@ from keyboards.callbacks.user_callback import POST_FILTER_CB
 
 from handlers.users.post.public_post import handle_posts
 
+from utils.session.url_dispatcher import REL_URLS
+
 from middlewares import _
 
 
@@ -23,6 +25,24 @@ async def back(message: types.Message, state: FSMContext):
     await message.answer(text=await get_menu_label(path), reply_markup=keyboard)
     await state.finish()
     await state.update_data(path=path)
+
+
+@dp.message_handler(Text(equals=['Сохранить фильтр', 'Save filter']), state=FilterPost)
+async def save_filter(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    if data.get('path'):
+        data.pop('path')
+    if not data:
+        await message.answer(_('Нет выбранных опций'))
+        return
+    resp, status = await Conn.post(REL_URLS['filters'], user_id=message.from_user.id,
+                                   data=data)
+    if status == 201:
+        await message.answer(_('Фильтры успешно сохранены'))
+    else:
+        logging.error(resp)
+        await message.answer(_('Произошла ошибка. Попробуйте снова'))
+        await message.answer(_('Подробный код ошибки: {code}'.format(code=resp)))
 
 
 @dp.message_handler(Text(equals=['Перейти к цене', 'Go to price']), state=FilterPost)

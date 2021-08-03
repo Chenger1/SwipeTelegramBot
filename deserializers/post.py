@@ -2,23 +2,12 @@ from deserializers.base import BaseDeserializer
 
 from collections import namedtuple
 
-from typing import Dict, Iterable, List
+from typing import Dict
 
 from middlewares import _
 
 
 class PostDeserializer(BaseDeserializer):
-    # async def make_list(self, response: Dict) -> Iterable[List[str]]:
-    #     coros = []
-    #     for data in response.get('results'):
-    #         if data.get('post'):
-    #             coros.append(self.for_list(data.get('post')))
-    #         else:
-    #             coros.append(self.for_list(data))
-    #
-    #     res = await self.async_for_loop(coros)
-    #     return res
-
     async def for_detail(self, data: Dict) -> namedtuple:
         post_info = _('<b>Квартира:</b> №{number}\n').format(number=data['flat_info']['number']) + \
                     _('<b>Город:</b> {city}\n').format(city=data['flat_info']['city']) + \
@@ -40,3 +29,29 @@ class PostDeserializer(BaseDeserializer):
                     _('<b>Связь:</b> {comm}\n').format(comm=data['communications_display']) + \
                     _('<b>Цена:</b> {price} грн.').format(price=data.get('price'))
         return await self.get_namedtuple(data['id'], post_info)
+
+
+class PostFilterDeserializer(BaseDeserializer):
+    _no_data = _('Не указано')
+
+    async def for_detail(self, data: Dict) -> namedtuple:
+        info = _('<b>{name}</b>\n' +
+                 '<b>Цена:</b> {price__gte}:{price__lte}\n' +
+                 '<b>Площадь:</b> {square__gte}:{square__lte}\n' +
+                 '<b>Город:</b> {city}\n' +
+                 '<b>Состояние:</b> {state}\n' +
+                 '<b>Планировка:</b> {plan}\n' +
+                 '<b>Территория:</b> {terr}\n').format(name=data.get('name'),
+                                                       price__gte=data.get('price__gte', self._no_data),
+                                                       price__lte=data.get('price__lte', self._no_data),
+                                                       square__gte=data.get('flat__square__gte', self._no_data),
+                                                       square__lte=data.get('flat__square__lte', self._no_data),
+                                                       city=data.get('house__city', self._no_data),
+                                                       state=data.get('flat__state', self._no_data),
+                                                       plan=data.get('flat__plan', self._no_data),
+                                                       terr=data.get('house__territory', self._no_data))
+        return await self.get_namedtuple(data['saved_filter_pk'], info)
+
+    async def for_list(self, data: Dict) -> namedtuple:
+        info = _('<b>{name}</b>').format(name=data.get('name'))
+        return await self.get_namedtuple(data['saved_filter_pk'], info)

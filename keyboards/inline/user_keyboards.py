@@ -122,3 +122,30 @@ async def get_post_complaint_types(post_pk: int) -> InlineKeyboardMarkup:
                                                                                                       type='DESC'))
     )
     return inline_markup
+
+
+async def get_keyboard_for_filter(items: Iterable) -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup(row_width=4)
+    for index, item in enumerate(items, start=1):
+        markup.insert(
+            InlineKeyboardButton(text=f'{index}',
+                                 callback_data=user_callback.get_detail_callback(action='filter_detail',
+                                                                                 pk=item.pk))
+        )
+
+    return markup
+
+
+async def get_keyboard_for_filter_detail(pk: int) -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup()
+    markup.row(
+        InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='filter_list',
+                                                                                       page='1',
+                                                                                       key='filter_list_new')),
+        InlineKeyboardButton(_('Применить'), callback_data=user_callback.get_detail_callback(action='set_filter',
+                                                                                             pk=pk))
+    ).add(
+        InlineKeyboardButton(_('Удалить'), callback_data=user_callback.get_detail_callback(action='delete_filter',
+                                                                                           pk=pk))
+    )
+    return markup

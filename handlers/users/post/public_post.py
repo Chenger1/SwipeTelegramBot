@@ -6,7 +6,7 @@ from aiogram.utils.exceptions import MessageNotModified
 
 from loader import dp, Conn
 from utils.session.url_dispatcher import REL_URLS
-from deserializers.post import PostDeserializer
+from deserializers.post import PostDeserializer, PostFilterDeserializer
 
 from middlewares import _
 
@@ -22,6 +22,7 @@ from utils.db_api.models import File, User
 
 
 post_des = PostDeserializer()
+filter_des = PostFilterDeserializer()
 
 
 async def get_post_list(page: str, message: Union[types.Message, types.CallbackQuery],
@@ -78,6 +79,29 @@ async def handle_posts(message: Union[types.Message, types.CallbackQuery], **kwa
         else:
             keyboard_cor.close()
             await message.message.answer(text=_('Публикаций нет'))
+            await message.answer()
+
+
+async def get_filter_list(message: Union[types.Message, types.CallbackQuery]):
+    resp = await Conn.get(REL_URLS['filters'], user_id=message.from_user.id)
+    if resp:
+        data = await filter_des.make_list(resp)
+        text = ''
+        for index, item in enumerate(data, start=1):
+            text += f'{index}. {item.data}\n'
+        return text, user_keyboards.get_keyboard_for_filter(data)
+    else:
+        return _('Фильтров нет'), user_keyboards.get_keyboard_for_filter([])
+
+
+async def handle_filters(message: Union[types.Message, types.CallbackQuery]):
+    text, keyboard_cor = await get_filter_list(message)
+    if isinstance(message, types.Message):
+        await message.answer(text, reply_markup=await keyboard_cor)
+    elif isinstance(message, types.CallbackQuery):
+        await message.message.edit_text(text, reply_markup=await keyboard_cor)
+    else:
+        keyboard_cor.close()
 
 
 @dp.message_handler(Text(equals=['Текущие фильтры', 'Current filters']))
@@ -107,6 +131,56 @@ async def current_filters(message: types.Message, state: FSMContext):
     await state.update_data(path=path)
     await message.answer(_('Фильтры сброшены'))
     await handle_posts(message, page='1', key='posts_public')
+
+
+@dp.message_handler(Text(equals=['Мои фильтры', 'My filters']))
+async def user_filters(message: types.Message):
+    await handle_filters(message)
+
+
+@dp.callback_query_handler(user_callback.LIST_CB.filter(action='filter_list'))
+async def user_filters_callback(call: types.CallbackQuery, callback_data: dict):
+    await handle_filters(call)
+
+
+@dp.callback_query_handler(user_callback.DETAIL_CB.filter(action='filter_detail'))
+async def filter_detail(call: types.CallbackQuery, callback_data: dict):
+    logging.info(callback_data)
+    pk = callback_data['pk']
+    url = f'{REL_URLS["filters"]}{pk}/'
+    resp = await Conn.get(url, user_id=call.from_user.id)
+    if resp:
+        data = await filter_des.for_detail(resp)
+        await call.message.edit_text(data.data, reply_markup=await user_keyboards.get_keyboard_for_filter_detail(pk))
+        await call.answer()
+    else:
+        await call.answer(_('Фильтра не найден'), show_alert=True)
+
+
+@dp.callback_query_handler(user_callback.DETAIL_CB.filter(action='set_filter'))
+async def set_filter(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
+    pk = callback_data.get('pk')
+    url = f'{REL_URLS["filters"]}{pk}/'
+    resp = await Conn.get(url, user_id=call.from_user.id)
+    data = await state.get_data()
+    for key, value in resp.items():
+        if value and key not in ('name', 'saved_filter_pk'):
+            data[key] = value
+    await state.update_data(data)
+    logging.info(data)
+    await call.answer(_('Фильтр установлен'))
+
+
+@dp.callback_query_handler(user_callback.DETAIL_CB.filter(action='delete_filter'))
+async def delete_filter(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    url = f'{REL_URLS["filters"]}{pk}/'
+    resp, status = await Conn.delete(url, user_id=call.from_user.id)
+    if status == 204:
+        await call.answer(_('Фильтр удален'), show_alert=True)
+        await handle_filters(call)
+    else:
+        await call.answer(_('Произошла ошибка. Попробуйте снова'), show_alert=True)
 
 
 @dp.message_handler(Text(equals=['Список публикаций', 'List ads']))

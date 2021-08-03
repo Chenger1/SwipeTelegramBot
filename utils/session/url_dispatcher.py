@@ -2,23 +2,23 @@
 REL_URLS = {
     'login': 'auth/login/',
 
-    # PUBLIC - Don`t require auth token
+    # PUBLIC
     'posts_public': 'main/posts_public/',
     'houses_public': 'main/houses_public/',
     'flats_public': 'main/flats_public/',
 
-    # COMPLAINT
+    # POST
+    #   #COMPLAINT
     'complaint': 'main/complaints/',
-
-    # FAVORITES
+    #   #FAVORITES
     'favorites': 'main/favorites_posts/',
-
+    #   #Like/Dislike
+    'like_dislike': 'main/like_dislike/{pk}/',
+    #   #Filters
+    'filters': 'main/user_filters/',
     # NEWS
     'news': 'main/news/',
 
     # DOCUMENTS
     'documents': 'main/documents/',
-
-    # Auth token required
-    'like_dislike': 'main/like_dislike/{pk}/'
 }
