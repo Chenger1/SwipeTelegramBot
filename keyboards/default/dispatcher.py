@@ -1,4 +1,4 @@
-from typing import Callable, Tuple, Coroutine
+from typing import Callable, Tuple
 
 from aiogram.types import ReplyKeyboardMarkup
 
@@ -13,11 +13,15 @@ menu_storage = {
     'LEVEL_1': admin_keyboards.keyboard_dispatcher,
     'LEVEL_1:LEVEL_2': {
         'LEVEL_2_POSTS': user_keyboards.get_level_2_post_keyboard,
+        'LEVEL_2_POSTS:LEVEL_3_FILTER_POSTS': {
+            'LEVEL_3_FILTER_POSTS': user_keyboards.get_level_2_filter_post_keyboard
+        }
     }
 }
 menu_label = {
     'LEVEL_1': _('Главное меню'),
-    'LEVEL_2_POSTS': _('Список публикаций')
+    'LEVEL_2_POSTS': _('Список публикаций'),
+    'LEVEL_3_FILTER_POSTS': _('Фильтрация объявлений')
 }
 
 

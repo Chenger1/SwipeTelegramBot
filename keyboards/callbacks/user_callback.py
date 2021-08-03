@@ -9,6 +9,9 @@ COMPLAINT_CB = CallbackData('complaint', 'action', 'pk', 'type')
 LIKE_DISLIKE_CB = CallbackData('detail', 'action', 'pk', 'type', 'page', 'key')
 LIST_CB = CallbackData('list', 'action', 'page', 'key')
 
+# POST FILTER CALLBACKS
+POST_FILTER_CB = CallbackData('filter', 'action', 'value')
+
 
 def get_detail_callback_with_page(action: str, pk: int, page: str, key: str) -> str:
     return DETAIL_WITH_PAGE_CB.new(action=action, pk=pk, page=page, key=key)

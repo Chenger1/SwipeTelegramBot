@@ -47,7 +47,8 @@ async def get_post_list(page: str, message: Union[types.Message, types.CallbackQ
 
 
 async def handle_posts(message: Union[types.Message, types.CallbackQuery], **kwargs):
-    text, keyboard_cor = await get_post_list(kwargs.get('page'), message, key=kwargs.get('key'))
+    text, keyboard_cor = await get_post_list(kwargs.get('page'), message, key=kwargs.get('key'),
+                                             params=kwargs.get('params'), data=kwargs.get('data'))
     if isinstance(message, types.Message):
         if text:
             if kwargs.get('keyboard'):
@@ -62,6 +63,7 @@ async def handle_posts(message: Union[types.Message, types.CallbackQuery], **kwa
     if isinstance(message, types.CallbackQuery):
         if text:
             if kwargs.get('new'):
+                await message.message.answer(text=_('Список публикаций'), reply_markup=kwargs.get('keyboard'))
                 await message.message.answer(text=text, reply_markup=await keyboard_cor)
             else:
                 try:

@@ -19,6 +19,27 @@ async def get_level_2_post_keyboard(is_admin) -> ReplyKeyboardMarkup:
     markup = ReplyKeyboardMarkup(resize_keyboard=True).add(
         KeyboardButton(_('Вернуться')),
     ).add(
-        KeyboardButton(_('Фильтрация постов'))
+        KeyboardButton(_('Фильтрация объявлений'))
+    )
+    return markup
+
+
+async def get_level_2_filter_post_keyboard(is_admin) -> ReplyKeyboardMarkup:
+    markup = ReplyKeyboardMarkup(resize_keyboard=True).add(
+        KeyboardButton(_('Фильтровать'))
+    ).add(
+        KeyboardButton(_('Перейти к цене'))
+    ).add(
+        KeyboardButton(_('Перейти к площади'))
+    ).add(
+        KeyboardButton(_('Перейти к городу'))
+    ).add(
+        KeyboardButton(_('Перейти к состоянию квартиры'))
+    ).add(
+        KeyboardButton(_('Перейти к планировке'))
+    ).add(
+        KeyboardButton(_('Перейти к территории'))
+    ).add(
+        KeyboardButton(_('Вернуться'))
     )
     return markup
