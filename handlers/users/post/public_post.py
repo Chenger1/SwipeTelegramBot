@@ -249,7 +249,7 @@ async def post_detail(call: types.CallbackQuery, callback_data: dict):
 async def list_post(call: types.CallbackQuery, callback_data: dict):
     logging.info(callback_data)
     pk = callback_data['pk']
-    key = callback_data.get('pk')
+    key = callback_data.get('key')
     url = REL_URLS['like_dislike'].format(pk=pk)
     data = {'action': callback_data.get('type')}
     resp = await Conn.patch(url, data=data, user_id=call.from_user.id)
@@ -260,7 +260,8 @@ async def list_post(call: types.CallbackQuery, callback_data: dict):
     page = callback_data.get('page')
     keyboard = await user_keyboards.get_keyboard_for_post_detail(page, pk,
                                                                  resp_detail.get('flat_info')['id'],
-                                                                 key=key)
+                                                                 key=key,
+                                                                 favorites=resp_detail.get('in_favorites'))
     await call.message.edit_caption(caption=inst.data, reply_markup=keyboard)
     await call.answer(text=_('Успешно'))
 
