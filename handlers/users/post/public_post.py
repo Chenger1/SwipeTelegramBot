@@ -13,6 +13,7 @@ from middlewares import _
 from keyboards.inline import user_keyboards
 from keyboards.callbacks import user_callback
 from keyboards.default.dispatcher import dispatcher, back_button, get_menu_label
+from keyboards.inline.filter_post import labels
 
 from typing import Union, Tuple, Coroutine
 
@@ -47,6 +48,9 @@ async def get_post_list(page: str, message: Union[types.Message, types.CallbackQ
 
 
 async def handle_posts(message: Union[types.Message, types.CallbackQuery], **kwargs):
+    params = kwargs.get('params')
+    if params and 'path' in params.keys():
+        params.pop('path')
     text, keyboard_cor = await get_post_list(kwargs.get('page'), message, key=kwargs.get('key'),
                                              params=kwargs.get('params'), data=kwargs.get('data'))
     if isinstance(message, types.Message):
@@ -76,25 +80,58 @@ async def handle_posts(message: Union[types.Message, types.CallbackQuery], **kwa
             await message.message.answer(text=_('Публикаций нет'))
 
 
+@dp.message_handler(Text(equals=['Текущие фильтры', 'Current filters']))
+async def current_filters(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    no_data = _('Не указано')
+    text = '<b>Цена</b> {price__gte}:{price__lte} грн\n' \
+           '<b>Площадь</b> {square__gte}:{square__lte} м2\n' \
+           '<b>Город</b>: {city}\n <b>Состояние</b> {state}\n' \
+           '<b>Территория</b>: {terr}\n <b>Планировка</b> {plan}'. \
+        format(price__gte=data.get('price__gte', no_data),
+               price__lte=data.get('price__lte', no_data),
+               square__gte=data.get('flat__square__gte', no_data),
+               square__lte=data.get('flat__square__lte', no_data),
+               city=data.get('house__city', no_data),
+               state=labels.get(data.get('flat__state'), no_data),
+               terr=labels.get(data.get('house__territory'), no_data),
+               plan=labels.get(data.get('flat__plan'), no_data))
+    await message.answer(_(text))
+
+
+@dp.message_handler(Text(equals=['Сбросить фильтры', 'Current filters']))
+async def current_filters(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    path = data.get('path')
+    await state.reset_data()
+    await state.update_data(path=path)
+    await message.answer(_('Фильтры сброшены'))
+    await handle_posts(message, page='1', key='posts_public')
+
+
 @dp.message_handler(Text(equals=['Список публикаций', 'List ads']))
 async def public_post(message: types.Message, state: FSMContext):
     keyboard, path = await dispatcher('LEVEL_2_POSTS', message.from_user.id)
-    await handle_posts(message, page='1', key='posts_public', keyboard=keyboard)
+    params = await state.get_data()
+    await handle_posts(message, page='1', key='posts_public', keyboard=keyboard,
+                       params=params)
     await state.update_data(path=path)
 
 
 @dp.callback_query_handler(user_callback.LIST_CB.filter(action='post_list'))
-async def post_list(call: types.CallbackQuery, callback_data: dict):
+async def post_list(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
     page = callback_data.get('page')
     key = callback_data.get('key')
-    await handle_posts(call, page=page, key=key)
+    params = await state.get_data()
+    await handle_posts(call, page=page, key=key, params=params)
 
 
 @dp.callback_query_handler(user_callback.LIST_CB.filter(action='post_list_new'))
-async def post_list(call: types.CallbackQuery, callback_data: dict):
+async def post_list(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
     page = callback_data.get('page')
     key = callback_data.get('key')
-    await handle_posts(call, page=page, new=True, key=key)
+    params = await state.get_data()
+    await handle_posts(call, page=page, new=True, key=key, params=params)
 
 
 @dp.callback_query_handler(user_callback.DETAIL_WITH_PAGE_CB.filter(action='post_detail'))
