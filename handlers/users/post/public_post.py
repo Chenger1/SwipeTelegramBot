@@ -144,8 +144,6 @@ async def list_post(call: types.CallbackQuery, callback_data: dict):
     url_detail = f'{REL_URLS["posts_public"]}{pk}/'
     resp_detail = await Conn.get(url_detail, user_id=call.from_user.id)
     inst = await post_des.for_detail(resp_detail)
-    if resp.get('main_image'):
-        pass
     page = callback_data.get('page')
     keyboard = await user_keyboards.get_keyboard_for_post_detail(page, pk,
                                                                  resp_detail.get('flat_info')['id'],

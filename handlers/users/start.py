@@ -17,7 +17,8 @@ from keyboards.default.dispatcher import dispatcher
 from middlewares import _
 
 
-async def authorize_user(user: User = None,) -> User:
+async def authorize_user(user_id: int) -> User:
+    user = await User.get(user_id=user_id)
     data = await Conn.authorize(REL_URLS['login'], params={'phone_number': user.phone_number},
                                 user_id=user.user_id)
     if data.get('auth'):
@@ -89,7 +90,7 @@ async def phone_number(message: types.Message, state: FSMContext):
             await message.answer('Произошла ошибка. Нажмите /start снова')
             await state.reset_state()
     else:
-        await state.set_data({'user': user})
+        await state.set_data({'user': user.user_id})
         await message.answer(_('Вы можете ввести токен администратора или нажать "/cancel"'),
                              reply_markup=defaults.remove_markup)
         await StartState.CHECK_TOKEN.set()
@@ -101,7 +102,8 @@ async def check_admin_token(message: types.Message, state: FSMContext):
     data = message.text
     if await AdminToken.filter(token=data).exists():
         data = await state.get_data()
-        user = data.get('user')
+        user_id = data.get('user')
+        user = await User.get(user_id=user_id)
         user.is_admin = True
         result = await authorize_user(user)
         if result:
