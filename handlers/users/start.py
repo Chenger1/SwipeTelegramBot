@@ -71,7 +71,7 @@ async def phone_number(message: types.Message, state: FSMContext):
         return
     data = await state.get_data()
     user, created = await User.get_or_create(user_id=message.from_user.id,
-                                             phone_number=message.contact.phone_number.replace('+', '%2B'))
+                                             defaults={'phone_number': message.contact.phone_number})
     if user.language != data.get('language'):
         user.language = data.get('language', message.from_user.locale)
         await user.save()
