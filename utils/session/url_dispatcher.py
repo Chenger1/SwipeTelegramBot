@@ -16,9 +16,16 @@ REL_URLS = {
     'like_dislike': 'main/like_dislike/{pk}/',
     #   #Filters
     'filters': 'main/user_filters/',
-    # NEWS
+    #   #POSTS - user posts
+    'posts': 'main/posts/',
+
+    # HOUSES
+    'houses': 'main/houses/',
+    #   #FLATS
+    'flats': 'main/flats/',
+    #   #NEWS
     'news': 'main/news/',
 
-    # DOCUMENTS
+    #   #DOCUMENTS
     'documents': 'main/documents/',
 }

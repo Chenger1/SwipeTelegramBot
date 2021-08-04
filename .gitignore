@@ -135,3 +135,4 @@ db.sqlite3-wal
 aerich.ini
 migrations
 pybabel_instructions.txt
+photos/

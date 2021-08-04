@@ -55,3 +55,49 @@ class PostFilterDeserializer(BaseDeserializer):
     async def for_list(self, data: Dict) -> namedtuple:
         info = _('<b>{name}</b>').format(name=data.get('name'))
         return await self.get_namedtuple(data['saved_filter_pk'], info)
+
+
+class HouseForCreatePost(BaseDeserializer):
+    async def for_detail(self, data: Dict) -> namedtuple:
+        info = _('<b>{name}</b>\n' +
+                 '<b>{address}</b>\n' +
+                 '<b>{city}</b>',
+                 '<b>Тип</b>: {type}').format(name=data.get('name'),
+                                              address=data.get('address'),
+                                              city=data.get('city'),
+                                              type=data.get('type_display'))
+        return await self.get_namedtuple(data['id'], info)
+
+    async def for_list(self, data: Dict) -> namedtuple:
+        info = _('<b>{name}</b>\n' +
+                 '<b>{address}</b>\n' +
+                 '<b>{city}</b>').format(name=data.get('name'),
+                                         address=data.get('address'),
+                                         city=data.get('city'))
+        return await self.get_namedtuple(data['id'], info)
+
+
+class FlatForCreatePost(BaseDeserializer):
+    async def for_detail(self, data: Dict) -> namedtuple:
+        owned = data.get('owned')
+        booked = data.get('booked')
+        status = True if owned or booked else False
+        info = _('<b>Квартира </>№ {number}\n' +
+                 '<b>Площадь:</b> {square} м2\n' +
+                 '<b>Цена:</b> {price}\n' +
+                 '<b>Кол-во комнат:</b> {rooms}\n' +
+                 '<b>Свободна:</b> {free}\n').format(number=data.get('number'),
+                                                     square=data.get('square'),
+                                                     price=data.get('price'),
+                                                     rooms=data.get('number_of_rooms'),
+                                                     free=_('Нет') if status else _('Да'))
+        return await self.get_namedtuple(data['id'], info)
+
+    async def for_list(self, data: Dict) -> namedtuple:
+        owned = data.get('owned')
+        booked = data.get('booked')
+        status = True if owned or booked else False
+        info = _('<b>Квартира </>№ {number}\n' +
+                 '<b>Свободна:</b> {free}').format(number=data.get('number'),
+                                                   free=_('Нет') if status else _('Да'))
+        return await self.get_namedtuple(data['id'], info)

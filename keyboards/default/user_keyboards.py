@@ -24,6 +24,9 @@ async def get_level_2_post_keyboard(is_admin) -> ReplyKeyboardMarkup:
         KeyboardButton(_('Текущие фильтры')),
         KeyboardButton(_('Мои фильтры')),
         KeyboardButton(_('Сбросить фильтры'))
+    ).add(
+        KeyboardButton(_('Добавить новую публикацию')),
+        KeyboardButton(_('Мои публикации'))
     )
     return markup
 
@@ -46,5 +49,25 @@ async def get_level_2_filter_post_keyboard(is_admin) -> ReplyKeyboardMarkup:
     ).add(
         KeyboardButton(_('Вернуться')),
         KeyboardButton(_('Сохранить фильтр'))
+    )
+    return markup
+
+
+async def get_level_3_create_post_keyboard(is_admin) -> ReplyKeyboardMarkup:
+    markup = ReplyKeyboardMarkup(resize_keyboard=True).add(
+        KeyboardButton(_('Сохранить'))
+    ).add(
+        KeyboardButton(_('Перейти к дому')),
+        KeyboardButton(_('Перейти к квартире'))
+    ).add(
+        KeyboardButton(_('Перейти к цене')),
+        KeyboardButton(_('Перейти к способу платежа'))
+    ).add(
+        KeyboardButton(_('Перейти к вариантам связи'))
+    ).add(
+        KeyboardButton(_('Перейти к описанию')),
+        KeyboardButton(_('Перейти к фото'))
+    ).add(
+        KeyboardButton(_('Вернуться'))
     )
     return markup

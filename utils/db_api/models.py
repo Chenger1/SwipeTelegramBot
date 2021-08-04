@@ -14,7 +14,7 @@ class User(Model):
 class File(Model):
     filename = fields.CharField(max_length=150)
     file_id = fields.CharField(max_length=255)
-    parent_id = fields.IntField()
+    parent_id = fields.IntField(null=True)
 
 
 class AdminToken(Model):

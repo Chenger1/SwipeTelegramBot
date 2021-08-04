@@ -16,3 +16,15 @@ class FilterPost(StatesGroup):
     TERR = State()
     FILTERING = State()
     SAVE_FILTER = State()  # Optional
+
+
+class CreatePost(StatesGroup):
+    STARTER = State()
+    HOUSE = State()
+    FLAT = State()
+    PAYMENT = State()
+    PRICE = State()
+    COMMUNICATION = State()
+    DESCRIPTION = State()
+    IMAGE = State()
+    SAVE = State()
