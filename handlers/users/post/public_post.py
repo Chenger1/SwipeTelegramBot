@@ -15,7 +15,7 @@ from keyboards.callbacks import user_callback
 from keyboards.default.dispatcher import dispatcher, back_button, get_menu_label
 from keyboards.inline.filter_post import labels
 
-from typing import Union, Tuple, Coroutine
+from typing import Union, Tuple, Coroutine, Optional
 
 from utils.helpers import get_page
 from utils.db_api.models import File, User
@@ -25,13 +25,23 @@ post_des = PostDeserializer()
 filter_des = PostFilterDeserializer()
 
 
+async def prepare_dict(obj: Optional[dict]) -> dict:
+    if obj:
+        new_dict = {}
+        for key, value in obj.items():
+            if type(value) in (int, str):
+                new_dict[key] = value
+        return new_dict
+
+
 async def get_post_list(page: str, message: Union[types.Message, types.CallbackQuery],
                         params: dict = None, data: dict = None,
                         key: str = None) -> Tuple[str, Coroutine]:
     """ List of all posts """
     # url = f'{REL_URLS["posts_public"]}?page={page}'
     url = f'{REL_URLS[key]}?page={page}'
-    resp = await Conn.get(url, user_id=message.from_user.id, params=params, data=data)
+    resp = await Conn.get(url, user_id=message.from_user.id, params=await prepare_dict(params),
+                          data=await prepare_dict(data))
     pages = {
         'next': await get_page(resp.get('next')) or 'last',
         'prev': await get_page(resp.get('previous')) or '1',

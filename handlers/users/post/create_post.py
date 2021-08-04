@@ -58,6 +58,110 @@ async def back(message: types.Message, state: FSMContext):
     await state.update_data(**data)
 
 
+@dp.message_handler(Text(equals=['Сохранить', 'Save']), state=CreatePost)
+async def save_post_button(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    post_data = data.get('create_post')
+    keys = ('house', 'flat', 'payment_options', 'communication',
+            'price', 'description', 'main_image')
+    if all(key in post_data for key in keys):
+        text = _('Подтверждаете?')
+        await message.answer(text, reply_markup=await get_create_post_confirm_keyboard())
+        await CreatePost.SAVE.set()
+    else:
+        text = _('Вы не указали: \n')
+        if not post_data.get('house'):
+            text += _('Дом\n')
+        if not post_data.get('flat'):
+            text += _('Квартиру\n')
+        if not post_data.get('payment_options'):
+            text += _('Метод оплаты\n')
+        if not post_data.get('price'):
+            text += _('Цену\n')
+        if not post_data.get('communication'):
+            text += _('Способ коммуникации с вами\n')
+        if not post_data.get('description'):
+            text += _('Описание\n')
+        if not post_data.get('main_image'):
+            text += _('Фото к объявлению\n')
+        await message.answer(text)
+
+
+@dp.message_handler(Text(equals=['Перейти к дому', 'Go to house']), state=CreatePost)
+async def go_to_house(message: types.Message):
+    error_text = _('Домов нет. Добавьте дом, преждем чем создавать объявление')
+    text, keyboard_cor, status = await list_items(user_id=message.from_user.id,
+                                                  url=REL_URLS['houses'],
+                                                  deserializer=house_des,
+                                                  keyboard=get_item_for_create_post,
+                                                  error_text=error_text,
+                                                  action='add_house')
+    if not status:
+        await message.answer(text)
+        keyboard_cor.close()
+        return
+    await message.answer(_('Выберите дом'))
+    await message.answer(text, reply_markup=await keyboard_cor)
+    await CreatePost.HOUSE.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к квартире', 'Go to flat']), state=CreatePost)
+async def go_to_flat(message: types.Message):
+    error_text = _('Квартир нет. Добавьте квартиру, преждем чем создавать объявление')
+    text, keyboard_cor, status = await list_items(user_id=message.from_user.id,
+                                                  url=REL_URLS['flats'],
+                                                  deserializer=flat_des,
+                                                  keyboard=get_item_for_create_post,
+                                                  error_text=error_text,
+                                                  action='add_flat')
+    if not status:
+        await message.answer(text)
+        keyboard_cor.close()
+        return
+    await message.answer(_('Выберите квартиру'))
+    await message.answer(text, reply_markup=await keyboard_cor)
+    await CreatePost.FLAT.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к цене', 'Go to price']), state=CreatePost)
+async def go_to_price(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    post_data = data.get('create_post')
+    await message.answer(_('Текущая цена: {price}\n' +
+                           'Введите новую цену').format(price=post_data.get('price', _('Не указано'))))
+    await CreatePost.PRICE.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к способу платежа', 'Go to payment options']), state=CreatePost)
+async def go_to_payment_option(message: types.Message):
+    await message.answer(_('Выберите метод оплаты'),
+                         reply_markup=await get_payment_options())
+    await CreatePost.PAYMENT.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к вариантам связи', 'Go to communication']), state=CreatePost)
+async def go_to_communications(message: types.Message):
+    await message.answer(_('Выберите метод коммуникации'), reply_markup=await get_communication_keyboard())
+    await CreatePost.COMMUNICATION.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к описанию', 'Go to description']), state=CreatePost)
+async def go_to_description(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    post_data = data.get('create_post')
+    if post_data:
+        current_desc = post_data.get('description', _('Не указано'))
+        await message.answer(_('Текущее описание\n {desc}').format(desc=current_desc))
+    await message.answer('Добавьте описание')
+    await CreatePost.DESCRIPTION.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к фото', 'Go to photo']), state=CreatePost)
+async def go_to_photo(message: types.Message):
+    await message.answer(_('Добавьте изображение'))
+    await CreatePost.IMAGE.set()
+
+
 @dp.message_handler(Text(equals=['Добавить новую публикацию', 'Add new post']))
 async def add_post(message: types.Message, state: FSMContext):
     await CreatePost.STARTER.set()
