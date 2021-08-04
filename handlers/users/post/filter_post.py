@@ -249,7 +249,7 @@ async def filter_state(call: types.CallbackQuery, callback_data: dict, state: FS
         params = await state.get_data()
         keyboard, path = await dispatcher('LEVEL_2_POSTS', call.from_user.id)
         await handle_posts(call, page='1', key='posts_public', keyboard=keyboard, params=params,
-                           new=True)
+                           new=True, detail_action='post_detail')
         await state.finish()
         await state.update_data(**params, path=path)
     else:

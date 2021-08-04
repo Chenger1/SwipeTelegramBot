@@ -191,7 +191,7 @@ async def current_filters(message: types.Message, state: FSMContext):
     await state.reset_data()
     await state.update_data(path=path)
     await message.answer(_('Фильтры сброшены'))
-    await handle_posts(message, page='1', key='posts_public')
+    await handle_posts(message, page='1', key='posts_public', detail_action='post_detail')
 
 
 @dp.message_handler(Text(equals=['Мои фильтры', 'My filters']))
