@@ -55,6 +55,7 @@ async def back(message: types.Message, state: FSMContext):
     if data.get('create_post'):
         data.pop('create_post')
     await state.finish()
+    data['path'] = path
     await state.update_data(**data)
 
 
