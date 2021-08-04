@@ -290,6 +290,7 @@ async def get_photo(message: types.Message, state: FSMContext):
         await message.edit_text(_('Вы не добавили изображение'))
         return
     image = photos[-1].file_id
+    await photos[-1].download()
     file, created = await File.get_or_create(file_id=image,
                                              defaults={'filename': photos[-1].file_id})
     await update_state(state, new_data=file.file_id, key='main_image')
@@ -317,5 +318,7 @@ async def get_confirm(call: types.CallbackQuery, callback_data: dict, state: FSM
             await state.update_data(data)
         else:
             await call.answer(_('Произошла ошибка. Повторите попытке'))
+            if resp.get('Error'):
+                await call.answer(resp.get('Error'))
     else:
         await call.answer(_('Вы можете выбрать нужные этап через меню'))
