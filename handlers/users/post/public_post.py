@@ -60,7 +60,9 @@ async def get_post_list(page: str, message: Union[types.Message, types.CallbackQ
                                 user_keyboards.get_keyboard_for_post)(data, pages, key,
                                                                       detail_action=detail_action)
     else:
-        return _('Публикаций нет'), kwargs.get('custom_keyboard', user_keyboards.get_keyboard_for_post)([], pages, key)
+        return _('Публикаций нет'), kwargs.get('custom_keyboard',
+                                               user_keyboards.get_keyboard_for_post)([], pages, key,
+                                                                                     detail_action=detail_action)
 
 
 async def handle_posts(message: Union[types.Message, types.CallbackQuery], **kwargs):

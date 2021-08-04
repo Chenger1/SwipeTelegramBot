@@ -44,3 +44,19 @@ async def delete_post(call: types.CallbackQuery, callback_data: dict):
     else:
         logging.error(resp)
         await call.answer(_('Произошла ошибка. Попробуйте снова'))
+
+
+@dp.callback_query_handler(user_callback.LIST_CB.filter(action='my_post_list'))
+async def post_list(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
+    page = callback_data.get('page')
+    key = callback_data.get('key')
+    params = await state.get_data()
+    await handle_posts(call, page=page, key=key, params=params, detail_action='my_post_detail')
+
+
+@dp.callback_query_handler(user_callback.LIST_CB.filter(action='my_post_list_new'))
+async def post_list(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
+    page = callback_data.get('page')
+    key = callback_data.get('key')
+    params = await state.get_data()
+    await handle_posts(call, page=page, new=True, key=key, params=params, detail_action='my_post_detail')

@@ -25,8 +25,12 @@ async def get_detail_keyboard(action: str, title: str, pk: int) -> InlineKeyboar
 
 
 async def get_keyboard_for_post(items: Iterable, pages: dict, key: str,
-                                detail_action='post_detail') -> InlineKeyboardMarkup:
+                                detail_action: str) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup(row_width=4)
+    if detail_action == 'post_detail':
+        post_list_action = 'post_list'
+    else:
+        post_list_action = 'my_post_list'
     for index, item in enumerate(items, start=1):
         markup.insert(
             InlineKeyboardButton(text=f'{index}',
@@ -36,14 +40,14 @@ async def get_keyboard_for_post(items: Iterable, pages: dict, key: str,
                                                                                            key=key))
         )
     markup.add(
-        InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.get_list_callback(action='post_list',
+        InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.get_list_callback(action=post_list_action,
                                                                                             page=pages.get('prev'),
                                                                                             key=key)),
         InlineKeyboardButton(text=_('Новое'),
-                             callback_data=user_callback.get_list_callback(action='post_list',
+                             callback_data=user_callback.get_list_callback(action=post_list_action,
                                                                            page=pages.get('first'),
                                                                            key=key)),
-        InlineKeyboardButton(text=_('Вперед'), callback_data=user_callback.get_list_callback(action='post_list',
+        InlineKeyboardButton(text=_('Вперед'), callback_data=user_callback.get_list_callback(action=post_list_action,
                                                                                              page=pages.get('next'),
                                                                                              key=key))
     )
@@ -160,7 +164,7 @@ async def get_keyboard_for_my_post_detail(page: str, pk: int, flat_pk: int, key:
                                                                              pk=flat_pk))
     )
     markup.row(
-            InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='post_list_new',
+            InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='my_post_list_new',
                                                                                            page=page,
                                                                                            key=key)),
             InlineKeyboardButton(_('Удалить'), callback_data=user_callback.get_detail_callback_with_page(action='delete_post',
