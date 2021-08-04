@@ -24,12 +24,13 @@ async def get_detail_keyboard(action: str, title: str, pk: int) -> InlineKeyboar
     return markup
 
 
-async def get_keyboard_for_post(items: Iterable, pages: dict, key: str) -> InlineKeyboardMarkup:
+async def get_keyboard_for_post(items: Iterable, pages: dict, key: str,
+                                detail_action='post_detail') -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup(row_width=4)
     for index, item in enumerate(items, start=1):
         markup.insert(
             InlineKeyboardButton(text=f'{index}',
-                                 callback_data=user_callback.get_detail_callback_with_page(action='post_detail',
+                                 callback_data=user_callback.get_detail_callback_with_page(action=detail_action,
                                                                                            pk=item.pk,
                                                                                            page=pages.get('current'),
                                                                                            key=key))
@@ -55,7 +56,7 @@ async def get_keyboard_for_post_detail(page: str, pk: int, flat_pk: int, key: st
     markup = InlineKeyboardMarkup()
     markup.add(
         InlineKeyboardButton(text=_('О квартире'),
-                             callback_data=user_callback.get_detail_callback(action='post_detail',
+                             callback_data=user_callback.get_detail_callback(action='flat_detail',
                                                                              pk=flat_pk))
     ).add(
         InlineKeyboardButton(emoji.emojize(':thumbs_up:'),
@@ -148,4 +149,23 @@ async def get_keyboard_for_filter_detail(pk: int) -> InlineKeyboardMarkup:
         InlineKeyboardButton(_('Удалить'), callback_data=user_callback.get_detail_callback(action='delete_filter',
                                                                                            pk=pk))
     )
+    return markup
+
+
+async def get_keyboard_for_my_post_detail(page: str, pk: int, flat_pk: int, key: str,) -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup()
+    markup.add(
+        InlineKeyboardButton(text=_('О квартире'),
+                             callback_data=user_callback.get_detail_callback(action='flat_detail',
+                                                                             pk=flat_pk))
+    )
+    markup.row(
+            InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='post_list_new',
+                                                                                           page=page,
+                                                                                           key=key)),
+            InlineKeyboardButton(_('Удалить'), callback_data=user_callback.get_detail_callback_with_page(action='delete_post',
+                                                                                                         page=page,
+                                                                                                         key=key,
+                                                                                                         pk=pk))
+            )
     return markup

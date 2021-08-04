@@ -23,6 +23,10 @@ from utils.db_api.models import File, User
 
 post_des = PostDeserializer()
 filter_des = PostFilterDeserializer()
+keyboard_post_detail = {
+    'post_detail': user_keyboards.get_keyboard_for_post_detail,
+    'my_post_detail': user_keyboards.get_keyboard_for_my_post_detail
+}
 
 
 async def prepare_dict(obj: Optional[dict]) -> dict:
@@ -35,10 +39,9 @@ async def prepare_dict(obj: Optional[dict]) -> dict:
 
 
 async def get_post_list(page: str, message: Union[types.Message, types.CallbackQuery],
-                        params: dict = None, data: dict = None,
+                        detail_action: str, params: dict = None, data: dict = None,
                         key: str = None, **kwargs) -> Tuple[str, Coroutine]:
     """ List of all posts """
-    # url = f'{REL_URLS["posts_public"]}?page={page}'
     url = f'{REL_URLS[key]}?page={page}'
     resp = await Conn.get(url, user_id=message.from_user.id, params=await prepare_dict(params),
                           data=await prepare_dict(data))
@@ -53,7 +56,9 @@ async def get_post_list(page: str, message: Union[types.Message, types.CallbackQ
         text = ''
         for index, item in enumerate(data, start=1):
             text += f'{index}. {item.data}\n'
-        return text, kwargs.get('custom_keyboard', user_keyboards.get_keyboard_for_post)(data, pages, key)
+        return text, kwargs.get('custom_keyboard',
+                                user_keyboards.get_keyboard_for_post)(data, pages, key,
+                                                                      detail_action=detail_action)
     else:
         return _('Публикаций нет'), kwargs.get('custom_keyboard', user_keyboards.get_keyboard_for_post)([], pages, key)
 
@@ -63,7 +68,8 @@ async def handle_posts(message: Union[types.Message, types.CallbackQuery], **kwa
     if params and 'path' in params.keys():
         params.pop('path')
     text, keyboard_cor = await get_post_list(kwargs.get('page'), message, key=kwargs.get('key'),
-                                             params=kwargs.get('params'), data=kwargs.get('data'))
+                                             params=kwargs.get('params'), data=kwargs.get('data'),
+                                             detail_action=kwargs.get('detail_action'))
     if isinstance(message, types.Message):
         if text:
             if kwargs.get('keyboard'):
@@ -115,6 +121,48 @@ async def handle_filters(message: Union[types.Message, types.CallbackQuery]):
             await message.message.edit_text(_('Фильтров нет'))
     else:
         keyboard_cor.close()
+
+
+async def get_post(call: types.CallbackQuery, callback_data: dict,
+                   keyboard: str):
+    keyboard_cor = keyboard_post_detail[keyboard]
+    logging.info(callback_data)
+    page = callback_data.get('page')
+    pk = callback_data['pk']
+    key = callback_data.get('key')
+    url = f'{REL_URLS["posts_public"]}{pk}/'
+    resp = await Conn.get(url, user_id=call.from_user.id)
+    inst = await post_des.for_detail(resp)
+    user = await User.get(user_id=call.from_user.id)
+    if keyboard == 'post_detail':
+        keyboard = await keyboard_cor(page, pk,
+                                      resp.get('flat_info')['id'],
+                                      key=key,
+                                      user_id=user.swipe_id,
+                                      favorites=resp.get('in_favorites'))
+    elif keyboard == 'my_post_detail':
+        keyboard = await keyboard_cor(page, pk, resp.get('flat_info')['id'],
+                                      key)
+    if resp.get('main_image'):
+        file_path = resp.get('main_image')
+        filename = file_path.split('/')[-1]
+        file_data = await File.get_or_none(filename=filename, parent_id=pk)
+        if not file_data:
+            resp_file = await Conn.get(file_path, user_id=call.from_user.id)
+            msg = await call.bot.send_photo(chat_id=call.from_user.id,
+                                            photo=resp_file.get('file'), caption=inst.data,
+                                            reply_markup=keyboard)
+            await File.create(filename=filename, parent_id=pk,
+                              file_id=msg.photo[-1].file_id)
+        else:
+            await call.bot.send_photo(chat_id=call.from_user.id,
+                                      photo=file_data.file_id, caption=inst.data,
+                                      reply_markup=keyboard)
+    else:
+        await call.bot.send_message(chat_id=call.from_user.id,
+                                    text=_('Невалидная публикация. Пожалуйста, сообщите администрации'),
+                                    reply_markup=keyboard)
+    await call.answer()
 
 
 @dp.message_handler(Text(equals=['Текущие фильтры', 'Current filters']))
@@ -201,7 +249,7 @@ async def public_post(message: types.Message, state: FSMContext):
     keyboard, path = await dispatcher('LEVEL_2_POSTS', message.from_user.id)
     params = await state.get_data()
     await handle_posts(message, page='1', key='posts_public', keyboard=keyboard,
-                       params=params)
+                       params=params, detail_action='post_detail')
     await state.update_data(path=path)
 
 
@@ -210,7 +258,7 @@ async def post_list(call: types.CallbackQuery, callback_data: dict, state: FSMCo
     page = callback_data.get('page')
     key = callback_data.get('key')
     params = await state.get_data()
-    await handle_posts(call, page=page, key=key, params=params)
+    await handle_posts(call, page=page, key=key, params=params, detail_action='post_detail')
 
 
 @dp.callback_query_handler(user_callback.LIST_CB.filter(action='post_list_new'))
@@ -218,44 +266,12 @@ async def post_list(call: types.CallbackQuery, callback_data: dict, state: FSMCo
     page = callback_data.get('page')
     key = callback_data.get('key')
     params = await state.get_data()
-    await handle_posts(call, page=page, new=True, key=key, params=params)
+    await handle_posts(call, page=page, new=True, key=key, params=params, detail_action='post_detail')
 
 
 @dp.callback_query_handler(user_callback.DETAIL_WITH_PAGE_CB.filter(action='post_detail'))
 async def post_detail(call: types.CallbackQuery, callback_data: dict):
-    logging.info(callback_data)
-    page = callback_data.get('page')
-    pk = callback_data['pk']
-    key = callback_data.get('key')
-    url = f'{REL_URLS["posts_public"]}{pk}/'
-    resp = await Conn.get(url, user_id=call.from_user.id)
-    inst = await post_des.for_detail(resp)
-    user = await User.get(user_id=call.from_user.id)
-    keyboard = await user_keyboards.get_keyboard_for_post_detail(page, pk,
-                                                                 resp.get('flat_info')['id'],
-                                                                 key=key,
-                                                                 user_id=user.swipe_id,
-                                                                 favorites=resp.get('in_favorites'))
-    if resp.get('main_image'):
-        file_path = resp.get('main_image')
-        filename = file_path.split('/')[-1]
-        file_data = await File.get_or_none(filename=filename, parent_id=pk)
-        if not file_data:
-            resp_file = await Conn.get(file_path, user_id=call.from_user.id)
-            msg = await call.bot.send_photo(chat_id=call.from_user.id,
-                                            photo=resp_file.get('file'), caption=inst.data,
-                                            reply_markup=keyboard)
-            await File.create(filename=filename, parent_id=pk,
-                              file_id=msg.photo[-1].file_id)
-        else:
-            await call.bot.send_photo(chat_id=call.from_user.id,
-                                      photo=file_data.file_id, caption=inst.data,
-                                      reply_markup=keyboard)
-    else:
-        await call.bot.send_message(chat_id=call.from_user.id,
-                                    text=_('Невалидная публикация. Пожалуйста, сообщите администрации'),
-                                    reply_markup=keyboard)
-    await call.answer()
+    await get_post(call, callback_data, 'post_detail')
 
 
 @dp.callback_query_handler(user_callback.LIKE_DISLIKE_CB.filter(action='like_post'))
@@ -298,7 +314,7 @@ async def save_to_favorites(call: types.CallbackQuery, callback_data: dict):
 
 @dp.message_handler(Text(equals=['Избранное', 'Favorites']))
 async def public_post(message: types.Message):
-    await handle_posts(message, page='1', key='favorites')
+    await handle_posts(message, page='1', key='favorites', detail_action='post_detail')
 
 
 @dp.callback_query_handler(user_callback.DETAIL_WITH_PAGE_CB.filter(action='delete_from_favorites'))
