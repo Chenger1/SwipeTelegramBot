@@ -36,7 +36,7 @@ async def prepare_dict(obj: Optional[dict]) -> dict:
 
 async def get_post_list(page: str, message: Union[types.Message, types.CallbackQuery],
                         params: dict = None, data: dict = None,
-                        key: str = None) -> Tuple[str, Coroutine]:
+                        key: str = None, **kwargs) -> Tuple[str, Coroutine]:
     """ List of all posts """
     # url = f'{REL_URLS["posts_public"]}?page={page}'
     url = f'{REL_URLS[key]}?page={page}'
@@ -53,9 +53,9 @@ async def get_post_list(page: str, message: Union[types.Message, types.CallbackQ
         text = ''
         for index, item in enumerate(data, start=1):
             text += f'{index}. {item.data}\n'
-        return text, user_keyboards.get_keyboard_for_post(data, pages, key)
+        return text, kwargs.get('custom_keyboard', user_keyboards.get_keyboard_for_post)(data, pages, key)
     else:
-        return _('Публикаций нет'), user_keyboards.get_keyboard_for_post([], pages, key)
+        return _('Публикаций нет'), kwargs.get('custom_keyboard', user_keyboards.get_keyboard_for_post)([], pages, key)
 
 
 async def handle_posts(message: Union[types.Message, types.CallbackQuery], **kwargs):
