@@ -2,23 +2,15 @@ import logging
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
-from aiogram.utils.exceptions import MessageNotModified, MessageTextIsEmpty
 
 from loader import dp, Conn
 from utils.session.url_dispatcher import REL_URLS
-from deserializers.post import PostDeserializer, PostFilterDeserializer
+from deserializers.post import PostDeserializer
 
 from middlewares import _
 
-from keyboards.inline import user_keyboards
 from keyboards.callbacks import user_callback
-from keyboards.default.dispatcher import dispatcher, back_button, get_menu_label
-from keyboards.inline.filter_post import labels
-
-from typing import Union, Tuple, Coroutine, Optional
-
-from utils.helpers import get_page
-from utils.db_api.models import File, User
+from keyboards.default.dispatcher import dispatcher
 
 from handlers.users.post.public_post import handle_posts, get_post
 
@@ -37,3 +29,18 @@ async def my_posts(message: types.Message, state: FSMContext):
 @dp.callback_query_handler(user_callback.DETAIL_WITH_PAGE_CB.filter(action='my_post_detail'))
 async def my_post_detail(call: types.CallbackQuery, callback_data: dict):
     await get_post(call, callback_data, 'my_post_detail')
+
+
+@dp.callback_query_handler(user_callback.DETAIL_WITH_PAGE_CB.filter(action='delete_post'))
+async def delete_post(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data['pk']
+    page = callback_data['page']
+    key = callback_data['key']
+    url = f'{REL_URLS["posts"]}{pk}/'
+    resp, status = await Conn.delete(url, user_id=call.from_user.id)
+    if status == 204:
+        await handle_posts(call, page=page, key=key, detail_action='my_post_detail',
+                           new=True)
+    else:
+        logging.error(resp)
+        await call.answer(_('Произошла ошибка. Попробуйте снова'))

@@ -326,7 +326,8 @@ async def delete_from_favorites(call: types.CallbackQuery, callback_data: dict):
     url = f'{REL_URLS["favorites"]}{pk}/'
     resp, status = await Conn.delete(url, call.from_user.id)
     if status == 204:
-        await handle_posts(call, page=page, key=key, new=True)
+        await handle_posts(call, page=page, key=key, new=True,
+                           detail_action='post_detail')
     else:
         logging.error(resp)
         await call.answer(_('Произошла ошибка. Попробуйте снова'))
