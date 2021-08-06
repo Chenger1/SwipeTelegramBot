@@ -258,7 +258,8 @@ async def filter_state(call: types.CallbackQuery, callback_data: dict, state: FS
                           detail_action='post_detail', list_action='post_list', deserializer=post_des,
                           new_callback_answer=True)
         await state.finish()
-        await state.update_data(**params, path=path)
+        params['path'] = path
+        await state.update_data(**params)
     else:
         await call.message.answer(_('Используйте меню чтобы выбрать етап фильтрации'))
     await call.answer()
