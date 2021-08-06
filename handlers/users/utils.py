@@ -5,7 +5,7 @@ from aiogram.utils.exceptions import MessageNotModified, MessageTextIsEmpty
 
 from typing import Optional, Iterable, Union, Callable, Coroutine
 
-from utils.db_api.models import User, File
+from utils.db_api.models import File
 from utils.session.url_dispatcher import REL_URLS
 from utils.helpers import get_page
 
@@ -17,6 +17,13 @@ from middlewares import _
 
 
 async def prepare_dict(obj: Optional[dict]) -> Optional[dict]:
+    """
+    Data and Query params for http request are got from FSMContext. And might contain an extra keys,
+    such as keyboard 'path', etc. Also, there can be object - dicts, lists
+    This function returns new dict with only - integers and strings as value for keys
+    :param obj: state from FSMContext in general
+    :return: new dict
+    """
     if obj:
         new_dict = {}
         for key, value in obj.items():
@@ -27,6 +34,15 @@ async def prepare_dict(obj: Optional[dict]) -> Optional[dict]:
 
 async def get_list(user_id: str, key: str, page: str, params: dict = None,
                    data: dict = None) -> dict:
+    """
+    Makes request and returns response
+    :param user_id: user_id in telegram.
+    :param key: REL_URLS contains all http paths in dict. Key for get path
+    :param page: For pagination
+    :param params: Additional parameters for request
+    :param data: Additional parameters for request
+    :return: Response
+    """
     url = f'{REL_URLS[key]}?page={page}'
     resp = await Conn.get(url, user_id=user_id, params=params,
                           data=data)
@@ -34,6 +50,10 @@ async def get_list(user_id: str, key: str, page: str, params: dict = None,
 
 
 async def prepare_text(data: Iterable) -> Optional[str]:
+    """
+    Using deserialized info from response, we have to prepare it to send to user.
+    Using this data, we make list from 1, to {n} elements
+    """
     if data:
         text = ''
         for index, item in enumerate(data, start=1):
@@ -44,6 +64,9 @@ async def prepare_text(data: Iterable) -> Optional[str]:
 async def send_answer(message: Union[types.Message, types.CallbackQuery],
                       text: str, new_callback_answer: bool,
                       keyboard_cor: Coroutine = None):
+    """
+    In depends on message type, this function "send" answer as a new message or edit current.
+    """
     if isinstance(message, types.Message):
         await message.answer(text, reply_markup=await keyboard_cor)
 
@@ -66,10 +89,21 @@ async def handle_list(message: Union[types.Message, types.CallbackQuery],
                       keyboard: Callable, detail_action: str, list_action: str,
                       params: dict = None, data: dict = None,
                       new_callback_answer: bool = False):
+    """
+    1) Gets response(with list of items) from API
+    2) Pass response to deserializer class. Gets tuple with list of namedtuple.
+    Every namedtuple contains ['id'] of object and ['data'] - object description, text
+    3) Combine independent text into one message
+    4) If 'text' variable is EMPTY:
+        Send common 'answer' - 'There is nothing to show'
+       If 'text' variable is NOT empty:
+            Prepare 'page' dict - it will be used to manage pages
+            5) Prepare keyboard for message
+    """
     resp = await get_list(message.from_user.id, key, page,
-                          await prepare_dict(params), await prepare_dict(data))
-    items_data = await deserializer.make_list(resp)
-    text = await prepare_text(items_data)
+                          await prepare_dict(params), await prepare_dict(data))  # 1)
+    items_data = await deserializer.make_list(resp)  # 2)
+    text = await prepare_text(items_data)  # 3)
     if text:
         pages = {
             'next': await get_page(resp.get('next')) or 'last',
@@ -86,6 +120,12 @@ async def handle_list(message: Union[types.Message, types.CallbackQuery],
 async def send_with_image(call: types.CallbackQuery, resp: dict, pk: int,
                           text: str, keyboard: types.InlineKeyboardMarkup,
                           image_key: str):
+    """
+    If object contains image -> get this image from server. Check if this image is already in telegram and bot db.
+    If so, send message with it`s id. If not - send message and save image`s 'id' in db
+
+        * This is useful, because telegram contains media`s id`s, so we can just pass this id to message
+    """
     file_path = resp.get(image_key)
     filename = file_path.split('/')[-1]
     file_data = await File.get_or_none(filename=filename, parent_id=pk)
