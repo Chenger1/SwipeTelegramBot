@@ -145,18 +145,26 @@ async def house_house_class(call: types.CallbackQuery, callback_data: dict, stat
 async def house_sea(message: types.Message, state: FSMContext):
     if message.text:
         answer = message.text
-        await update_state(state, answer, 'distance_to_sea')
-    await message.answer(_('Введите высоту потолков'))
-    await CreateHouse.HEIGHT.set()
+        try:
+            int(answer)
+            await update_state(state, answer, 'distance_to_sea')
+            await message.answer(_('Введите высоту потолков'))
+            await CreateHouse.HEIGHT.set()
+        except ValueError:
+            await message.answer(_('Введите число'))
 
 
 @dp.message_handler(state=CreateHouse.HEIGHT)
 async def house_height(message: types.Message, state: FSMContext):
     if message.text:
         answer = message.text
-        await update_state(state, answer, 'ceiling_height')
-    await message.answer(_('Выберите тип газопровода'), reply_markup=create_house.gas_keyboard)
-    await CreateHouse.GAS.set()
+        try:
+            int(answer)
+            await update_state(state, answer, 'ceiling_height')
+            await message.answer(_('Выберите тип газопровода'), reply_markup=create_house.gas_keyboard)
+            await CreateHouse.GAS.set()
+        except ValueError:
+            await message.answer(_('Введите число'))
 
 
 @dp.callback_query_handler(create_house.ITEM_CB.filter(action='add_gas'), state=CreateHouse.GAS)
