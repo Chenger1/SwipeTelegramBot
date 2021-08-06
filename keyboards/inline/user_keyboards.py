@@ -24,13 +24,9 @@ async def get_detail_keyboard(action: str, title: str, pk: int) -> InlineKeyboar
     return markup
 
 
-async def get_keyboard_for_post(items: Iterable, pages: dict, key: str,
-                                detail_action: str) -> InlineKeyboardMarkup:
+async def get_keyboard_for_list(items: Iterable, pages: dict, key: str,
+                                detail_action: str, list_action: str) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup(row_width=4)
-    if detail_action == 'post_detail':
-        post_list_action = 'post_list'
-    else:
-        post_list_action = 'my_post_list'
     for index, item in enumerate(items, start=1):
         markup.insert(
             InlineKeyboardButton(text=f'{index}',
@@ -40,14 +36,14 @@ async def get_keyboard_for_post(items: Iterable, pages: dict, key: str,
                                                                                            key=key))
         )
     markup.add(
-        InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.get_list_callback(action=post_list_action,
+        InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.get_list_callback(action=list_action,
                                                                                             page=pages.get('prev'),
                                                                                             key=key)),
         InlineKeyboardButton(text=_('Новое'),
-                             callback_data=user_callback.get_list_callback(action=post_list_action,
+                             callback_data=user_callback.get_list_callback(action=list_action,
                                                                            page=pages.get('first'),
                                                                            key=key)),
-        InlineKeyboardButton(text=_('Вперед'), callback_data=user_callback.get_list_callback(action=post_list_action,
+        InlineKeyboardButton(text=_('Вперед'), callback_data=user_callback.get_list_callback(action=list_action,
                                                                                              page=pages.get('next'),
                                                                                              key=key))
     )
