@@ -84,18 +84,19 @@ async def handle_list(message: Union[types.Message, types.CallbackQuery],
 
 
 async def send_with_image(call: types.CallbackQuery, resp: dict, pk: int,
-                          text: str, keyboard: Coroutine):
-    file_path = resp.get('main_image')
+                          text: str, keyboard: types.InlineKeyboardMarkup,
+                          image_key: str):
+    file_path = resp.get(image_key)
     filename = file_path.split('/')[-1]
     file_data = await File.get_or_none(filename=filename, parent_id=pk)
     if not file_data:
         resp_file = await Conn.get(file_path, user_id=call.from_user.id)
         msg = await call.bot.send_photo(chat_id=call.from_user.id,
                                         photo=resp_file.get('file'), caption=text,
-                                        reply_markup=await keyboard)
+                                        reply_markup=keyboard)
         await File.create(filename=filename, parent_id=pk,
                           file_id=msg.photo[-1].file_id)
     else:
         await call.bot.send_photo(chat_id=call.from_user.id,
                                   photo=file_data.file_id,
-                                  caption=text, reply_markup=await keyboard)
+                                  caption=text, reply_markup=keyboard)

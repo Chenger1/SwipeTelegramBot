@@ -54,8 +54,8 @@ async def handle_filters(message: Union[types.Message, types.CallbackQuery]):
 
 
 async def get_post(call: types.CallbackQuery, callback_data: dict,
-                   keyboard: str):
-    keyboard_cor = keyboard_post_detail[keyboard]
+                   keyboard_key: str):
+    keyboard_cor = keyboard_post_detail[keyboard_key]
     logging.info(callback_data)
     page = callback_data.get('page')
     pk = callback_data['pk']
@@ -64,15 +64,14 @@ async def get_post(call: types.CallbackQuery, callback_data: dict,
     resp = await Conn.get(url, user_id=call.from_user.id)
     inst = await post_des.for_detail(resp)
     user = await User.get(user_id=call.from_user.id)
-    if keyboard == 'post_detail':
+    if keyboard_key == 'post_detail':
         keyboard = keyboard_cor(page, pk,
                                 resp.get('flat_info')['id'],
                                 key=key,
                                 user_id=user.swipe_id,
                                 favorites=resp.get('in_favorites'))
-    elif keyboard == 'my_post_detail':
+    elif keyboard_key == 'my_post_detail':
         keyboard = keyboard_cor(page, pk, resp.get('flat_info')['id'], key)
-
     await send_with_image(call, resp, pk, inst.data, keyboard)
     await call.answer()
 
@@ -180,7 +179,7 @@ async def post_list(call: types.CallbackQuery, callback_data: dict, state: FSMCo
 
 
 @dp.callback_query_handler(user_callback.LIST_CB.filter(action='post_list_new'))
-async def post_list(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
+async def post_list_new(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
     page = callback_data.get('page')
     key = callback_data.get('key')
     params = await state.get_data()

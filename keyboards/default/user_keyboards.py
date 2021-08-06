@@ -73,7 +73,7 @@ async def get_level_3_create_post_keyboard(is_admin) -> ReplyKeyboardMarkup:
     return markup
 
 
-async def get_level_3_house_keyboard(is_admin: int) -> ReplyKeyboardMarkup:
+async def get_level_2_house_keyboard(is_admin: int) -> ReplyKeyboardMarkup:
     markup = ReplyKeyboardMarkup(resize_keyboard=True).add(
         KeyboardButton(_('Все дома')),
         KeyboardButton(_('Мои квартиры'))

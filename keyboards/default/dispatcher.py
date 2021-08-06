@@ -17,16 +17,14 @@ menu_storage = {
             'LEVEL_3_FILTER_POSTS': user_keyboards.get_level_2_filter_post_keyboard,
             'LEVEL_3_CREATE_POST': user_keyboards.get_level_3_create_post_keyboard
         },
-        'LEVEL_2_POSTS:LEVEL_3_HOUSE': {
-            'LEVEL_3_HOUSE': user_keyboards.get_level_3_house_keyboard
-        }
+        'LEVEL_2_HOUSES': user_keyboards.get_level_2_house_keyboard
     }
 }
 menu_label = {
     'LEVEL_1': _('Главное меню'),
     'LEVEL_2_POSTS': _('Список публикаций'),
     'LEVEL_3_FILTER_POSTS': _('Фильтрация объявлений'),
-    'LEVEL_3_HOUSE': _('Дома'),
+    'LEVEL_2_HOUSES': _('Дома'),
 }
 
 
@@ -64,6 +62,8 @@ async def find_in_dict(level: str, storage: dict, path: str = '') -> Tuple[Calla
             result = await find_in_dict(level, value, path)
             if result:
                 return result
+            path = '/'.join(path.split('/')[:-1])
+            #  if we didn't find the result - remove this path and iterate again
 
 
 async def back_button(path: str, user_id: int) -> Tuple[ReplyKeyboardMarkup, str]:
