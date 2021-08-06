@@ -15,11 +15,10 @@ from keyboards.callbacks import user_callback
 from keyboards.default.dispatcher import dispatcher, back_button, get_menu_label
 from keyboards.inline.filter_post import labels
 
-from typing import Union, Tuple, Coroutine, Optional
+from typing import Union
 
-from utils.helpers import get_page
-from utils.db_api.models import File, User
-from handlers.users.utils import handle_list
+from utils.db_api.models import User
+from handlers.users.utils import handle_list, send_with_image
 
 
 post_des = PostDeserializer()
@@ -67,33 +66,15 @@ async def get_post(call: types.CallbackQuery, callback_data: dict,
     inst = await post_des.for_detail(resp)
     user = await User.get(user_id=call.from_user.id)
     if keyboard == 'post_detail':
-        keyboard = await keyboard_cor(page, pk,
-                                      resp.get('flat_info')['id'],
-                                      key=key,
-                                      user_id=user.swipe_id,
-                                      favorites=resp.get('in_favorites'))
+        keyboard = keyboard_cor(page, pk,
+                                resp.get('flat_info')['id'],
+                                key=key,
+                                user_id=user.swipe_id,
+                                favorites=resp.get('in_favorites'))
     elif keyboard == 'my_post_detail':
-        keyboard = await keyboard_cor(page, pk, resp.get('flat_info')['id'],
-                                      key)
-    if resp.get('main_image'):
-        file_path = resp.get('main_image')
-        filename = file_path.split('/')[-1]
-        file_data = await File.get_or_none(filename=filename, parent_id=pk)
-        if not file_data:
-            resp_file = await Conn.get(file_path, user_id=call.from_user.id)
-            msg = await call.bot.send_photo(chat_id=call.from_user.id,
-                                            photo=resp_file.get('file'), caption=inst.data,
-                                            reply_markup=keyboard)
-            await File.create(filename=filename, parent_id=pk,
-                              file_id=msg.photo[-1].file_id)
-        else:
-            await call.bot.send_photo(chat_id=call.from_user.id,
-                                      photo=file_data.file_id, caption=inst.data,
-                                      reply_markup=keyboard)
-    else:
-        await call.bot.send_message(chat_id=call.from_user.id,
-                                    text=_('Невалидная публикация. Пожалуйста, сообщите администрации'),
-                                    reply_markup=keyboard)
+        keyboard = keyboard_cor(page, pk, resp.get('flat_info')['id'], key)
+
+    await send_with_image(call, resp, pk, inst.data, keyboard)
     await call.answer()
 
 

@@ -1,8 +1,11 @@
+import logging
+
 from aiogram import types
 from aiogram.utils.exceptions import MessageNotModified, MessageTextIsEmpty
 
 from typing import Optional, Iterable, Union, Callable, Coroutine
 
+from utils.db_api.models import User, File
 from utils.session.url_dispatcher import REL_URLS
 from utils.helpers import get_page
 
@@ -76,3 +79,21 @@ async def handle_list(message: Union[types.Message, types.CallbackQuery],
         await send_answer(message, text, new_callback_answer, keyboard_cor)
     else:
         await send_answer(message, _('Ничего нет'), new_callback_answer)
+
+
+async def send_with_image(call: types.CallbackQuery, resp: dict, pk: int,
+                          text: str, keyboard: Coroutine):
+    file_path = resp.get('main_image')
+    filename = file_path.split('/')[-1]
+    file_data = await File.get_or_none(filename=filename, parent_id=pk)
+    if not file_data:
+        resp_file = await Conn.get(file_path, user_id=call.from_user.id)
+        msg = await call.bot.send_photo(chat_id=call.from_user.id,
+                                        photo=resp_file.get('file'), caption=text,
+                                        reply_markup=await keyboard)
+        await File.create(filename=filename, parent_id=pk,
+                          file_id=msg.photo[-1].file_id)
+    else:
+        await call.bot.send_photo(chat_id=call.from_user.id,
+                                  photo=file_data.file_id,
+                                  caption=text, reply_markup=await keyboard)
