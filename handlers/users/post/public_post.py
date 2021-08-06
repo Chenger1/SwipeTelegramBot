@@ -65,14 +65,14 @@ async def get_post(call: types.CallbackQuery, callback_data: dict,
     inst = await post_des.for_detail(resp)
     user = await User.get(user_id=call.from_user.id)
     if keyboard_key == 'post_detail':
-        keyboard = keyboard_cor(page, pk,
-                                resp.get('flat_info')['id'],
-                                key=key,
-                                user_id=user.swipe_id,
-                                favorites=resp.get('in_favorites'))
+        keyboard = await keyboard_cor(page, pk,
+                                      resp.get('flat_info')['id'],
+                                      key=key,
+                                      user_id=user.swipe_id,
+                                      favorites=resp.get('in_favorites'))
     elif keyboard_key == 'my_post_detail':
-        keyboard = keyboard_cor(page, pk, resp.get('flat_info')['id'], key)
-    await send_with_image(call, resp, pk, inst.data, keyboard)
+        keyboard = await keyboard_cor(page, pk, resp.get('flat_info')['id'], key)
+    await send_with_image(call, resp, pk, inst.data, keyboard, 'main_image')
     await call.answer()
 
 
