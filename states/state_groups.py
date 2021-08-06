@@ -28,3 +28,35 @@ class CreatePost(StatesGroup):
     DESCRIPTION = State()
     IMAGE = State()
     SAVE = State()
+
+
+class CreateHouse(StatesGroup):
+    STARTER = State()
+    NAME = State()
+    CITY = State()
+    ADDRESS = State()
+    TECH = State()
+    TERR = State()
+    PAYMENT_OPTIONS = State()
+    DESCRIPTION = State()
+
+    SAVE = State()
+
+    #  This states is optional
+    ROLE = State()
+    TYPE = State()
+    HOUSE_CLASS = State()
+    SEA = State()
+    HEIGHT = State()
+    GAS = State()
+    HEATING = State()
+    ELECTRICITY = State()
+    SEWERAGE = State()
+    WATER = State()
+    PLAYGROUND = State()
+    CAR_PARK = State()
+    SHOP = State()
+    CHILD_PLAYGROUND = State()
+    ELEVATOR = State()
+    SECURITY = State()
+    IMAGE = State()
