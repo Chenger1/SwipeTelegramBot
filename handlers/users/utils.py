@@ -47,7 +47,7 @@ async def send_answer(message: Union[types.Message, types.CallbackQuery],
     if isinstance(message, types.Message):
         await message.answer(text, reply_markup=await keyboard_cor)
 
-    if isinstance(message, types.CallbackQuery):
+    elif isinstance(message, types.CallbackQuery):
         if new_callback_answer:
             await message.message.answer(text, reply_markup=await keyboard_cor)
             await message.answer()
@@ -57,6 +57,8 @@ async def send_answer(message: Union[types.Message, types.CallbackQuery],
                 await message.answer()
             except (MessageTextIsEmpty, MessageNotModified):
                 await message.answer(text=_('Больше ничего нет'), show_alert=True)
+    else:
+        keyboard_cor.close()
 
 
 async def handle_list(message: Union[types.Message, types.CallbackQuery],

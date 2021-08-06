@@ -18,7 +18,7 @@ from keyboards.inline.filter_post import labels
 from typing import Union
 
 from utils.db_api.models import User
-from handlers.users.utils import handle_list, send_with_image
+from handlers.users.utils import handle_list, send_with_image, prepare_text
 
 
 post_des = PostDeserializer()
@@ -31,11 +31,10 @@ keyboard_post_detail = {
 
 async def get_filter_list(message: Union[types.Message, types.CallbackQuery]):
     resp = await Conn.get(REL_URLS['filters'], user_id=message.from_user.id)
-    if resp:
-        data = await filter_des.make_list(resp)
-        text = ''
-        for index, item in enumerate(data, start=1):
-            text += f'{index}. {item.data}\n'
+
+    data = await filter_des.make_list(resp)
+    text = await prepare_text(data)
+    if text:
         return text, user_keyboards.get_keyboard_for_filter(data)
     else:
         return _('Фильтров нет'), user_keyboards.get_keyboard_for_filter([])
