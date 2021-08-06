@@ -7,7 +7,7 @@ from loader import dp, Conn
 
 from keyboards.default.dispatcher import dispatcher
 from keyboards.inline.user_keyboards import get_keyboard_for_list, get_keyboard_for_house, get_keyboard_for_my_house
-from keyboards.callbacks.user_callback import LIST_CB, DETAIL_WITH_PAGE_CB
+from keyboards.callbacks.user_callback import LIST_CB, DETAIL_WITH_PAGE_CB, DETAIL_CB
 
 from deserializers.house import HouseDeserializer
 
@@ -129,3 +129,22 @@ async def my_house_list(call: types.CallbackQuery, callback_data: dict, state: F
 @dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='my_house_detail'))
 async def my_house_detail(call: types.CallbackQuery, callback_data: dict):
     await get_house(call, callback_data, 'my_house_detail')
+
+
+@dp.callback_query_handler(DETAIL_CB.filter(action='delete_house'))
+async def delete_house(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
+    pk = callback_data.get('pk')
+    key = callback_data.get('key')
+    page = callback_data.get('page')
+    params = await state.get_data()
+    url = f'{REL_URLS["houses"]}{pk}/'
+    resp, status = await Conn.delete(url, user_id=call.from_user.id)
+    if status == 204:
+        await handle_list(call, key=key, page=page, deserializer=house_des,
+                          detail_action='my_house_detail', list_action='my_house_list',
+                          keyboard=get_keyboard_for_list, params=params,
+                          new_callback_answer=True)
+        await call.answer(_('Дом был удален'))
+    else:
+        await call.answer(_('Произошла ошибка'))
+
