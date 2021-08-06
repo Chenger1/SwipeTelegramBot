@@ -11,8 +11,10 @@ from middlewares import _
 
 from keyboards.callbacks import user_callback
 from keyboards.default.dispatcher import dispatcher
+from keyboards.inline.user_keyboards import get_keyboard_for_list
 
-from handlers.users.post.public_post import handle_posts, get_post
+from handlers.users.post.public_post import get_post
+from handlers.users.utils import handle_list
 
 
 post_des = PostDeserializer()
@@ -21,8 +23,9 @@ post_des = PostDeserializer()
 @dp.message_handler(Text(equals=['Мои публикации', 'My ads']))
 async def my_posts(message: types.Message, state: FSMContext):
     keyboard, path = await dispatcher('LEVEL_2_POSTS', message.from_user.id)
-    await handle_posts(message, page='1', key='posts',
-                       keyboard=keyboard, detail_action='my_post_detail')
+    await message.answer(_('Список моих публикаций'), reply_markup=keyboard)
+    await handle_list(message, page='1', key='posts', keyboard=get_keyboard_for_list, detail_action='my_post_detail',
+                      list_action='my_post_list', deserializer=post_des)
     await state.update_data(path=path)
 
 
@@ -39,8 +42,9 @@ async def delete_post(call: types.CallbackQuery, callback_data: dict):
     url = f'{REL_URLS["posts"]}{pk}/'
     resp, status = await Conn.delete(url, user_id=call.from_user.id)
     if status == 204:
-        await handle_posts(call, page=page, key=key, detail_action='my_post_detail',
-                           new=True)
+        await handle_list(call, page=page, key=key, keyboard=get_keyboard_for_list,
+                          detail_action='my_post_detail', list_action='my_post_list', deserializer=post_des,
+                          new_callback_answer=True)
     else:
         logging.error(resp)
         await call.answer(_('Произошла ошибка. Попробуйте снова'))
@@ -51,7 +55,8 @@ async def post_list(call: types.CallbackQuery, callback_data: dict, state: FSMCo
     page = callback_data.get('page')
     key = callback_data.get('key')
     params = await state.get_data()
-    await handle_posts(call, page=page, key=key, params=params, detail_action='my_post_detail')
+    await handle_list(call, page=page, key=key, params=params, deserializer=post_des, detail_action='my_post_detail',
+                      list_action='my_post_list', keyboard=get_keyboard_for_list)
 
 
 @dp.callback_query_handler(user_callback.LIST_CB.filter(action='my_post_list_new'))
@@ -59,4 +64,5 @@ async def post_list(call: types.CallbackQuery, callback_data: dict, state: FSMCo
     page = callback_data.get('page')
     key = callback_data.get('key')
     params = await state.get_data()
-    await handle_posts(call, page=page, new=True, key=key, params=params, detail_action='my_post_detail')
+    await handle_list(call, page=page, key=key, params=params, deserializer=post_des, detail_action='my_post_detail',
+                      list_action='my_post_list', new_callback_answer=True, keyboard=get_keyboard_for_list)

@@ -9,13 +9,19 @@ from states.state_groups import FilterPost
 
 from keyboards.default.dispatcher import dispatcher, back_button, get_menu_label
 from keyboards.inline import filter_post
+from keyboards.inline.user_keyboards import get_keyboard_for_list
 from keyboards.callbacks.user_callback import POST_FILTER_CB
 
-from handlers.users.post.public_post import handle_posts
+from handlers.users.utils import handle_list
+
+from deserializers.post import PostDeserializer
 
 from utils.session.url_dispatcher import REL_URLS
 
 from middlewares import _
+
+
+post_des = PostDeserializer()
 
 
 @dp.message_handler(Text(equals=['Вернуться', 'Back']), state=FilterPost)
@@ -248,8 +254,9 @@ async def filter_state(call: types.CallbackQuery, callback_data: dict, state: FS
     if value == 'YES':
         params = await state.get_data()
         keyboard, path = await dispatcher('LEVEL_2_POSTS', call.from_user.id)
-        await handle_posts(call, page='1', key='posts_public', keyboard=keyboard, params=params,
-                           new=True, detail_action='post_detail')
+        await handle_list(call, page='1', keyboard=get_keyboard_for_list, params=params, key='posts_public',
+                          detail_action='post_detail', list_action='post_list', deserializer=post_des,
+                          new_callback_answer=True)
         await state.finish()
         await state.update_data(**params, path=path)
     else:

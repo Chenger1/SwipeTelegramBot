@@ -16,13 +16,17 @@ menu_storage = {
         'LEVEL_2_POSTS:LEVEL_3_FILTER_POSTS': {
             'LEVEL_3_FILTER_POSTS': user_keyboards.get_level_2_filter_post_keyboard,
             'LEVEL_3_CREATE_POST': user_keyboards.get_level_3_create_post_keyboard
+        },
+        'LEVEL_2_POSTS:LEVEL_3_HOUSE': {
+            'LEVEL_3_HOUSE': user_keyboards.get_level_3_house_keyboard
         }
     }
 }
 menu_label = {
     'LEVEL_1': _('Главное меню'),
     'LEVEL_2_POSTS': _('Список публикаций'),
-    'LEVEL_3_FILTER_POSTS': _('Фильтрация объявлений')
+    'LEVEL_3_FILTER_POSTS': _('Фильтрация объявлений'),
+    'LEVEL_3_HOUSE': _('Дома'),
 }
 
 
