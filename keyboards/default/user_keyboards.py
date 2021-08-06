@@ -112,7 +112,6 @@ async def get_level_4_create_house(is_admin: int) -> ReplyKeyboardMarkup:
         KeyboardButton(_('Перейти к статусу')),
         KeyboardButton(_('Перейти к типу')),
         KeyboardButton(_('Перейти к классу дома')),
-        KeyboardButton(_('Перейти к роли'))
     ).add(
         KeyboardButton(_('Перейти к расстоянию до моря')),
         KeyboardButton(_('Перейти к высоте потолков'))

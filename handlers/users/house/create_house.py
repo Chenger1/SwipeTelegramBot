@@ -40,6 +40,191 @@ async def back(message: types.Message, state: FSMContext):
     await state.update_data(**data)
 
 
+@dp.message_handler(Text(equals=['Сохранить', 'Save']), state=CreateHouse)
+async def save_house(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    house_data = data.get('create_house')
+    keys = ('name', 'address', 'city', 'tech', 'territory', 'payment_options',
+            'description')
+    if all(key in house_data for key in keys):
+        await message.answer(_('Подтверждаете?'),
+                             reply_markup=create_house.confirm_keyboard)
+        await CreateHouse.SAVE.set()
+    else:
+        text = _('Вы не указали: \n')
+        if not house_data.get('name'):
+            text += _('Название\n')
+        if not house_data.get('address'):
+            text += _('Адрес\n')
+        if not house_data.get('city'):
+            text += _('Город\n')
+        if not house_data.get('tech'):
+            text += _('Технологию строительства\n')
+        if not house_data.get('territory'):
+            text += _('Тип территории\n')
+        if not house_data.get('payment_options'):
+            text += _('Предпочитаемый способ оплаты\n')
+        if not house_data.get('description'):
+            text += _('Описание\n')
+        await message.answer(text)
+
+
+@dp.message_handler(Text(equals=['Перейти к названию', 'Go to name']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Введите название дома'))
+    await CreateHouse.NAME.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к городу', 'Go to city']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Введите город'))
+    await CreateHouse.CITY.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к адресу', 'Go to address']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Введите адрес дома'))
+    await CreateHouse.ADDRESS.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к технологии строительства', 'Go to technology']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Выберите технологию строительства'), reply_markup=create_house.tech_keyboard)
+    await CreateHouse.TECH.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к территории', 'Go to territory']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Выберите тип территории'), reply_markup=create_house.terr_keyboard)
+    await CreateHouse.TERR.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к платежным способам', 'Go to payment methods']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Выберите предпочитаемые способы платежа'))
+    await CreateHouse.PAYMENT_OPTIONS.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к описанию', 'Go to description']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Добавьте описание'))
+    await CreateHouse.DESCRIPTION.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к статусу', 'Go to status']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Выберите статус дома'))
+    await CreateHouse.ROLE.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к типу', 'Go to type']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Введите тип дома'))
+    await CreateHouse.TYPE.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к классу дома', 'Go to house class']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Выберите класс дома дома'))
+    await CreateHouse.HOUSE_CLASS.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к классу дома', 'Go to house class']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Выберите класс дома дома'))
+    await CreateHouse.HOUSE_CLASS.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к расстоянию до моря', 'Go to distance to sea']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Введите расстояние до моря'))
+    await CreateHouse.SEA.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к высоте потолков', 'Go to ceiling height']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Введите высоту потолков'))
+    await CreateHouse.HEIGHT.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к газопроводу', 'Go to gas']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Выберите тип газопровода'))
+    await CreateHouse.GAS.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к отоплению', 'Go to heating']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Выберите тип отопления'))
+    await CreateHouse.HEATING.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к электричеству', 'Go to electricity']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Выберите тип электроподачи'))
+    await CreateHouse.ELECTRICITY.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к канализации', 'Go to sewerage']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Выберите тип канализации'))
+    await CreateHouse.SEWERAGE.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к водоснабжению', 'Go to water supply']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Выберите тип водоснабжения'))
+    await CreateHouse.WATER.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к спортивной площадке', 'Go to house class']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Есть ли в вашем доме(или рядом с ним) спортивная площадка?'),
+                         reply_markup=await create_house.get_advantages_keyboard('add_playground'))
+    await CreateHouse.PLAYGROUND.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к парковке', 'Go to car park']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Есть ли в вашем доме(или рядом с ним) парковка?'),
+                         reply_markup=await create_house.get_advantages_keyboard('add_car_park'))
+    await CreateHouse.CAR_PARK.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к магазину', 'Go to shop']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Есть ли в вашем доме(или рядом с ним) магазин?'),
+                         reply_markup=await create_house.get_advantages_keyboard('add_shop'))
+    await CreateHouse.SHOP.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к детской площадке', 'Go to child playground']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Есть ли в вашем доме(или рядом с ним) детская площадка?'),
+                         reply_markup=await create_house.get_advantages_keyboard('add_child_playground'))
+    await CreateHouse.CHILD_PLAYGROUND.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к лифту', 'Go to elevator']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Есть ли в вашем доме лифт?'),
+                         reply_markup=await create_house.get_advantages_keyboard('add_elevator'))
+    await CreateHouse.ELEVATOR.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к охране', 'Go to security']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Есть ли в вашем доме охрана?'),
+                         reply_markup=await create_house.get_advantages_keyboard('add_security'))
+    await CreateHouse.SECURITY.set()
+
+
+@dp.message_handler(Text(equals=['Перейти к картинке', 'Go to image']), state=CreateHouse)
+async def go_to_house_name(message: types.Message):
+    await message.answer(_('Добавьте изображение'))
+    await CreateHouse.IMAGE.set()
+
+
 @dp.message_handler(Text(equals=['Добавить дом', 'Add house']))
 async def add_house(message: types.Message, state: FSMContext):
     await CreateHouse.STARTER.set()

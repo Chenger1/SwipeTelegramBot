@@ -16,7 +16,7 @@ class HouseDeserializer(BaseDeserializer):
     async def for_detail(self, data: Dict) -> Tuple:
         info = _('<b>{name}</b>\n' +
                  '<i>{address}.{city}</i>\n' +
-                 '<b>Предназначение:</b> {status}\n' +
+                 '<b>Предназначение:</b> {role}\n' +
                  '<b>Тип:</b> {type}\n' +
                  '<b>Класс:</b> {klass}\n' +
                  '<b>Технология:</b> {tech}\n' +
@@ -30,7 +30,7 @@ class HouseDeserializer(BaseDeserializer):
                  '<b>Водоснабжение:</b> {water}\n' +
                  '----------------------------------------\n' +
                  '{description}\n').format(name=data['name'], address=data['address'],
-                                           city=data.get('city'), status=data.get('status_display'),
+                                           city=data.get('city'), role=data.get('role_display'),
                                            type=data.get('type_display'), klass=data.get('house_class_display'),
                                            tech=data.get('tech_display'), terr=data.get('territory_display'),
                                            sea=data.get('distance_to_sea'), height=data.get('ceiling_height')
