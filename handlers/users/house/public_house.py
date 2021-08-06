@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from loader import dp, Conn
 
 from keyboards.default.dispatcher import dispatcher
-from keyboards.inline.user_keyboards import get_keyboard_for_list, get_keyboard_for_house
+from keyboards.inline.user_keyboards import get_keyboard_for_list, get_keyboard_for_house, get_keyboard_for_my_house
 from keyboards.callbacks.user_callback import LIST_CB, DETAIL_WITH_PAGE_CB
 
 from deserializers.house import HouseDeserializer
@@ -22,7 +22,8 @@ house_des = HouseDeserializer()
 
 
 keyboard_house_detail = {
-    'house_detail': get_keyboard_for_house
+    'house_detail': get_keyboard_for_house,
+    'my_house_detail': get_keyboard_for_my_house
 }
 
 
@@ -38,6 +39,11 @@ async def get_house(call: types.CallbackQuery, callback_data: dict,
         keyboard = await keyboard_cor(page=callback_data.get('page'),
                                       key=callback_data.get('key'),
                                       action='house_list_new' if resp.get('image') else 'house_list')
+    if keyboard_key == 'my_house_detail':
+        keyboard = await keyboard_cor(page=callback_data.get('page'),
+                                      key=callback_data.get('key'),
+                                      action='my_house_list_new' if resp.get('image') else 'my_house_list',
+                                      pk=pk)
     if resp.get('image'):
         await send_with_image(call, resp, pk, inst.data, keyboard,
                               'image')
@@ -86,3 +92,40 @@ async def house_list_new(call: types.CallbackQuery, callback_data: dict, state: 
 @dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='house_detail'))
 async def house_detail(call: types.CallbackQuery, callback_data: dict):
     await get_house(call, callback_data, 'house_detail')
+
+
+@dp.message_handler(Text(equals=['Мои дома', 'My houses']))
+async def my_houses(message: types.Message, state: FSMContext):
+    keyboard, path = await dispatcher('LEVEL_3_MY_HOUSES', message.from_user.id)
+    params = await state.get_data()
+    await message.answer(_('Мои дома'), reply_markup=keyboard)
+    await handle_list(message, key='houses', page='1', params=params, keyboard=get_keyboard_for_list,
+                      detail_action='my_house_detail', list_action='my_house_list',
+                      deserializer=house_des)
+    await state.update_data(path=path)
+
+
+@dp.callback_query_handler(LIST_CB.filter(action='my_house_list'))
+async def my_house_list(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
+    page = callback_data.get('page')
+    key = callback_data.get('key')
+    params = await state.get_data()
+    await handle_list(call, key=key, page=page, deserializer=house_des,
+                      detail_action='my_house_detail', list_action='my_house_list',
+                      keyboard=get_keyboard_for_list, params=params)
+
+
+@dp.callback_query_handler(LIST_CB.filter(action='my_house_list_new'))
+async def my_house_list(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
+    page = callback_data.get('page')
+    key = callback_data.get('key')
+    params = await state.get_data()
+    await handle_list(call, key=key, page=page, deserializer=house_des,
+                      detail_action='my_house_detail', list_action='my_house_list',
+                      keyboard=get_keyboard_for_list, params=params,
+                      new_callback_answer=True)
+
+
+@dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='my_house_detail'))
+async def my_house_detail(call: types.CallbackQuery, callback_data: dict):
+    await get_house(call, callback_data, 'my_house_detail')

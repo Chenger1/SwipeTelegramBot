@@ -17,7 +17,10 @@ menu_storage = {
             'LEVEL_3_FILTER_POSTS': user_keyboards.get_level_2_filter_post_keyboard,
             'LEVEL_3_CREATE_POST': user_keyboards.get_level_3_create_post_keyboard
         },
-        'LEVEL_2_HOUSES': user_keyboards.get_level_2_house_keyboard
+        'LEVEL_2_HOUSES': user_keyboards.get_level_2_house_keyboard,
+        'LEVEL_2_HOUSES:LEVEL_3_MY_HOUSES':{
+            'LEVEL_3_MY_HOUSES': user_keyboards.get_level_3_my_house_keyboard
+        }
     }
 }
 menu_label = {
