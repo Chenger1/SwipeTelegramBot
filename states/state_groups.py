@@ -60,3 +60,12 @@ class CreateHouse(StatesGroup):
     ELEVATOR = State()
     SECURITY = State()
     IMAGE = State()
+
+
+class EditUserDate(StatesGroup):
+    STARTER = State()
+    NAME = State()
+    EMAIL = State()
+    PHOTO = State()
+    ROLE = State()
+    SAVING = State()
