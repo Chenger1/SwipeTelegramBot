@@ -33,9 +33,10 @@ async def prepare_dict(obj: Optional[dict]) -> Optional[dict]:
 
 
 async def get_list(user_id: str, key: str, page: str, params: dict = None,
-                   data: dict = None) -> dict:
+                   data: dict = None, custom_url: str = None) -> dict:
     """
     Makes request and returns response
+    :param custom_url: f'{REL_URLS[key]}?house__pk=1&page={page}' for example
     :param user_id: user_id in telegram.
     :param key: REL_URLS contains all http paths in dict. Key for get path
     :param page: For pagination
@@ -43,7 +44,7 @@ async def get_list(user_id: str, key: str, page: str, params: dict = None,
     :param data: Additional parameters for request
     :return: Response
     """
-    url = f'{REL_URLS[key]}?page={page}'
+    url = custom_url or f'{REL_URLS[key]}?page={page}'
     resp = await Conn.get(url, user_id=user_id, params=params,
                           data=data)
     return resp
@@ -88,7 +89,8 @@ async def handle_list(message: Union[types.Message, types.CallbackQuery],
                       key: str, page: str, deserializer: BaseDeserializer,
                       keyboard: Callable, detail_action: str, list_action: str,
                       params: dict = None, data: dict = None,
-                      new_callback_answer: bool = False):
+                      new_callback_answer: bool = False,
+                      custom_url: str = None):
     """
     1) Gets response(with list of items) from API
     2) Pass response to deserializer class. Gets tuple with list of namedtuple.
@@ -101,20 +103,21 @@ async def handle_list(message: Union[types.Message, types.CallbackQuery],
             5) Prepare keyboard for message
     """
     resp = await get_list(message.from_user.id, key, page,
-                          await prepare_dict(params), await prepare_dict(data))  # 1)
+                          await prepare_dict(params), await prepare_dict(data),
+                          custom_url)  # 1)
     items_data = await deserializer.make_list(resp)  # 2)
     text = await prepare_text(items_data)  # 3)
+    pages = {
+        'next': await get_page(resp.get('next')) or 'last',
+        'prev': await get_page(resp.get('previous')) or '1',
+        'first': '1',
+        'current': page
+    }
+    keyboard_cor = keyboard(items_data, pages, key, detail_action, list_action)
     if text:
-        pages = {
-            'next': await get_page(resp.get('next')) or 'last',
-            'prev': await get_page(resp.get('previous')) or '1',
-            'first': '1',
-            'current': page
-        }
-        keyboard_cor = keyboard(items_data, pages, key, detail_action, list_action)
         await send_answer(message, text, new_callback_answer, keyboard_cor)
     else:
-        await send_answer(message, _('Ничего нет'), new_callback_answer)
+        await send_answer(message, _('Ничего нет'), new_callback_answer, keyboard_cor)
 
 
 async def send_with_image(call: types.CallbackQuery, resp: dict, pk: int,

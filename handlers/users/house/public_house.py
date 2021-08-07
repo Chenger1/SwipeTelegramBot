@@ -6,10 +6,11 @@ from aiogram.dispatcher import FSMContext
 from loader import dp, Conn
 
 from keyboards.default.dispatcher import dispatcher
-from keyboards.inline.user_keyboards import get_keyboard_for_list, get_keyboard_for_house, get_keyboard_for_my_house
-from keyboards.callbacks.user_callback import LIST_CB, DETAIL_WITH_PAGE_CB, DETAIL_CB
+from keyboards.inline.user_keyboards import (get_keyboard_for_list, get_keyboard_for_house, get_keyboard_for_my_house,
+                                             get_keyboard_for_flat)
+from keyboards.callbacks.user_callback import LIST_CB, DETAIL_WITH_PAGE_CB, DETAIL_CB, LIST_CB_WITH_PK
 
-from deserializers.house import HouseDeserializer
+from deserializers.house import HouseDeserializer, FlatDeserializer
 
 from middlewares import _
 
@@ -19,11 +20,16 @@ from utils.session.url_dispatcher import REL_URLS
 
 
 house_des = HouseDeserializer()
+flat_des = FlatDeserializer()
 
 
 keyboard_house_detail = {
     'house_detail': get_keyboard_for_house,
     'my_house_detail': get_keyboard_for_my_house
+}
+keyboard_flat_detail = {
+    'flat_detail': get_keyboard_for_flat,
+    'my_flat_detail': None
 }
 
 
@@ -38,8 +44,9 @@ async def get_house(call: types.CallbackQuery, callback_data: dict,
     if keyboard_key == 'house_detail':
         keyboard = await keyboard_cor(page=callback_data.get('page'),
                                       key=callback_data.get('key'),
-                                      action='house_list_new' if resp.get('image') else 'house_list')
-    if keyboard_key == 'my_house_detail':
+                                      action='house_list_new' if resp.get('image') else 'house_list',
+                                      pk=pk)
+    else:
         keyboard = await keyboard_cor(page=callback_data.get('page'),
                                       key=callback_data.get('key'),
                                       action='my_house_list_new' if resp.get('image') else 'my_house_list',
@@ -49,6 +56,25 @@ async def get_house(call: types.CallbackQuery, callback_data: dict,
                               'image')
     else:
         await call.message.answer(inst.data, reply_markup=keyboard)
+    await call.answer()
+
+
+async def get_flat(call: types.CallbackQuery, callback_data: dict,
+                   keyboard_key: str):
+    keyboard_cor = keyboard_flat_detail[keyboard_key]
+    logging.info(callback_data)
+    pk = callback_data.get('pk')
+    url = f'{REL_URLS["flats_public"]}{pk}/'
+    resp = await Conn.get(url, user_id=call.from_user.id)
+    inst = await flat_des.for_detail(resp)
+    if keyboard_key == 'flat_detail':
+        keyboard = await keyboard_cor(key=callback_data.get('key'),
+                                      page=callback_data.get('page'),
+                                      action='flats_list',
+                                      pk=pk)
+    else:
+        keyboard = None
+    await send_with_image(call, resp, pk, inst.data, keyboard, 'schema')
     await call.answer()
 
 
@@ -148,3 +174,20 @@ async def delete_house(call: types.CallbackQuery, callback_data: dict, state: FS
     else:
         await call.answer(_('Произошла ошибка'))
 
+
+@dp.callback_query_handler(LIST_CB_WITH_PK.filter(action='flats_list'))
+async def house_flats(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    key = callback_data.get('key')
+    page = callback_data.get('page')
+    params = callback_data.get('params')
+    url = f'{REL_URLS["flats_public"]}?house__pk={pk}&page={page}'
+    await handle_list(call, key=key, page=page, params=params,
+                      keyboard=get_keyboard_for_list, detail_action='flat_detail',
+                      list_action='flats_list', deserializer=flat_des,
+                      new_callback_answer=True, custom_url=url)
+
+
+@dp.callback_query_handler(LIST_CB_WITH_PK.filter(action='flat_detail'))
+async def flat_detail(call: types.CallbackQuery, callback_data: dict):
+    await get_flat(call, callback_data, 'flat_detail')

@@ -40,3 +40,41 @@ class HouseDeserializer(BaseDeserializer):
                                            sewerage=data.get('sewerage_display'), water=data.get('water_supply_display'),
                                            description=data.get('description') or _('Нет описания'))
         return await self.get_namedtuple(data['id'], info)
+
+
+class FlatDeserializer(BaseDeserializer):
+    async def for_list(self, data: Dict) -> Tuple:
+        info = _('<b>№:</b> {number}\n' +
+                 '<b>Площадь:</b> {square}\n' +
+                 '<b>Количество комнат:</b> {rooms}\n' +
+                 '<b>Цена:</b> {price}\n' +
+                 '<b>Состояние:</b> {state}\n' +
+                 '<b>Этаж:</b> {floor}\n').format(number=data.get('number'),
+                                                  square=data.get('square'),
+                                                  rooms=data.get('number_of_rooms'),
+                                                  price=data.get('price'),
+                                                  state=data.get('state_display'),
+                                                  floor=data.get('floor'))
+        return await self.get_namedtuple(data['id'], info)
+
+    async def for_detail(self, data: Dict) -> Tuple:
+        info = _('<b>№:</b> {number}\n' +
+                 '<b>Площадь:</b> {square}\n' +
+                 '<b>Количество комнат:</b> {rooms}\n' +
+                 '<b>Цена:</b> {price}\n' +
+                 '<b>Состояние:</b> {state}\n' +
+                 '<b>Этаж:</b> {floor}\n' +
+                 '<b>Тип:</b> {type}\n' +
+                 '<b>Планировка:</b> {plan}\n' +
+                 '<b>Балкон/Лоджия:</b> {balcony}\n' +
+                 '<b>Документ:</b> {doc}\n').format(number=data.get('number'),
+                                                    square=data.get('square'),
+                                                    rooms=data.get('number_of_rooms'),
+                                                    price=data.get('price'),
+                                                    state=data.get('state_display'),
+                                                    floor=data.get('floor'),
+                                                    type=data.get('type_display'),
+                                                    plan=data.get('plan_display'),
+                                                    balcony=data.get('balcony_display'),
+                                                    doc=data.get('doc_display'))
+        return await self.get_namedtuple(data['id'], info)

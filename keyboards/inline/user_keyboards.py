@@ -171,12 +171,13 @@ async def get_keyboard_for_my_post_detail(page: str, pk: int, flat_pk: int, key:
     return markup
 
 
-async def get_keyboard_for_house(key: str, page: str, action: str) -> InlineKeyboardMarkup:
+async def get_keyboard_for_house(key: str, page: str, action: str, pk: int) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     markup.add(
-        InlineKeyboardButton(text=_('Квартиры'), callback_data=user_callback.get_list_callback(action='flat_list',
-                                                                                               page='1',
-                                                                                               key='flats'))
+        InlineKeyboardButton(text=_('Квартиры'), callback_data=user_callback.LIST_CB_WITH_PK.new(action='flats_list',
+                                                                                                 page='1',
+                                                                                                 key='flats',
+                                                                                                 pk=pk))
     ).add(
         InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.get_list_callback(action=action,
                                                                                             page=page,
@@ -188,11 +189,26 @@ async def get_keyboard_for_house(key: str, page: str, action: str) -> InlineKeyb
 async def get_keyboard_for_my_house(key: str, page: str, action: str, pk: int) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     markup.add(
-        InlineKeyboardButton(text=_('Квартиры'), callback_data=user_callback.get_list_callback(action='flat_list',
-                                                                                               page='1',
-                                                                                               key='flats')),
+        InlineKeyboardButton(text=_('Квартиры'), callback_data=user_callback.LIST_CB_WITH_PK.new(action='flats_list',
+                                                                                                 page='1',
+                                                                                                 key='flats',
+                                                                                                 pk=pk)),
         InlineKeyboardButton(text=_('Удалить'), callback_data=user_callback.get_detail_callback(action='delete_house',
                                                                                                 pk=pk))
+    ).add(
+        InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.get_list_callback(action=action,
+                                                                                            page=page,
+                                                                                            key=key))
+    )
+    return markup
+
+
+async def get_keyboard_for_flat(key: str, page: str, action: str, pk: int) -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup()
+    markup.add(
+        InlineKeyboardButton(text=_('Забронировать'),
+                             callback_data=user_callback.get_detail_callback(action='order_flat',
+                                                                             pk=pk))
     ).add(
         InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.get_list_callback(action=action,
                                                                                             page=page,

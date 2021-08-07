@@ -8,6 +8,7 @@ DETAIL_CB = CallbackData('detail', 'action', 'pk')
 COMPLAINT_CB = CallbackData('complaint', 'action', 'pk', 'type')
 LIKE_DISLIKE_CB = CallbackData('detail', 'action', 'pk', 'type', 'page', 'key')
 LIST_CB = CallbackData('list', 'action', 'page', 'key')
+LIST_CB_WITH_PK = CallbackData('list', 'action', 'page', 'key', 'pk')
 
 # POST FILTER CALLBACKS
 POST_FILTER_CB = CallbackData('filter', 'action', 'value')
