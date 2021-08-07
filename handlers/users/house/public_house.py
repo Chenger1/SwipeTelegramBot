@@ -205,3 +205,17 @@ async def house_flats(call: types.CallbackQuery, callback_data: dict):
 @dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='flat_detail'))
 async def flat_detail(call: types.CallbackQuery, callback_data: dict):
     await get_flat(call, callback_data, 'flat_detail')
+
+
+@dp.callback_query_handler(DETAIL_CB.filter(action='booking_flat'))
+async def booking_flat(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    url = REL_URLS['booking_flat'].format(flat_pk=pk)
+    data = {'booking': '1'}
+    resp = await Conn.patch(url, data=data, user_id=call.from_user.id)
+    if resp.get('Error'):
+        await call.message.answer(_('Произошла ошибка'))
+        await call.answer(resp.get('Error'), show_alert=True)
+    else:
+        await call.answer(_('Квартира забронирована. Запрос на добавление в шахматку отправлен администратору дома'),
+                          show_alert=True)

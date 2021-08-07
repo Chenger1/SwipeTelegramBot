@@ -23,6 +23,7 @@ REL_URLS = {
     'houses': 'main/houses/',
     #   #FLATS
     'flats': 'main/flats/',
+    'booking_flat': 'main/flats/{flat_pk}/booking/',
     #   #NEWS
     'news': 'main/news/',
 

@@ -208,7 +208,7 @@ async def get_keyboard_for_flat(key: str, page: str, action: str, pk: int,
     markup = InlineKeyboardMarkup()
     markup.add(
         InlineKeyboardButton(text=_('Забронировать'),
-                             callback_data=user_callback.get_detail_callback(action='order_flat',
+                             callback_data=user_callback.get_detail_callback(action='booking_flat',
                                                                              pk=pk))
     ).add(
         InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.LIST_CB_WITH_PK.new(action=action,
