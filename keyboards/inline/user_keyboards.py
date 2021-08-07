@@ -256,12 +256,26 @@ async def get_keyboard_for_my_flat(key: str, page: str, action: str, pk: int,
         InlineKeyboardButton(text=_('Отменить бронь'),
                              callback_data=user_callback.get_detail_callback(action='unbooking_flat',
                                                                              pk=pk)),
-        InlineKeyboardButton(text=_('Дом'), callback_data=user_callback.get_detail_callback(action='house_detail',
-                                                                                            pk=house_pk))
+        InlineKeyboardButton(text=_('Дом'),
+                             callback_data=user_callback.get_detail_callback_with_page(action='from_flat_house_detail',
+                                                                                       pk=house_pk,
+                                                                                       page=page,
+                                                                                       key=key))
     ).add(
         InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.LIST_CB_WITH_PK.new(action=action,
                                                                                               page=page,
                                                                                               key=key,
                                                                                               pk=house_pk))
+    )
+    return markup
+
+
+async def get_keyboard_for_flat_detail_house(key: str, page: str, action: str) -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup()
+    markup.add(
+        InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.LIST_CB_WITH_PK.new(action=action,
+                                                                                              page=page,
+                                                                                              key=key,
+                                                                                              pk='1'))
     )
     return markup
