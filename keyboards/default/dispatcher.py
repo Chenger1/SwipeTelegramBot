@@ -23,7 +23,8 @@ menu_storage = {
             'LEVEL_3_MY_HOUSES:LEVEL_4_ADD_HOUSE': {
                 'LEVEL_4_ADD_HOUSE': user_keyboards.get_level_4_create_house
             }
-        }
+        },
+        'LEVEL_2_SETTINGS': user_keyboards.get_level_2_user_settings_keyboard
     }
 }
 menu_label = {

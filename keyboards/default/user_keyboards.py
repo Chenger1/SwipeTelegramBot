@@ -134,3 +134,12 @@ async def get_level_4_create_house(is_admin: int) -> ReplyKeyboardMarkup:
         KeyboardButton(_('Вернуться'))
     )
     return markup
+
+
+async def get_level_2_user_settings_keyboard(is_admin: int) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(resize_keyboard=True).add(
+        KeyboardButton(_('Изменить данные')),
+        KeyboardButton(_('Настройки подписки'))
+    ).add(
+        KeyboardButton(_('Вернуться'))
+    )
