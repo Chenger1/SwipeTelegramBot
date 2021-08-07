@@ -7,7 +7,7 @@ from loader import dp, Conn
 
 from keyboards.default.dispatcher import dispatcher
 from keyboards.inline.user_keyboards import (get_keyboard_for_list, get_keyboard_for_house, get_keyboard_for_my_house,
-                                             get_keyboard_for_flat, get_keyboard_for_flat_list)
+                                             get_keyboard_for_flat, get_keyboard_for_flat_list, get_keyboard_for_my_flat)
 from keyboards.callbacks.user_callback import LIST_CB, DETAIL_WITH_PAGE_CB, DETAIL_CB, LIST_CB_WITH_PK
 
 from deserializers.house import HouseDeserializer, FlatDeserializer
@@ -17,6 +17,7 @@ from middlewares import _
 from handlers.users.utils import handle_list, send_with_image
 
 from utils.session.url_dispatcher import REL_URLS
+from utils.db_api.models import User
 
 
 house_des = HouseDeserializer()
@@ -29,7 +30,7 @@ keyboard_house_detail = {
 }
 keyboard_flat_detail = {
     'flat_detail': get_keyboard_for_flat,
-    'my_flat_detail': None
+    'my_flat_detail': get_keyboard_for_my_flat
 }
 
 
@@ -71,6 +72,12 @@ async def get_flat(call: types.CallbackQuery, callback_data: dict,
         keyboard = await keyboard_cor(key=callback_data.get('key'),
                                       page=callback_data.get('page'),
                                       action='flats_list',
+                                      pk=pk,
+                                      house_pk=resp.get('house_pk'))
+    elif keyboard_key == 'my_flat_detail':
+        keyboard = await keyboard_cor(key=callback_data.get('key'),
+                                      page=callback_data.get('page'),
+                                      action='my_flats_list',
                                       pk=pk,
                                       house_pk=resp.get('house_pk'))
     else:
@@ -219,3 +226,31 @@ async def booking_flat(call: types.CallbackQuery, callback_data: dict):
     else:
         await call.answer(_('Квартира забронирована. Запрос на добавление в шахматку отправлен администратору дома'),
                           show_alert=True)
+
+
+@dp.message_handler(Text(equals=['Мои квартиры', 'My flats']))
+async def my_flats(message: types.Message):
+    await message.answer(_('Список забронированных квартир'))
+    user = await User.get(user_id=message.from_user.id)
+    url = f'{REL_URLS["flats_public"]}?client_pk={user.swipe_id}'
+    await handle_list(message, key='flats', page='1',
+                      keyboard=get_keyboard_for_flat_list,
+                      detail_action='my_flat_detail', list_action='my_flats_list',
+                      deserializer=flat_des, pk=0, custom_url=url)
+
+
+@dp.callback_query_handler(LIST_CB_WITH_PK.filter(action='my_flats_list'))
+async def my_flats_callback(call: types.CallbackQuery, callback_data: dict):
+    key = callback_data.get('key')
+    page = callback_data.get('page')
+    user = await User.get(user_id=call.from_user.id)
+    url = f'{REL_URLS["flats_public"]}?client_pk={user.swipe_id}'
+    await handle_list(call, key=key, page=page,
+                      keyboard=get_keyboard_for_flat_list,
+                      detail_action='my_flat_detail', list_action='my_flats_list',
+                      deserializer=flat_des, pk=0, custom_url=url, new_callback_answer=True)
+
+
+@dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='my_flat_detail'))
+async def my_flat_detail(call: types.CallbackQuery, callback_data: dict):
+    await get_flat(call, callback_data, keyboard_key='my_flat_detail')
