@@ -265,3 +265,22 @@ async def my_flats_callback(call: types.CallbackQuery, callback_data: dict):
 @dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='my_flat_detail'))
 async def my_flat_detail(call: types.CallbackQuery, callback_data: dict):
     await get_flat(call, callback_data, keyboard_key='my_flat_detail')
+
+
+@dp.callback_query_handler(DETAIL_CB.filter(action='unbooking_flat'))
+async def unbooking_flat(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    url = REL_URLS['booking_flat'].format(flat_pk=pk)
+    data = {'booking': '0'}
+    resp = await Conn.patch(url, data=data, user_id=call.from_user.id)
+    if resp.get('Error'):
+        await call.message.answer(_('Произошла ошибка'))
+        await call.answer(resp.get('Error'), show_alert=True)
+    else:
+        await call.answer(_('Бронь снята'), show_alert=True)
+        user = await User.get(user_id=call.from_user.id)
+        url = f'{REL_URLS["flats_public"]}?client_pk={user.swipe_id}&page=1'
+        await handle_list(call, key='flats', page='1',
+                          keyboard=get_keyboard_for_flat_list ,
+                          detail_action='my_flat_detail', list_action='my_flats_list',
+                          deserializer=flat_des, pk=0, custom_url=url, new_callback_answer=True)
