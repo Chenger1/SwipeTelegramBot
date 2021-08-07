@@ -25,7 +25,7 @@ async def get_detail_keyboard(action: str, title: str, pk: int) -> InlineKeyboar
 
 
 async def get_keyboard_for_list(items: Iterable, pages: dict, key: str,
-                                detail_action: str, list_action: str) -> InlineKeyboardMarkup:
+                                detail_action: str, list_action: str, **kwargs) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup(row_width=4)
     for index, item in enumerate(items, start=1):
         markup.insert(
@@ -214,4 +214,34 @@ async def get_keyboard_for_flat(key: str, page: str, action: str, pk: int) -> In
                                                                                             page=page,
                                                                                             key=key))
     )
+    return markup
+
+
+async def get_keyboard_for_flat_list(items: Iterable, pages: dict, key: str,
+                                     detail_action: str, list_action: str, pk: int) -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup(row_width=4)
+    for index, item in enumerate(items, start=1):
+        markup.insert(
+            InlineKeyboardButton(text=f'{index}',
+                                 callback_data=user_callback.get_detail_callback_with_page(action=detail_action,
+                                                                                           pk=item.pk,
+                                                                                           page=pages.get('current'),
+                                                                                           key=key))
+        )
+    markup.add(
+        InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.LIST_CB_WITH_PK.new(action=list_action,
+                                                                                              page=pages.get('prev'),
+                                                                                              key=key,
+                                                                                              pk=pk)),
+        InlineKeyboardButton(text=_('Новое'),
+                             callback_data=user_callback.LIST_CB_WITH_PK.new(action=list_action,
+                                                                             page=pages.get('first'),
+                                                                             key=key,
+                                                                             pk=pk)),
+        InlineKeyboardButton(text=_('Вперед'), callback_data=user_callback.LIST_CB_WITH_PK.new(action=list_action,
+                                                                                               page=pages.get('next'),
+                                                                                               key=key,
+                                                                                               pk=pk))
+    )
+
     return markup

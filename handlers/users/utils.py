@@ -90,7 +90,7 @@ async def handle_list(message: Union[types.Message, types.CallbackQuery],
                       keyboard: Callable, detail_action: str, list_action: str,
                       params: dict = None, data: dict = None,
                       new_callback_answer: bool = False,
-                      custom_url: str = None):
+                      custom_url: str = None, pk: int = None):
     """
     1) Gets response(with list of items) from API
     2) Pass response to deserializer class. Gets tuple with list of namedtuple.
@@ -113,7 +113,7 @@ async def handle_list(message: Union[types.Message, types.CallbackQuery],
         'first': '1',
         'current': page
     }
-    keyboard_cor = keyboard(items_data, pages, key, detail_action, list_action)
+    keyboard_cor = keyboard(items_data, pages, key, detail_action, list_action, pk=pk)
     if text:
         await send_answer(message, text, new_callback_answer, keyboard_cor)
     else:

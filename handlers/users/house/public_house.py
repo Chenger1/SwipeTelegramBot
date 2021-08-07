@@ -7,7 +7,7 @@ from loader import dp, Conn
 
 from keyboards.default.dispatcher import dispatcher
 from keyboards.inline.user_keyboards import (get_keyboard_for_list, get_keyboard_for_house, get_keyboard_for_my_house,
-                                             get_keyboard_for_flat)
+                                             get_keyboard_for_flat, get_keyboard_for_flat_list)
 from keyboards.callbacks.user_callback import LIST_CB, DETAIL_WITH_PAGE_CB, DETAIL_CB, LIST_CB_WITH_PK
 
 from deserializers.house import HouseDeserializer, FlatDeserializer
@@ -183,11 +183,24 @@ async def house_flats(call: types.CallbackQuery, callback_data: dict):
     params = callback_data.get('params')
     url = f'{REL_URLS["flats_public"]}?house__pk={pk}&page={page}'
     await handle_list(call, key=key, page=page, params=params,
-                      keyboard=get_keyboard_for_list, detail_action='flat_detail',
-                      list_action='flats_list', deserializer=flat_des,
-                      new_callback_answer=True, custom_url=url)
+                      keyboard=get_keyboard_for_flat_list, detail_action='flat_detail',
+                      list_action='flats_list_edit', deserializer=flat_des,
+                      new_callback_answer=True, custom_url=url, pk=pk)
 
 
-@dp.callback_query_handler(LIST_CB_WITH_PK.filter(action='flat_detail'))
+@dp.callback_query_handler(LIST_CB_WITH_PK.filter(action='flats_list_edit'))
+async def house_flats(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    key = callback_data.get('key')
+    page = callback_data.get('page')
+    params = callback_data.get('params')
+    url = f'{REL_URLS["flats_public"]}?house__pk={pk}&page={page}'
+    await handle_list(call, key=key, page=page, params=params,
+                      keyboard=get_keyboard_for_flat_list, detail_action='flat_detail',
+                      list_action='flats_list_edit', deserializer=flat_des,
+                      custom_url=url, pk=pk)
+
+
+@dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='flat_detail'))
 async def flat_detail(call: types.CallbackQuery, callback_data: dict):
     await get_flat(call, callback_data, 'flat_detail')
