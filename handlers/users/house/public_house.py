@@ -71,7 +71,8 @@ async def get_flat(call: types.CallbackQuery, callback_data: dict,
         keyboard = await keyboard_cor(key=callback_data.get('key'),
                                       page=callback_data.get('page'),
                                       action='flats_list',
-                                      pk=pk)
+                                      pk=pk,
+                                      house_pk=resp.get('house_pk'))
     else:
         keyboard = None
     await send_with_image(call, resp, pk, inst.data, keyboard, 'schema')

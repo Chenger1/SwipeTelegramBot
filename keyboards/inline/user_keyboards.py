@@ -203,16 +203,18 @@ async def get_keyboard_for_my_house(key: str, page: str, action: str, pk: int) -
     return markup
 
 
-async def get_keyboard_for_flat(key: str, page: str, action: str, pk: int) -> InlineKeyboardMarkup:
+async def get_keyboard_for_flat(key: str, page: str, action: str, pk: int,
+                                house_pk: int) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     markup.add(
         InlineKeyboardButton(text=_('Забронировать'),
                              callback_data=user_callback.get_detail_callback(action='order_flat',
                                                                              pk=pk))
     ).add(
-        InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.get_list_callback(action=action,
-                                                                                            page=page,
-                                                                                            key=key))
+        InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.LIST_CB_WITH_PK.new(action=action,
+                                                                                              page=page,
+                                                                                              key=key,
+                                                                                              pk=house_pk))
     )
     return markup
 

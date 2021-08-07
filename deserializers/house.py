@@ -54,7 +54,7 @@ class FlatDeserializer(BaseDeserializer):
                                                   rooms=data.get('number_of_rooms'),
                                                   price=data.get('price'),
                                                   state=data.get('state_display'),
-                                                  floor=data.get('floor'))
+                                                  floor=data.get('floor_display'))
         return await self.get_namedtuple(data['id'], info)
 
     async def for_detail(self, data: Dict) -> Tuple:
@@ -72,7 +72,7 @@ class FlatDeserializer(BaseDeserializer):
                                                     rooms=data.get('number_of_rooms'),
                                                     price=data.get('price'),
                                                     state=data.get('state_display'),
-                                                    floor=data.get('floor'),
+                                                    floor=data.get('floor_display'),
                                                     type=data.get('type_display'),
                                                     plan=data.get('plan_display'),
                                                     balcony=data.get('balcony_display'),
