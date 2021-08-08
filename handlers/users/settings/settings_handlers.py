@@ -108,3 +108,15 @@ async def check_subscription(message: types.Message):
         await message.answer(_('Ваша пользовательская подписка активирована до {date}').format(date=resp.get('end_date')))
     else:
         await message.answer(_('Ваша пользовательская подписка не активирована'))
+
+
+@dp.message_handler(Text(equals=['Отменить подписку', 'Cancel subscription']))
+async def cancel_subscription(message: types.Message):
+    user = await User.get(user_id=message.from_user.id)
+    url = REL_URLS['subscription'].format(pk=user.swipe_id)
+    data = {'subscribed': '0'}
+    resp = await Conn.patch(url, data=data, user_id=user.user_id)
+    if resp.get('subscribed') is False:
+        await message.answer(_('Ваша пользовательская подписка отменена'))
+    else:
+        await message.answer(_('Произошла ошибка. Повторите попытку'))

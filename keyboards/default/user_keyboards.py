@@ -166,5 +166,5 @@ async def get_level_3_user_subscription_settings(is_admin: int) -> ReplyKeyboard
     ).add(
         KeyboardButton(_('Вернуться'))
     ).add(
-        KeyboardButton(_('Отказаться от подписки'))
+        KeyboardButton(_('Отменить подписку'))
     )
