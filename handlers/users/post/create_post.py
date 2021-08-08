@@ -20,6 +20,8 @@ from utils.db_api.models import File
 
 from handlers.users.utils import update_state
 
+import os
+
 
 house_des = HouseForCreatePost()
 flat_des = FlatForCreatePost()
@@ -59,7 +61,7 @@ async def back(message: types.Message, state: FSMContext):
 async def save_post_button(message: types.Message, state: FSMContext):
     data = await state.get_data()
     post_data = data.get('create_post')
-    keys = ('house', 'flat', 'payment_options', 'communication',
+    keys = ('house', 'flat', 'payment_options', 'communications',
             'price', 'description', 'main_image')
     if all(key in post_data for key in keys):
         text = _('Подтверждаете?')
@@ -75,7 +77,7 @@ async def save_post_button(message: types.Message, state: FSMContext):
             text += _('Метод оплаты\n')
         if not post_data.get('price'):
             text += _('Цену\n')
-        if not post_data.get('communication'):
+        if not post_data.get('communications'):
             text += _('Способ коммуникации с вами\n')
         if not post_data.get('description'):
             text += _('Описание\n')
@@ -85,7 +87,8 @@ async def save_post_button(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(Text(equals=['Перейти к дому', 'Go to house']), state=CreatePost)
-async def go_to_house(message: types.Message):
+async def go_to_house(message: types.Message, state: FSMContext):
+    data = await state.get_data()
     error_text = _('Домов нет. Добавьте дом, преждем чем создавать объявление')
     text, keyboard_cor, status = await list_items(user_id=message.from_user.id,
                                                   url=REL_URLS['houses'],
@@ -98,12 +101,15 @@ async def go_to_house(message: types.Message):
         keyboard_cor.close()
         return
     await message.answer(_('Выберите дом'))
+    if data.get('post_info'):
+        await message.answer(_('Сейчас: {value}').format(value=data['post_info']['house']))
     await message.answer(text, reply_markup=await keyboard_cor)
     await CreatePost.HOUSE.set()
 
 
 @dp.message_handler(Text(equals=['Перейти к квартире', 'Go to flat']), state=CreatePost)
-async def go_to_flat(message: types.Message):
+async def go_to_flat(message: types.Message, state: FSMContext):
+    data = await state.get_data()
     error_text = _('Квартир нет. Добавьте квартиру, преждем чем создавать объявление')
     text, keyboard_cor, status = await list_items(user_id=message.from_user.id,
                                                   url=REL_URLS['flats'],
@@ -116,6 +122,8 @@ async def go_to_flat(message: types.Message):
         keyboard_cor.close()
         return
     await message.answer(_('Выберите квартиру'))
+    if data.get('post_info'):
+        await message.answer(_('Сейчас: {value}').format(value=data['post_info']['flat']))
     await message.answer(text, reply_markup=await keyboard_cor)
     await CreatePost.FLAT.set()
 
@@ -124,20 +132,30 @@ async def go_to_flat(message: types.Message):
 async def go_to_price(message: types.Message, state: FSMContext):
     data = await state.get_data()
     post_data = data.get('create_post')
+    if data.get('post_info'):
+        current_price = data['post_info']['price']
+    else:
+        current_price = post_data.get('price', _('Не указано'))
     await message.answer(_('Текущая цена: {price}\n' +
-                           'Введите новую цену').format(price=post_data.get('price', _('Не указано'))))
+                           'Введите новую цену').format(price=current_price))
     await CreatePost.PRICE.set()
 
 
 @dp.message_handler(Text(equals=['Перейти к способу платежа', 'Go to payment options']), state=CreatePost)
-async def go_to_payment_option(message: types.Message):
+async def go_to_payment_option(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    if data.get('post_info'):
+        await message.answer(_('Сейчас: {value}').format(value=data['post_info']['payment']))
     await message.answer(_('Выберите метод оплаты'),
                          reply_markup=await get_payment_options())
     await CreatePost.PAYMENT.set()
 
 
 @dp.message_handler(Text(equals=['Перейти к вариантам связи', 'Go to communication']), state=CreatePost)
-async def go_to_communications(message: types.Message):
+async def go_to_communications(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    if data.get('post_info'):
+        await message.answer(_('Сейчас: {value}').format(value=data['post_info']['communication']))
     await message.answer(_('Выберите метод коммуникации'), reply_markup=await get_communication_keyboard())
     await CreatePost.COMMUNICATION.set()
 
@@ -149,6 +167,8 @@ async def go_to_description(message: types.Message, state: FSMContext):
     if post_data:
         current_desc = post_data.get('description', _('Не указано'))
         await message.answer(_('Текущее описание\n {desc}').format(desc=current_desc))
+    if data.get('post_info'):
+        current_desc = data['post_info']['description'] or _('Не указано')
     await message.answer('Добавьте описание')
     await CreatePost.DESCRIPTION.set()
 
@@ -164,7 +184,7 @@ async def edit_post(call: types.CallbackQuery, callback_data: dict, state: FSMCo
     pk = callback_data.get('pk')
     url = f'{REL_URLS["posts_public"]}{pk}/'
     resp = await Conn.get(url, user_id=call.from_user.id)
-    post_data = {
+    post_data_display = {
         'pk': resp['id'],
         'house': resp['house'],
         'flat': resp['flat_info']['floor'],
@@ -173,17 +193,32 @@ async def edit_post(call: types.CallbackQuery, callback_data: dict, state: FSMCo
         'communication': resp['communications_display'],
         'description': resp['description'] or '',
     }
-    inst = post_des.for_detail(resp)
-    url_house = f'{REL_URLS["houses_public"]}{post_data["house"]}/'
+    image_name = resp.get('main_image').split('/')[-1]
+    file = await File.get(filename=image_name)
+    post_data = {
+        'house': str(resp['house']),
+        'flat': str(resp['flat']),
+        'payment_options': resp['payment_options'],
+        'price': str(resp['price']),
+        'communications': resp['communications'],
+        'description': resp['description'],
+        'main_image': file.file_id
+    }
+    if image_name not in os.listdir('photos/'):
+        file = await call.bot.get_file(file.file_id)
+        await file.download()
+
+    inst = await post_des.for_detail(resp)
+    url_house = f'{REL_URLS["houses_public"]}{post_data_display["house"]}/'
     house_rep = await Conn.get(url_house, user_id=call.from_user.id)
-    post_data['house'] = house_rep['name']
+    post_data_display['house'] = house_rep['name']
     keyboard, path = await dispatcher('LEVEL_3_CREATE_POST', call.from_user.id)
     await call.message.answer(inst.data)
     await call.message.answer(_('Редактируйте информацию'),
                               reply_markup=keyboard)
     logging.info({'path': path})
     error_text = _('Домов нет. Добавьте дом, преждем чем создавать объявление')
-    text, keyboard_cor, status = await list_items(user_id=call.message.from_user.id,
+    text, keyboard_cor, status = await list_items(user_id=call.from_user.id,
                                                   url=REL_URLS['houses'],
                                                   deserializer=house_des,
                                                   keyboard=get_item_for_create_post,
@@ -197,7 +232,7 @@ async def edit_post(call: types.CallbackQuery, callback_data: dict, state: FSMCo
                                 'Сейчас {house}').format(house=post_data['house']))
     await call.message.answer(text, reply_markup=await keyboard_cor)
     await CreatePost.HOUSE.set()
-    await state.update_data(path=path, post_info=post_data, create_post={})
+    await state.update_data(path=path, post_info=post_data_display, create_post=post_data)
     await call.answer()
 
 
@@ -319,7 +354,7 @@ async def get_communication(call: types.CallbackQuery, callback_data: dict, stat
     logging.info(callback_data)
     value = callback_data.get('value')
     state_data = await state.get_data()
-    await update_state(state, new_data=value, key='communication', root_key='create_post')
+    await update_state(state, new_data=value, key='communications', root_key='create_post')
     await call.answer(_('Способ связи добавлен'))
     await call.message.answer('Добавьте описание')
     if state_data.get('post_info'):
@@ -362,6 +397,8 @@ async def get_confirm(call: types.CallbackQuery, callback_data: dict, state: FSM
         post_data = data.get('create_post')
         main_image = await File.get(file_id=post_data.get('main_image'))
         image = await call.bot.get_file(main_image.file_id)
+        if image.file_path.split('/')[-1] not in os.listdir('photos/'):
+            await image.download()
         with open(image.file_path, 'rb') as rb_image:
             post_data['main_image'] = rb_image
             if data.get('post_info'):

@@ -163,6 +163,8 @@ async def get_keyboard_for_my_post_detail(page: str, pk: int, flat_pk: int, key:
             InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='my_post_list_new',
                                                                                            page=page,
                                                                                            key=key)),
+            InlineKeyboardButton(_('Редактировать'), callback_data=user_callback.get_detail_callback(action='edit_post',
+                                                                                                     pk=pk)),
             InlineKeyboardButton(_('Удалить'), callback_data=user_callback.get_detail_callback_with_page(action='delete_post',
                                                                                                          page=page,
                                                                                                          key=key,
