@@ -1,4 +1,4 @@
-from utils.session.session_core import User
+from aiohttp.client_exceptions import ContentTypeError
 
 from typing import Dict, Tuple
 
@@ -25,7 +25,10 @@ class SessionManager(BaseSessionManager):
                 return {'filename': path.split('/')[-1], 'file': await resp.read(),
                         'file_type': resp.content_type}
             else:
-                data = await resp.json()
+                try:
+                    data = await resp.json()
+                except ContentTypeError:
+                    return {'Error': f'Status: {resp.status}'}
             return data
 
     async def patch(self, path: str, data: dict = None, params: dict = None, user_id: int = None) -> Dict[str, str]:
@@ -35,7 +38,11 @@ class SessionManager(BaseSessionManager):
             # Only authorized users can change info
             async with self._session.patch(absolute_url, params=params, data=data, headers=headers) as resp:
                 await self._process_authorization_token(user_id, resp.headers.get('Authorization'))
-                return await resp.json()
+                try:
+                    data = await resp.json()
+                except ContentTypeError:
+                    return {'Error': f'Status: {resp.status}'}
+                return data
         return {'Error': 'Нет id пользователя'}
 
     async def post(self, path: str, data: dict = None, params: dict = None, user_id: int = None) -> Tuple[Dict[str, str], int]:
@@ -45,7 +52,10 @@ class SessionManager(BaseSessionManager):
             # Only authorized users can change info
             async with self._session.post(absolute_url, params=params, data=data, headers=headers) as resp:
                 await self._process_authorization_token(user_id, resp.headers.get('Authorization'))
-                return await resp.json(), resp.status
+                try:
+                    return await resp.json(), resp.status
+                except ContentTypeError:
+                    return {'Error': f'Status: {resp.status}'}, resp.status
         return {'Error': 'Нет id пользователя'}, 400
 
     async def delete(self, path: str, user_id: int = None) -> Tuple[Dict[str, str], int]:

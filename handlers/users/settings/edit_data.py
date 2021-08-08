@@ -34,7 +34,7 @@ async def back(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(Text(equals=['Сохранить', 'Save']), state=EditUserDate)
-async def save_user_data(message: types.Message, state: FSMContext):
+async def save_user_data(message: types.Message):
     await message.answer(_('Подтверждаете?'),
                          reply_markup=await get_create_post_confirm_keyboard())
     await EditUserDate.SAVE.set()
@@ -50,19 +50,19 @@ async def go_to_full_name(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(Text(equals=['Перейти к электронной почте', 'Go to email']), state=EditUserDate)
-async def go_to_email(message: types.Message, state: FSMContext):
+async def go_to_email(message: types.Message):
     await message.answer(_('Введите ваш email'))
     await EditUserDate.EMAIL.set()
 
 
 @dp.message_handler(Text(equals=['Перейти к фото', 'Go to photo']), state=EditUserDate)
-async def go_to_email(message: types.Message, state: FSMContext):
+async def go_to_email(message: types.Message):
     await message.answer(_('Добавьте фото профиля'))
     await EditUserDate.PHOTO.set()
 
 
 @dp.message_handler(Text(equals=['Перейти к роли', 'Go to role']), state=EditUserDate)
-async def go_to_email(message: types.Message, state: FSMContext):
+async def go_to_email(message: types.Message):
     await message.answer(_('Выберите вашу пользовательскую роль'), reply_markup=edit_user_role_keyboard)
     await EditUserDate.ROLE.set()
 

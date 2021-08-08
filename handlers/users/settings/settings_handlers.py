@@ -82,21 +82,15 @@ async def process_successful_payment_subscription(message: types.Message, state:
     user = await User.get(user_id=message.from_user.id)
     url = REL_URLS['subscription'].format(pk=user.swipe_id)
     data = {'subscribed': '1'}
-    try:
-        resp = await Conn.patch(url, data=data, user_id=user.user_id)
-        if resp.get('subscribed') is True:
-            await message.answer(_('Оплата прошла успешно.\n' +
-                                   'Ваша подписка активирована до {date}').format(date=resp.get('end_date')))
-        else:
-            await message.answer(_('Произошла ошибка. Попробуйте ещё раз'))
-        data = await state.get_data()
-        await state.finish()
-        await state.update_data(**data)
-    except ContentTypeError:
+    resp = await Conn.patch(url, data=data, user_id=user.user_id)
+    if resp.get('subscribed') is True:
+        await message.answer(_('Оплата прошла успешно.\n' +
+                               'Ваша подписка активирована до {date}').format(date=resp.get('end_date')))
+    else:
         await message.answer(_('Произошла ошибка. Попробуйте ещё раз'))
-        data = await state.get_data()
-        await state.finish()
-        await state.update_data(**data)
+    data = await state.get_data()
+    await state.finish()
+    await state.update_data(**data)
 
 
 @dp.message_handler(Text(equals=['Проверить статус подписки', 'Check subscription status']))
