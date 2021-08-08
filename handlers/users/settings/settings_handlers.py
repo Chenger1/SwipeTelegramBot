@@ -97,3 +97,14 @@ async def process_successful_payment_subscription(message: types.Message, state:
         data = await state.get_data()
         await state.finish()
         await state.update_data(**data)
+
+
+@dp.message_handler(Text(equals=['Проверить статус подписки', 'Check subscription status']))
+async def check_subscription(message: types.Message):
+    user = await User.get(user_id=message.from_user.id)
+    url = f'{REL_URLS["users"]}{user.swipe_id}/'
+    resp = await Conn.get(url, user_id=user.user_id)
+    if resp.get('subscribed') is True:
+        await message.answer(_('Ваша пользовательская подписка активирована до {date}').format(date=resp.get('end_date')))
+    else:
+        await message.answer(_('Ваша пользовательская подписка не активирована'))
