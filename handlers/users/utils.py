@@ -2,6 +2,7 @@ import logging
 
 from aiogram import types
 from aiogram.utils.exceptions import MessageNotModified, MessageTextIsEmpty
+from aiogram.dispatcher import FSMContext
 
 from typing import Optional, Iterable, Union, Callable, Coroutine
 
@@ -143,3 +144,10 @@ async def send_with_image(call: types.CallbackQuery, resp: dict, pk: int,
         await call.bot.send_photo(chat_id=call.from_user.id,
                                   photo=file_data.file_id,
                                   caption=text, reply_markup=keyboard)
+
+
+async def update_state(state: FSMContext, new_data: Union[int, str, dict],
+                       key: str, root_key: str):
+    logging.info(f'{new_data} - {key}')
+    async with state.proxy() as data:
+        data.get(root_key, {})[key] = new_data

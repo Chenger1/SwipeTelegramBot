@@ -1,6 +1,7 @@
 # Contains all the relative paths for SwipeRestApi
 REL_URLS = {
     'login': 'auth/login/',
+    'users': 'main/users/',
 
     # PUBLIC
     'posts_public': 'main/posts_public/',

@@ -279,3 +279,15 @@ async def get_keyboard_for_flat_detail_house(key: str, page: str, action: str) -
                                                                                               pk='1'))
     )
     return markup
+
+
+edit_user_role_keyboard = InlineKeyboardMarkup().add(
+    InlineKeyboardButton(_('Клиент'), callback_data=user_callback.POST_FILTER_CB.new(action='edit_role',
+                                                                                     value='USER')),
+    InlineKeyboardButton(_('Агент'), callback_data=user_callback.POST_FILTER_CB.new(action='edit_role',
+                                                                                    value='AGENT')),
+    InlineKeyboardButton(_('Нотариус'), callback_data=user_callback.POST_FILTER_CB.new(action='edit_role',
+                                                                                       value='NOTARY')),
+    InlineKeyboardButton(_('Отдел продаж'), callback_data=user_callback.POST_FILTER_CB.new(action='edit_role',
+                                                                                           value='DEPART')),
+)

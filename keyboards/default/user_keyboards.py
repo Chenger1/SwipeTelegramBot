@@ -147,6 +147,8 @@ async def get_level_2_user_settings_keyboard(is_admin: int) -> ReplyKeyboardMark
 
 async def get_level_3_user_settings_edit_data(is_admin: int) -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(resize_keyboard=True).add(
+        KeyboardButton(_('Сохранить'))
+    ).add(
         KeyboardButton(_('Перейти к имени и фамилии')),
         KeyboardButton(_('Перейти к электронной почте'))
     ).add(

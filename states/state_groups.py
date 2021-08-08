@@ -68,4 +68,4 @@ class EditUserDate(StatesGroup):
     EMAIL = State()
     PHOTO = State()
     ROLE = State()
-    SAVING = State()
+    SAVE = State()
