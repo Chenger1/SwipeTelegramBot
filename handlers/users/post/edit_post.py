@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from loader import dp, Conn
 
 from states.state_groups import CreatePost
-from deserializers.post import HouseForCreatePost, BaseDeserializer, FlatForCreatePost, PostDeserializer
+from deserializers.post import HouseForCreatePost, FlatForCreatePost
 
 from middlewares import _
 
@@ -18,25 +18,12 @@ from keyboards.callbacks.user_callback import DETAIL_CB
 from utils.session.url_dispatcher import REL_URLS
 from utils.db_api.models import File
 
+from handlers.users.post.create_post import list_items
 from handlers.users.utils import update_state
 
 
 house_des = HouseForCreatePost()
 flat_des = FlatForCreatePost()
-post_des = PostDeserializer()
-
-
-async def list_items(user_id: int, url: str, deserializer: BaseDeserializer,
-                     keyboard, error_text: str, action: str):
-    resp = await Conn.get(url, user_id=user_id)
-    if resp:
-        data = await deserializer.make_list(resp)
-        text = ''
-        for index, item in enumerate(data, start=1):
-            text += f'{index}. {item.data}\n'
-        return text, keyboard(data, action), True
-    else:
-        return error_text, keyboard([]), False
 
 
 @dp.message_handler(Text(equals=['Вернуться', 'Back']), state=CreatePost)
@@ -45,11 +32,8 @@ async def back(message: types.Message, state: FSMContext):
     keyboard, path = await back_button(data.get('path'), message.from_user.id)
     await message.answer(text=await get_menu_label(path), reply_markup=keyboard)
     data = await state.get_data()
-    keys_to_delete = ('create_post', 'post_info')
-    new_dict = {}
-    for key, value in data.items():
-        if key not in keys_to_delete:
-            new_dict[key] = value
+    if data.get('create_post'):
+        data.pop('create_post')
     await state.finish()
     data['path'] = path
     await state.update_data(**data)
@@ -159,53 +143,11 @@ async def go_to_photo(message: types.Message):
     await CreatePost.IMAGE.set()
 
 
-@dp.callback_query_handler(DETAIL_CB.filter(action='edit_post'))
-async def edit_post(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
-    pk = callback_data.get('pk')
-    url = f'{REL_URLS["posts_public"]}{pk}/'
-    resp = await Conn.get(url, user_id=call.from_user.id)
-    post_data = {
-        'pk': resp['id'],
-        'house': resp['house'],
-        'flat': resp['flat_info']['floor'],
-        'payment': resp['payment_options_display'],
-        'price': resp['price'],
-        'communication': resp['communications_display'],
-        'description': resp['description'] or '',
-    }
-    inst = post_des.for_detail(resp)
-    url_house = f'{REL_URLS["houses_public"]}{post_data["house"]}/'
-    house_rep = await Conn.get(url_house, user_id=call.from_user.id)
-    post_data['house'] = house_rep['name']
-    keyboard, path = await dispatcher('LEVEL_3_CREATE_POST', call.from_user.id)
-    await call.message.answer(inst.data)
-    await call.message.answer(_('Редактируйте информацию'),
-                              reply_markup=keyboard)
-    logging.info({'path': path})
-    error_text = _('Домов нет. Добавьте дом, преждем чем создавать объявление')
-    text, keyboard_cor, status = await list_items(user_id=call.message.from_user.id,
-                                                  url=REL_URLS['houses'],
-                                                  deserializer=house_des,
-                                                  keyboard=get_item_for_create_post,
-                                                  error_text=error_text,
-                                                  action='add_house')
-    if not status:
-        await call.message.answer(text)
-        keyboard_cor.close()
-        return
-    await call.message.answer(_('Выберите дом\n' +
-                                'Сейчас {house}').format(house=post_data['house']))
-    await call.message.answer(text, reply_markup=await keyboard_cor)
-    await CreatePost.HOUSE.set()
-    await state.update_data(path=path, post_info=post_data, create_post={})
-    await call.answer()
-
-
 @dp.message_handler(Text(equals=['Добавить новую публикацию', 'Add new post']))
 async def add_post(message: types.Message, state: FSMContext):
     await CreatePost.STARTER.set()
     keyboard, path = await dispatcher('LEVEL_3_CREATE_POST', message.from_user.id)
-    await message.answer(_('Заполните форму для создания объявления'),
+    await message.answer(_('Заполните форму для фитрации'),
                          reply_markup=keyboard)
     await state.update_data(path=path)
     logging.info({'path': path})
@@ -228,7 +170,6 @@ async def add_post(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(DETAIL_CB.filter(action='add_house'), state=CreatePost.HOUSE)
 async def add_house(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
-    state_data = await state.get_data()
     logging.info(callback_data)
     pk = callback_data.get('pk')
     url = f'{REL_URLS["houses"]}{pk}/'
@@ -238,10 +179,10 @@ async def add_house(call: types.CallbackQuery, callback_data: dict, state: FSMCo
         text = _('Выбранный дом:\n' +
                  data.data)
         await call.message.answer(text)
-        await update_state(state, new_data=pk, key='house', root_key='create_post')
+        await update_state(state, pk, 'house', 'edit_post')
         await call.answer()
 
-        error_text = _('Квартир нет. Добавьте квартиру, преждем чем работать с объявлением')
+        error_text = _('Квартир нет. Добавьте квартиру, преждем чем создавать объявление')
         text, keyboard_cor, status = await list_items(user_id=call.from_user.id,
                                                       url=REL_URLS['flats'],
                                                       deserializer=flat_des,
@@ -253,9 +194,6 @@ async def add_house(call: types.CallbackQuery, callback_data: dict, state: FSMCo
             keyboard_cor.close()
             return
         await call.message.answer(_('Выберите квартиру'))
-        if state_data.get('post_info'):
-            text = _('Сейчас: {flat}').format(flat=state_data['post_info']['flat'])
-            await call.message.answer(text)
         await call.message.answer(text, reply_markup=await keyboard_cor)
         await CreatePost.FLAT.set()
     else:
@@ -265,7 +203,6 @@ async def add_house(call: types.CallbackQuery, callback_data: dict, state: FSMCo
 @dp.callback_query_handler(DETAIL_CB.filter(action='add_flat'), state=CreatePost.FLAT)
 async def get_flat(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
     logging.info(callback_data)
-    state_data = await state.get_data()
     pk = callback_data.get('pk')
     url = f'{REL_URLS["flats"]}{pk}/'
     resp = await Conn.get(url, user_id=call.from_user.id)
@@ -274,12 +211,10 @@ async def get_flat(call: types.CallbackQuery, callback_data: dict, state: FSMCon
         text = _('Выбранная квартира:\n' +
                  data.data)
         await call.message.answer(text)
-        await update_state(state, new_data=pk, key='flat', root_key='create_post')
+        await update_state(state, new_data=pk, key='flat')
         await call.answer()
 
         await call.message.answer(_('Выберите метод оплаты'), reply_markup=await get_payment_options())
-        if state_data.get('post_info'):
-            await call.message.answer(_('Сейчас: {value}').format(value=state_data['post_info']['payment']))
         await CreatePost.PAYMENT.set()
     else:
         await call.answer(_('Нет такой квартиры в системе. Выберите другую'))
@@ -287,14 +222,11 @@ async def get_flat(call: types.CallbackQuery, callback_data: dict, state: FSMCon
 
 @dp.callback_query_handler(ITEM_CB.filter(action='add_payment'), state=CreatePost.PAYMENT)
 async def get_payment(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
-    state_data = await state.get_data()
     logging.info(callback_data)
     value = callback_data.get('value')
-    await update_state(state, new_data=value, key='payment_options', root_key='create_post')
+    await update_state(state, new_data=value, key='payment_options')
     await call.answer(_('Метод оплаты добавлен'))
     await call.message.answer(_('Введите цену'))
-    if state_data.get('post_info'):
-        await call.message.answer(_('Сейчас {price}').format(state_data['post_info']['price']))
     await CreatePost.PRICE.set()
 
 
@@ -302,13 +234,10 @@ async def get_payment(call: types.CallbackQuery, callback_data: dict, state: FSM
 async def get_price(message: types.Message, state: FSMContext):
     value = message.text
     try:
-        state_data = await state.get_data()
         value = value.replace(' ', '')
-        await update_state(state, new_data=value, key='price', root_key='create_post')
+        await update_state(state, new_data=value, key='price')
         await message.answer(_('Цена добавлена'))
         await message.answer(_('Выберите метод коммуникации'), reply_markup=await get_communication_keyboard())
-        if state_data.get('post_info'):
-            await message.answer(_('Сейчас: {value}').format(value=state_data['post_info']['communication']))
         await CreatePost.COMMUNICATION.set()
     except ValueError:
         await message.answer(_('Неправильный формат ввода'))
@@ -318,12 +247,9 @@ async def get_price(message: types.Message, state: FSMContext):
 async def get_communication(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
     logging.info(callback_data)
     value = callback_data.get('value')
-    state_data = await state.get_data()
-    await update_state(state, new_data=value, key='communication', root_key='create_post')
+    await update_state(state, new_data=value, key='communication')
     await call.answer(_('Способ связи добавлен'))
     await call.message.answer('Добавьте описание')
-    if state_data.get('post_info'):
-        await call.message.answer(_('Сейчас:\n {desc}').format(desc=state_data['post_info']['description']))
     await CreatePost.DESCRIPTION.set()
 
 
@@ -331,7 +257,7 @@ async def get_communication(call: types.CallbackQuery, callback_data: dict, stat
 async def get_description(message: types.Message, state: FSMContext):
     value = message.text
     if value:
-        await update_state(state, new_data=value, key='description', root_key='create_post')
+        await update_state(state, new_data=value, key='description')
         await message.answer(_('Описание добавлено'))
     await message.answer(_('Добавьте изображение'))
     await CreatePost.IMAGE.set()
@@ -347,7 +273,7 @@ async def get_photo(message: types.Message, state: FSMContext):
     await photos[-1].download()
     file, created = await File.get_or_create(file_id=image,
                                              defaults={'filename': photos[-1].file_id})
-    await update_state(state, new_data=file.file_id, key='main_image', root_key='create_post')
+    await update_state(state, new_data=file.file_id, key='main_image')
     text = _('Подтверждаете?')
     await message.answer(text, reply_markup=await get_create_post_confirm_keyboard())
     await CreatePost.SAVE.set()
@@ -364,28 +290,15 @@ async def get_confirm(call: types.CallbackQuery, callback_data: dict, state: FSM
         image = await call.bot.get_file(main_image.file_id)
         with open(image.file_path, 'rb') as rb_image:
             post_data['main_image'] = rb_image
-            if data.get('post_info'):
-                url = f'{REL_URLS["posts"]}{data["post_info"]["pk"]}/'
-                resp = await Conn.patch(url, data=post_data, user_id=call.from_user.id)
-                if not resp.get('id'):
-                    await call.answer(_('Произошла ошибка. Повторите попытке'))
-                    if resp.get('Error'):
-                        await call.answer(resp.get('Error'))
-                else:
-                    await call.answer(_('Объявление изменено'), show_alert=True)
-                    data.pop('create_post')
-                    await state.finish()
-                    await state.update_data(**data)
-            else:
-                resp, status = await Conn.post(REL_URLS['posts'], data=post_data, user_id=call.from_user.id)
-                if status == 201:
-                    await call.answer(_('Объявление создано'), show_alert=True)
-                    data.pop('create_post')
-                    await state.finish()
-                    await state.update_data(**data)
-                else:
-                    await call.answer(_('Произошла ошибка. Повторите попытке'))
-                    if resp.get('Error'):
-                        await call.answer(resp.get('Error'))
+            resp, status = await Conn.post(REL_URLS['posts'], data=post_data, user_id=call.from_user.id)
+        if status == 201:
+            await call.answer(_('Объявление создано'), show_alert=True)
+            data.pop('create_post')
+            await state.finish()
+            await state.update_data(data)
+        else:
+            await call.answer(_('Произошла ошибка. Повторите попытке'))
+            if resp.get('Error'):
+                await call.answer(resp.get('Error'))
     else:
         await call.answer(_('Вы можете выбрать нужные этап через меню'))
