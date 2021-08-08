@@ -13,7 +13,7 @@ menu_storage = {
     'LEVEL_1': admin_keyboards.keyboard_dispatcher,
     'LEVEL_1:LEVEL_2': {
         'LEVEL_2_POSTS': user_keyboards.get_level_2_post_keyboard,
-        'LEVEL_2_POSTS:LEVEL_3_FILTER_POSTS': {
+        'LEVEL_2_POSTS:LEVEL_3_POSTS': {
             'LEVEL_3_FILTER_POSTS': user_keyboards.get_level_2_filter_post_keyboard,
             'LEVEL_3_CREATE_POST': user_keyboards.get_level_3_create_post_keyboard
         },
@@ -25,8 +25,9 @@ menu_storage = {
             }
         },
         'LEVEL_2_SETTINGS': user_keyboards.get_level_2_user_settings_keyboard,
-        'LEVEL_2_SETTINGS:LEVEL_3_EDIT_DATA': {
-            'LEVEL_3_EDIT_DATA': user_keyboards.get_level_3_user_settings_edit_data
+        'LEVEL_2_SETTINGS:LEVEL_3_USER_SETTINGS': {
+            'LEVEL_3_EDIT_DATA': user_keyboards.get_level_3_user_settings_edit_data,
+            'LEVEL_3_SUBSCRIPTION': user_keyboards.get_level_3_user_subscription_settings
         }
     }
 }

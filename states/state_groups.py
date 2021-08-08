@@ -69,3 +69,7 @@ class EditUserDate(StatesGroup):
     PHOTO = State()
     ROLE = State()
     SAVE = State()
+
+
+class Subscription(StatesGroup):
+    PAYMENT = State()

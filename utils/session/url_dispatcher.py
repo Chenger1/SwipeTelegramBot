@@ -2,6 +2,7 @@
 REL_URLS = {
     'login': 'auth/login/',
     'users': 'main/users/',
+    'subscription': 'main/users/{pk}/subscription/',
 
     # PUBLIC
     'posts_public': 'main/posts_public/',

@@ -158,3 +158,13 @@ async def get_level_3_user_settings_edit_data(is_admin: int) -> ReplyKeyboardMar
         KeyboardButton(_('Вернуться'))
     )
 
+
+async def get_level_3_user_subscription_settings(is_admin: int) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(resize_keyboard=True).add(
+        KeyboardButton(_('Получить подписку')),
+        KeyboardButton(_('Проверить статус подписки'))
+    ).add(
+        KeyboardButton(_('Вернуться'))
+    ).add(
+        KeyboardButton(_('Отказаться от подписки'))
+    )
