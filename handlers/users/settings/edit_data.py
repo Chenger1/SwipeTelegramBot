@@ -14,7 +14,7 @@ from middlewares import _
 from states.state_groups import EditUserDate
 
 from handlers.users.utils import update_state
-from utils.db_api.models import File
+from utils.db_api.models import File , User
 from utils.session.url_dispatcher import REL_URLS
 
 
@@ -26,6 +26,8 @@ async def back(message: types.Message, state: FSMContext):
     data = await state.get_data()
     if data.get('edit_data'):
         data.pop('edit_data')
+    if data.get('user_info'):
+        data.pop('user_info')
     await state.finish()
     data['path'] = path
     await state.update_data(**data)
@@ -33,7 +35,7 @@ async def back(message: types.Message, state: FSMContext):
 
 @dp.message_handler(Text(equals=['Сохранить', 'Save']), state=EditUserDate)
 async def save_user_data(message: types.Message, state: FSMContext):
-    await message.answer(_('Подтверждаете?') ,
+    await message.answer(_('Подтверждаете?'),
                          reply_markup=await get_create_post_confirm_keyboard())
     await EditUserDate.SAVE.set()
 
@@ -69,10 +71,25 @@ async def go_to_email(message: types.Message, state: FSMContext):
 async def edit_data(message: types.Message, state: FSMContext):
     await EditUserDate.STARTER.set()
     keyboard, path = await dispatcher('LEVEL_3_EDIT_DATA', message.from_user.id)
-    await message.answer(_('Введите имя и фамилию через пробел'), reply_markup=keyboard)
-    await state.update_data(path=path)
+    user = await User.get(user_id=message.from_user.id)
+    url = f'{REL_URLS["users"]}{user.swipe_id}/'
+    resp = await Conn.get(url, user_id=message.from_user.id)
+    no_data = _('Не указано')
+    info_data = {
+        'first_name': resp.get('first_name', no_data),
+        'last_name': resp.get('last_name', no_data),
+        'email': resp.get('email', no_data),
+        'role': resp.get('role_display')
+    }
+    full_name = (resp.get('first_name') or '') + ' ' + (resp.get('last_name') or '')
+    text = _('<b>{name}</b>\n' +
+             '<b>Email:</b>: {email}\n' +
+             '<b>Роль:</b> {role}').format(name=full_name, email=info_data.get('email'), role=info_data.get('role'))
+    await message.answer(_('Текущие данные:\n' + text))
+    await message.answer(_('Введите имя и фамилию через пробел.\n' +
+                           'Сейчас - <b>{name}</b>').format(name=full_name or no_data), reply_markup=keyboard)
     await EditUserDate.NAME.set()
-    await state.update_data(edit_data={})
+    await state.update_data(path=path, edit_info={}, user_info=info_data)
 
 
 @dp.message_handler(state=EditUserDate.NAME)
@@ -83,7 +100,9 @@ async def set_full_name(message: types.Message, state: FSMContext):
     last_name = ' '.join(last_name_list)
     await update_state(state, first_name, 'first_name', 'edit_data')
     await update_state(state, last_name, 'last_name', 'edit_data')
-    await message.answer(_('Введите ваш email'))
+    data = await state.get_data()
+    await message.answer(_('Введите ваш email.\n' +
+                           'Сейчас: <b>{email}</b>').format(email=data.get('email', _('Не указано'))))
     await EditUserDate.EMAIL.set()
 
 
@@ -94,7 +113,9 @@ async def set_email(message: types.Message, state: FSMContext):
         await message.answer(_('Неверный формат электронной почты'))
         return
     await update_state(state, answer, 'email', 'edit_data')
-    await message.answer(_('Выбериет вашу пользовательскую роль'), reply_markup=edit_user_role_keyboard)
+    data = await state.get_data()
+    await message.answer(_('Выбериет вашу пользовательскую роль.\n' +
+                           'Сейчас: <b>{role}</b>').format(role=data.get('role')), reply_markup=edit_user_role_keyboard)
     await EditUserDate.ROLE.set()
 
 
@@ -131,9 +152,11 @@ async def get_confirm_user(call: types.CallbackQuery, callback_data: dict, state
         user_data = data.get('edit_data')
         photo = await File.get(file_id=user_data.get('photo'))
         image = await call.bot.get_file(photo.file_id)
+        user = await User.get(user_id=call.from_user.id)
         with open(image.file_path, 'rb') as rb_image:
             user_data['photo'] = rb_image
-            resp = await Conn.patch(REL_URLS['users'], data=user_data, user_id=call.from_user.id)
+            url = f'{REL_URLS["users"]}{user.swipe_id}/'
+            resp = await Conn.patch(url, data=user_data, user_id=call.from_user.id)
         if not resp.get('Error'):
             await call.answer(_('Данные обновлены'), show_alert=True)
             data.pop('edit_data')

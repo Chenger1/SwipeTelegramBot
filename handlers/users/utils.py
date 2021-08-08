@@ -150,4 +150,4 @@ async def update_state(state: FSMContext, new_data: Union[int, str, dict],
                        key: str, root_key: str):
     logging.info(f'{new_data} - {key}')
     async with state.proxy() as data:
-        data.get(root_key, {})[key] = new_data
+        data.setdefault(root_key, {})[key] = new_data
