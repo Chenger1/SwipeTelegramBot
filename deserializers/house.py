@@ -87,6 +87,6 @@ class FlatDeserializer(BaseDeserializer):
                           type=data.get('type_display'),
                           plan=data.get('plan_display'),
                           balcony=data.get('balcony_display'),
-                          doc=data.get('doc_display'),
+                          doc=data.get('foundation_doc_display'),
                           )
         return await self.get_namedtuple(data['id'], info)
