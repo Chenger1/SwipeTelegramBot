@@ -324,9 +324,41 @@ async def save_section(call: types.CallbackQuery, callback_data: dict):
     pk = callback_data.get('pk')
     resp, status = await Conn.post(REL_URLS['sections'], data={'building': pk}, user_id=call.from_user.id)
     if status == 201:
-        building_resp = await Conn.get(f'{REL_URLS["buildings"]}{pk}/', user_id=call.from_user.id)
-        callback_data['pk'] = building_resp['house']
+        callback_data['pk'] = resp['house']
         await call.answer(_('Секция добавлена'), show_alert=True)
+        await get_house(call, callback_data, 'my_house_detail')
+    else:
+        await call.answer(_('Произошла ошибка'))
+        for key, value in resp.items():
+            logging.info(f'{key}: {value}\n')
+
+
+@dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='add_floor'))
+async def add_floor(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    page = callback_data.get('page')
+    key = callback_data.get('key')
+    resp = await Conn.get(REL_URLS['sections'], params={'house': pk}, user_id=call.from_user.id)
+    sections = resp.get('results')
+    if sections:
+        keyboard = await create_house.get_building_keyboard(items=resp.get('results'), action='add_floor_section',
+                                                            page=page, key=key)
+        text = ''
+        for index, item in enumerate(sections, start=1):
+            text += f'{index}. {item["section_full_name"]}\n'
+        await call.message.answer(text, reply_markup=keyboard)
+        await call.answer()
+    else:
+        await call.answer(_('Нет секций. Добавьте их сперва'), show_alert=True)
+
+
+@dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='add_floor_section'))
+async def save_floor(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    resp, status = await Conn.post(REL_URLS['floors'], data={'section': pk}, user_id=call.from_user.id)
+    if status == 201:
+        callback_data['pk'] = resp['house']
+        await call.answer(_('Этаж добавлен'), show_alert=True)
         await get_house(call, callback_data, 'my_house_detail')
     else:
         await call.answer(_('Произошла ошибка'))
