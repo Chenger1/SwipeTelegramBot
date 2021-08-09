@@ -675,45 +675,48 @@ async def get_image(message: types.Message, state: FSMContext):
 async def get_confirm_house(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
     logging.info(callback_data)
     value = callback_data.get('value')
+    keys_to_delete = ('create_house', 'house_info')
     if value:
         data = await state.get_data()
         logging.info(data)
         house_data = data.get('create_house')
-        keys_to_delete = ('create_house', 'house_info')
         if house_data.get('image'):
             image = await File.get(file_id=house_data.get('image'))
             image = await call.bot.get_file(image.file_id)
             if image.file_path.split('/')[-1] not in os.listdir('photos/'):
                 await image.download()
-            with open(image.file_path, 'rb') as rb_image:
-                house_data['image'] = rb_image
-        if data.get('house_info'):
-            url = f'{REL_URLS["houses"]}{data["house_info"]["id"]}/'
-            resp = await Conn.patch(url, data=house_data, user_id=call.from_user.id)
-            if not resp.get('id'):
-                await call.answer(_('Произошла ошибка. Повторите попытку'))
-            else:
-                await call.answer(_('Информация о доме изменена'), show_alert=True)
-                new_dict = {}
-                for key, value in data.items():
-                    if key not in keys_to_delete:
-                        new_dict[key] = value
-                await state.finish()
-                await state.update_data(**new_dict)
+            image_path = image.file_path
         else:
-            resp, status = await Conn.post(REL_URLS['houses'], data=house_data,
-                                           user_id=call.from_user.id)
-            if status == 201:
-                await call.answer(_('Дом создан'), show_alert=True)
-                new_dict = {}
-                for key, value in data.items():
-                    if key not in keys_to_delete:
-                        new_dict[key] = value
-                await state.finish()
-                await state.update_data(**new_dict)
+            image_path = 'default_form_image.png'
+        with open(image_path, 'rb') as rb_image:
+            house_data['image'] = rb_image
+            if data.get('house_info'):
+                url = f'{REL_URLS["houses"]}{data["house_info"]["id"]}/'
+                resp = await Conn.patch(url, data=house_data, user_id=call.from_user.id)
+                if not resp.get('id'):
+                    await call.answer(_('Произошла ошибка. Повторите попытку'))
+                else:
+                    await call.answer(_('Информация о доме изменена'), show_alert=True)
+                    new_dict = {}
+                    for key, value in data.items():
+                        if key not in keys_to_delete:
+                            new_dict[key] = value
+                    await state.finish()
+                    await state.update_data(**new_dict)
             else:
-                await call.answer(_('Произошла ошибка. Повторите попытке'))
-                if resp.get('Error'):
-                    await call.answer(resp.get('Error'))
+                resp, status = await Conn.post(REL_URLS['houses'], data=house_data,
+                                               user_id=call.from_user.id)
+                if status == 201:
+                    await call.answer(_('Дом создан'), show_alert=True)
+                    new_dict = {}
+                    for key, value in data.items():
+                        if key not in keys_to_delete:
+                            new_dict[key] = value
+                    await state.finish()
+                    await state.update_data(**new_dict)
+                else:
+                    await call.answer(_('Произошла ошибка. Повторите попытке'))
+                    if resp.get('Error'):
+                        await call.answer(resp.get('Error'))
     else:
         await call.answer(_('Вы можете выбрать нужные этап через меню'))
