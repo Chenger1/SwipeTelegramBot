@@ -373,3 +373,19 @@ async def save_floor(call: types.CallbackQuery, callback_data: dict):
         await call.answer(_('Произошла ошибка'))
         for key, value in resp.items():
             logging.info(f'{key}: {value}\n')
+
+
+@dp.callback_query_handler(DETAIL_CB.filter(action='delete_flat'))
+async def delete_flat(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    url = f'{REL_URLS["flats"]}{pk}/'
+    resp = await Conn.get(url, user_id=call.from_user.id)
+    resp_delete, status = await Conn.delete(url, user_id=call.from_user.id)
+    if status == 204:
+        await call.answer()
+        data = {'pk': resp.get('house_pk'),
+                'page': '1',
+                'key': 'houses'}
+        await get_house(call, data, 'my_house_detail')
+    else:
+        await call.answer(_('Произошла ошибка. Попробуйте ещё раз'))
