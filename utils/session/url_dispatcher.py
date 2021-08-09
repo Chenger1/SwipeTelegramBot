@@ -31,4 +31,5 @@ REL_URLS = {
 
     #   #DOCUMENTS
     'documents': 'main/documents/',
+    'buildings': 'main/buildings/'
 }

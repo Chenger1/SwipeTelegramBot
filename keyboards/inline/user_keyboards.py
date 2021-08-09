@@ -200,6 +200,13 @@ async def get_keyboard_for_my_house(key: str, page: str, action: str, pk: int) -
         InlineKeyboardButton(text=_('Удалить'), callback_data=user_callback.get_detail_callback(action='delete_house',
                                                                                                 pk=pk))
     ).add(
+        InlineKeyboardButton(_('Добавить корпус'), callback_data=user_callback.get_detail_callback(action='add_building',
+                                                                                                   pk=pk)),
+        InlineKeyboardButton(_('Добавить секцию'), callback_data=user_callback.get_detail_callback(action='add_section',
+                                                                                                   pk=pk)),
+        InlineKeyboardButton(_('Добавить этаж'), callback_data=user_callback.get_detail_callback(action='add_floor',
+                                                                                                 pk=pk))
+    ).add(
         InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.get_list_callback(action=action,
                                                                                             page=page,
                                                                                             key=key))
