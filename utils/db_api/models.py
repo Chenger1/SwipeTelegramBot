@@ -15,6 +15,7 @@ class File(Model):
     filename = fields.CharField(max_length=150)
     file_id = fields.CharField(max_length=255)
     parent_id = fields.IntField(null=True)
+    file_path = fields.TextField(null=True)
 
 
 class AdminToken(Model):
