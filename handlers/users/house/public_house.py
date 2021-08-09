@@ -9,6 +9,7 @@ from keyboards.default.dispatcher import dispatcher
 from keyboards.inline.user_keyboards import (get_keyboard_for_list, get_keyboard_for_house, get_keyboard_for_my_house,
                                              get_keyboard_for_flat, get_keyboard_for_flat_list, get_keyboard_for_my_flat,
                                              get_keyboard_for_flat_detail_house)
+from keyboards.inline import create_house
 from keyboards.callbacks.user_callback import LIST_CB, DETAIL_WITH_PAGE_CB, DETAIL_CB, LIST_CB_WITH_PK
 
 from deserializers.house import HouseDeserializer, FlatDeserializer
@@ -295,7 +296,39 @@ async def add_building(call: types.CallbackQuery, callback_data: dict):
         await get_house(call, callback_data, 'my_house_detail')
     else:
         await call.answer(_('Произошла ошибка'))
-        text = ''
         for key, value in resp.items():
-            text += f'{key}: {value}\n'
-        await call.message.answer(text)
+            logging.info(f'{key}: {value}\n')
+
+
+@dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='add_section'))
+async def add_section(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    page = callback_data.get('page')
+    key = callback_data.get('key')
+    resp = await Conn.get(REL_URLS['buildings'], params={'house': pk}, user_id=call.from_user.id)
+    buildings = resp.get('results')
+    if buildings:
+        keyboard = await create_house.get_building_keyboard(items=resp.get('results'), action='add_section_building',
+                                                            page=page, key=key)
+        text = ''
+        for index, item in enumerate(buildings, start=1):
+            text += f'{index}. {item["building_full_name"]}\n'
+        await call.message.answer(text, reply_markup=keyboard)
+        await call.answer()
+    else:
+        await call.answer(_('Нет корпусов. Сперва добавьте их'), show_alert=True)
+
+
+@dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='add_section_building'))
+async def save_section(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    resp, status = await Conn.post(REL_URLS['sections'], data={'building': pk}, user_id=call.from_user.id)
+    if status == 201:
+        building_resp = await Conn.get(f'{REL_URLS["buildings"]}{pk}/', user_id=call.from_user.id)
+        callback_data['pk'] = building_resp['house']
+        await call.answer(_('Секция добавлена'), show_alert=True)
+        await get_house(call, callback_data, 'my_house_detail')
+    else:
+        await call.answer(_('Произошла ошибка'))
+        for key, value in resp.items():
+            logging.info(f'{key}: {value}\n')
