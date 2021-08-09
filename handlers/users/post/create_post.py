@@ -195,6 +195,11 @@ async def edit_post(call: types.CallbackQuery, callback_data: dict, state: FSMCo
     }
     image_name = resp.get('main_image').split('/')[-1]
     file = await File.get(filename=image_name)
+    if image_name not in os.listdir('photos/'):
+        bot_file = await call.bot.get_file(file.file_id)
+        await bot_file.download()
+        file.file_path = bot_file.file_path
+        await file.save()
     post_data = {
         'house': str(resp['house']),
         'flat': str(resp['flat']),
@@ -204,10 +209,6 @@ async def edit_post(call: types.CallbackQuery, callback_data: dict, state: FSMCo
         'description': resp['description'],
         'main_image': file.file_id
     }
-    if image_name not in os.listdir('photos/'):
-        file = await call.bot.get_file(file.file_id)
-        await file.download()
-
     inst = await post_des.for_detail(resp)
     url_house = f'{REL_URLS["houses_public"]}{post_data_display["house"]}/'
     house_rep = await Conn.get(url_house, user_id=call.from_user.id)
@@ -396,10 +397,12 @@ async def get_confirm(call: types.CallbackQuery, callback_data: dict, state: FSM
         data = await state.get_data()
         post_data = data.get('create_post')
         main_image = await File.get(file_id=post_data.get('main_image'))
-        image = await call.bot.get_file(main_image.file_id)
-        if image.file_path.split('/')[-1] not in os.listdir('photos/'):
+        if not main_image.file_path:
+            image = await call.bot.get_file(main_image.file_id)
             await image.download()
-        with open(image.file_path, 'rb') as rb_image:
+            main_image.file_path = image.file_path
+            await main_image.save()
+        with open(main_image.file_path.file_path, 'rb') as rb_image:
             post_data['main_image'] = rb_image
             if data.get('post_info'):
                 url = f'{REL_URLS["posts"]}{data["post_info"]["pk"]}/'

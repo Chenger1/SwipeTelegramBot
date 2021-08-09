@@ -303,6 +303,11 @@ async def edit_house(call: types.CallbackQuery, callback_data: dict, state: FSMC
     resp = await Conn.get(url, user_id=call.from_user.id)
     image_name = resp.get('image').split('/')[-1]
     file = await File.get(filename=image_name)
+    if image_name not in os.listdir('photos/'):
+        bot_file = await call.bot.get_file(file.file_id)
+        await bot_file.download()
+        file.file_path = bot_file.file_path
+        await file.save()
     house_data = {
         'name': resp['name'],
         'city': resp['city'],
@@ -680,9 +685,11 @@ async def get_confirm_house(call: types.CallbackQuery, callback_data: dict, stat
         house_data = data.get('create_house')
         if house_data.get('image'):
             image = await File.get(file_id=house_data.get('image'))
-            image = await call.bot.get_file(image.file_id)
-            if image.file_path.split('/')[-1] not in os.listdir('photos/'):
-                await image.download()
+            if not image.file_path:
+                bot_image = await call.bot.get_file(image.file_id)
+                await bot_image.download()
+                image.file_path = bot_image.file_path
+                await image.save()
             image_path = image.file_path
         else:
             image_path = 'default_form_image.png'
