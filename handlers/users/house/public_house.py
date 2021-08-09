@@ -7,8 +7,8 @@ from loader import dp, Conn
 
 from keyboards.default.dispatcher import dispatcher
 from keyboards.inline.user_keyboards import (get_keyboard_for_list, get_keyboard_for_house, get_keyboard_for_my_house,
-                                             get_keyboard_for_flat, get_keyboard_for_flat_list, get_keyboard_for_my_flat,
-                                             get_keyboard_for_flat_detail_house)
+                                             get_keyboard_for_flat, get_keyboard_for_flat_list, get_keyboard_for_booked_flat,
+                                             get_keyboard_for_flat_detail_house, get_keyboard_for_my_flat)
 from keyboards.inline import create_house
 from keyboards.callbacks.user_callback import LIST_CB, DETAIL_WITH_PAGE_CB, DETAIL_CB, LIST_CB_WITH_PK
 
@@ -33,7 +33,8 @@ keyboard_house_detail = {
 }
 keyboard_flat_detail = {
     'flat_detail': get_keyboard_for_flat,
-    'my_flat_detail': get_keyboard_for_my_flat
+    'my_flat_detail': get_keyboard_for_my_flat,
+    'booked_flat': get_keyboard_for_booked_flat
 }
 
 
@@ -223,7 +224,15 @@ async def house_flats(call: types.CallbackQuery, callback_data: dict):
 
 @dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='flat_detail'))
 async def flat_detail(call: types.CallbackQuery, callback_data: dict):
-    await get_flat(call, callback_data, 'flat_detail')
+    pk = callback_data.get('pk')
+    url = f'{REL_URLS["flats"]}{pk}/'
+    resp = await Conn.get(url, user_id=call.from_user.id)
+    user = await User.get(user_id=call.from_user.id)
+    if resp.get('sales_department_pk') == user.swipe_id:
+        key = 'my_flat_detail'
+    else:
+        key = 'flat_detail'
+    await get_flat(call, callback_data, key)
 
 
 @dp.callback_query_handler(DETAIL_CB.filter(action='booking_flat'))
@@ -265,7 +274,7 @@ async def my_flats_callback(call: types.CallbackQuery, callback_data: dict):
 
 @dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='my_flat_detail'))
 async def my_flat_detail(call: types.CallbackQuery, callback_data: dict):
-    await get_flat(call, callback_data, keyboard_key='my_flat_detail')
+    await get_flat(call, callback_data, keyboard_key='booked_flat')
 
 
 @dp.callback_query_handler(DETAIL_CB.filter(action='unbooking_flat'))

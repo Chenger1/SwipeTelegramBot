@@ -89,7 +89,7 @@ async def go_to_flat_floor(message: types.Message, state: FSMContext):
         text += f'{index}. {item["floor_full_name "]}'
     await message.answer(_('Выберите этаж'), reply_markup=floor_keyboard)
     if state_data['flat_info']:
-        await message.answer(_('Сейчас: {value}').format(value=state_data['flat_info']['flat_display']))
+        await message.answer(_('\nСейчас: {value}').format(value=state_data['flat_info']['flat_display']))
     await CreateFlat.FLOOR.set()
 
 
@@ -98,7 +98,7 @@ async def go_to_flat_number(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите номер')
     if state_data['flat_info']:
-        text += _('Сейчас: {value}').format(value=state_data['create_flat']['number'])
+        text += _('\nСейчас: {value}').format(value=state_data['create_flat']['number'])
     await message.answer(text)
     await CreateFlat.NUMBER.set()
 
@@ -108,7 +108,7 @@ async def go_to_flat_square(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите площадь')
     if state_data['flat_info']:
-        text += _('Сейчас: {value}').format(value=state_data['create_flat']['square'])
+        text += _('\nСейчас: {value}').format(value=state_data['create_flat']['square'])
     await message.answer(text)
     await CreateFlat.SQUARE.set()
 
@@ -118,7 +118,7 @@ async def go_to_flat_kitchen_square(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите площадь кухни')
     if state_data['flat_info']:
-        text += _('Сейчас: {value}').format(value=state_data['create_flat']['kitchen_square'])
+        text += _('\nСейчас: {value}').format(value=state_data['create_flat']['kitchen_square'])
     await message.answer(text)
     await CreateFlat.KITCHEN_SQUARE.set()
 
@@ -128,7 +128,7 @@ async def go_to_flat_price(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите цену')
     if state_data['flat_info']:
-        text += _('Сейчас: {value}').format(value=state_data['create_flat']['price'])
+        text += _('\nСейчас: {value}').format(value=state_data['create_flat']['price'])
     await message.answer(text)
     await CreateFlat.PRICE.set()
 
@@ -138,7 +138,7 @@ async def go_to_flat_price_per_metre(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите цену за квадратный метр')
     if state_data['flat_info']:
-        text += _('Сейчас: {value}').format(value=state_data['create_flat']['price_per_metre'])
+        text += _('\nСейчас: {value}').format(value=state_data['create_flat']['price_per_metre'])
     await message.answer(text)
     await CreateFlat.PRICE_PER_METRE.set()
 
@@ -148,7 +148,7 @@ async def go_to_flat_number_of_rooms(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите число комнат')
     if state_data['flat_info']:
-        text += _('Сейчас: {value}').format(value=state_data['create_flat']['number_of_rooms'])
+        text += _('\nСейчас: {value}').format(value=state_data['create_flat']['number_of_rooms'])
     await message.answer(text)
     await CreateFlat.ROOMS.set()
 
@@ -158,7 +158,7 @@ async def go_to_flat_state(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите состояние')
     if state_data['flat_info']:
-        text += _('Сейчас: {value}').format(value=state_data['flat_info']['state_display'])
+        text += _('\nСейчас: {value}').format(value=state_data['flat_info']['state_display'])
     await message.answer(text, reply_markup=create_flat.state_keyboard)
     await CreateFlat.STATE.set()
 
@@ -168,7 +168,7 @@ async def go_to_flat_foundation_doc(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите формат собственности')
     if state_data['flat_info']:
-        text += _('Сейчас: {value}').format(value=state_data['flat_info']['foundation_doc_display'])
+        text += _('\nСейчас: {value}').format(value=state_data['flat_info']['foundation_doc_display'])
     await message.answer(text, reply_markup=create_flat.foundation_doc_keyboard)
     await CreateFlat.DOC.set()
 
@@ -178,7 +178,7 @@ async def go_to_flat_type(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите тип')
     if state_data['flat_info']:
-        text += _('Сейчас: {value}').format(value=state_data['flat_info']['type_display'])
+        text += _('\nСейчас: {value}').format(value=state_data['flat_info']['type_display'])
     await message.answer(text, reply_markup=create_flat.flat_type_keyboard)
     await CreateFlat.TYPE.set()
 
@@ -188,7 +188,7 @@ async def go_to_flat_balcony(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Есть ли балкон/лоджия?')
     if state_data['flat_info']:
-        text += _('Сейчас: {value}').format(value=state_data['flat_info']['balcony_display'])
+        text += _('\nСейчас: {value}').format(value=state_data['flat_info']['balcony_display'])
     await message.answer(text, reply_markup=create_flat.balcony_keyboard)
     await CreateFlat.BALCONY.set()
 
@@ -208,8 +208,10 @@ async def edit_flat(call: types.CallbackQuery, callback_data: dict, state: FSMCo
     image_name = resp.get('schema').split('/')[-1]
     file = await File.get(filename=image_name)
     if image_name not in os.listdir('photos/'):
-        file = await call.bot.get_file(file.file_id)
-        await file.download()
+        bot_file = await call.bot.get_file(file.file_id)
+        await bot_file.download()
+        file.file_path = bot_file.file_path
+        await file.save()
     flat_data = {
         'floor': str(resp.get('floor')),
         'number': str(resp.get('number')),
@@ -234,8 +236,8 @@ async def edit_flat(call: types.CallbackQuery, callback_data: dict, state: FSMCo
     logging.info({'path': path})
     keyboard = await create_flat.get_floors_keyboard(floor_resp['results'])
     text = ''
-    for index, item in enumerate(floor_resp, start=1):
-        text += f'{index}. {item["floor_full_name "]}'
+    for index, item in enumerate(floor_resp['results'], start=1):
+        text += f'{index}. {item["floor_full_name"]}\n'
     await call.message.answer(text, reply_markup=keyboard)
     await CreateFlat.FLOOR.set()
     await state.update_data(path=path, flat_info=resp, create_flat=flat_data)
@@ -450,10 +452,12 @@ async def flat_save(call: types.CallbackQuery, callback_data: dict, state: FSMCo
         logging.info(data)
         flat_data = data.get('create_flat')
         schema = await File.get(file_id=flat_data.get('schema'))
-        image = await call.bot.get_file(schema.file_id)
-        if image.file_path.split('/')[-1] not in os.listdir('photos/'):
+        if not schema.file_path:
+            image = await call.bot.get_file(schema.file_id)
             await image.download()
-        with open(image.file_path, 'rb') as rb_image:
+            schema.file_path = image.file_path
+            await schema.save()
+        with open(schema.file_path, 'rb') as rb_image:
             flat_data['schema'] = rb_image
             if data.get('flat_info'):
                 url = f'{REL_URLS["flats"]}{data["flat_info"]["id"]}/'
