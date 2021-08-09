@@ -53,8 +53,8 @@ async def back(message: types.Message, state: FSMContext):
         if key not in keys_to_delete:
             new_dict[key] = value
     await state.finish()
-    data['path'] = path
-    await state.update_data(**data)
+    new_dict['path'] = path
+    await state.update_data(**new_dict)
 
 
 @dp.message_handler(Text(equals=['Сохранить', 'Save']), state=CreatePost)
