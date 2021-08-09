@@ -73,3 +73,22 @@ class EditUserDate(StatesGroup):
 
 class Subscription(StatesGroup):
     PAYMENT = State()
+
+
+class CreateFlat(StatesGroup):
+    STARTER = State()
+    FLOOR = State()
+    NUMBER = State()
+    SQUARE = State()
+    KITCHEN_SQUARE = State()
+    PRICE = State()
+    PRICE_PER_METRE = State()
+    ROOMS = State()
+    STATE = State()
+    DOC = State()
+    TYPE = State()
+    PLAN = State()
+    BALCONY = State()
+    SCHEMA = State()
+
+    SAVE = State()

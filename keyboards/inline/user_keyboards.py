@@ -213,6 +213,9 @@ async def get_keyboard_for_my_house(key: str, page: str, action: str, pk: int) -
                                                                                                            key=key,
                                                                                                            page=page))
     ).add(
+      InlineKeyboardButton(_('Добавить квартиру'), callback_data=user_callback.get_detail_callback(action='add_flat',
+                                                                                                   pk=pk))
+    ).add(
         InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.get_list_callback(action=action,
                                                                                             page=page,
                                                                                             key=key))

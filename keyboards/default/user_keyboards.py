@@ -168,3 +168,30 @@ async def get_level_3_user_subscription_settings(is_admin: int) -> ReplyKeyboard
     ).add(
         KeyboardButton(_('Отменить подписку'))
     )
+
+
+async def get_level_4_add_flat(is_admin: int) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(resize_keyboard=True).add(
+        KeyboardButton(_('Сохранить'))
+    ).add(
+        KeyboardButton(_('Перейти к этажу'))
+    ).add(
+        KeyboardButton(_('Перейти к номеру')),
+        KeyboardButton(_('Перейти к площади')),
+        KeyboardButton(_('Перейти к площади кухи'))
+    ).add(
+        KeyboardButton(_('Перейти к цене')),
+        KeyboardButton(_('Перейти к цене за кв. метр')),
+        KeyboardButton(_('Перейти к числу комнат'))
+    ).add(
+        KeyboardButton(_('Перейти к состоянию')),
+        KeyboardButton(_('Перейти к типу собственности')),
+    ).add(
+        KeyboardButton(_('Перейти к типу')),
+        KeyboardButton(_('Перейти к балкону')),
+        KeyboardButton(_('Перейти к отоплению'))
+    ).add(
+        KeyboardButton(_('Перейти к схеме'))
+    ).add(
+        KeyboardButton(_('Вернуться'))
+    )

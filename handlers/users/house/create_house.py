@@ -17,8 +17,6 @@ from keyboards.inline import create_house
 
 from middlewares import _
 
-from typing import Union
-
 from utils.db_api.models import File
 from utils.session.url_dispatcher import REL_URLS
 
