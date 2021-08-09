@@ -28,6 +28,10 @@ class HouseDeserializer(BaseDeserializer):
                  '<b>Электричество:</b> {electricity}\n' +
                  '<b>Канализация:</b> {sewerage}\n' +
                  '<b>Водоснабжение:</b> {water}\n' +
+                 '<b>Количество корпусов:</b> {build}\n' +
+                 '<b>Количество секций:</b> {section}\n' +
+                 '<b>Количество этажей:</b> {floor_count}\n' +
+                 '<b>Количество квартир:</b> {flat}\n' +
                  '----------------------------------------\n' +
                  '{description}\n').format(name=data['name'], address=data['address'],
                                            city=data.get('city'), role=data.get('role_display'),
@@ -37,8 +41,14 @@ class HouseDeserializer(BaseDeserializer):
                                                                                    or _('Не указано'),
                                            gas=data.get('gas_display'), heating=data.get('heating_display'),
                                            electricity=data.get('electricity_display'),
-                                           sewerage=data.get('sewerage_display'), water=data.get('water_supply_display'),
-                                           description=data.get('description') or _('Нет описания'))
+                                           sewerage=data.get('sewerage_display'),
+                                           water=data.get('water_supply_display'),
+                                           description=data.get('description') or _('Нет описания'),
+                                           build=data.get('building_count'),
+                                           section=data.get('section_count'),
+                                           floor_count=data.get('floor_count'),
+                                           flat=data.get('flat_count')
+                                           )
         return await self.get_namedtuple(data['id'], info)
 
 
@@ -67,14 +77,16 @@ class FlatDeserializer(BaseDeserializer):
                  '<b>Тип:</b> {type}\n' +
                  '<b>Планировка:</b> {plan}\n' +
                  '<b>Балкон/Лоджия:</b> {balcony}\n' +
-                 '<b>Документ:</b> {doc}\n').format(number=data.get('number'),
-                                                    square=data.get('square'),
-                                                    rooms=data.get('number_of_rooms'),
-                                                    price=data.get('price'),
-                                                    state=data.get('state_display'),
-                                                    floor=data.get('floor_display'),
-                                                    type=data.get('type_display'),
-                                                    plan=data.get('plan_display'),
-                                                    balcony=data.get('balcony_display'),
-                                                    doc=data.get('doc_display'))
+                 '<b>Документ:</b> {doc}\n'
+                 ).format(number=data.get('number'),
+                          square=data.get('square'),
+                          rooms=data.get('number_of_rooms'),
+                          price=data.get('price'),
+                          state=data.get('state_display'),
+                          floor=data.get('floor_display'),
+                          type=data.get('type_display'),
+                          plan=data.get('plan_display'),
+                          balcony=data.get('balcony_display'),
+                          doc=data.get('doc_display'),
+                          )
         return await self.get_namedtuple(data['id'], info)

@@ -286,12 +286,13 @@ async def unbooking_flat(call: types.CallbackQuery, callback_data: dict):
                           deserializer=flat_des, pk=0, custom_url=url, new_callback_answer=True)
 
 
-@dp.callback_query_handler(DETAIL_CB.filter(action='add_building'))
+@dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='add_building'))
 async def add_building(call: types.CallbackQuery, callback_data: dict):
     pk = callback_data.get('pk')
     resp, status = await Conn.post(REL_URLS['buildings'], data={'house': pk}, user_id=call.from_user.id)
     if status == 201:
         await call.answer(_('Корпус добавлен'), show_alert=True)
+        await get_house(call, callback_data, 'my_house_detail')
     else:
         await call.answer(_('Произошла ошибка'))
         text = ''
