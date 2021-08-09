@@ -195,6 +195,8 @@ async def get_keyboard_for_my_house(key: str, page: str, action: str, pk: int) -
                                                                                                  page='1',
                                                                                                  key='flats',
                                                                                                  pk=pk)),
+        InlineKeyboardButton(text=_('Редактировать'), callback_data=user_callback.get_detail_callback(action='edit_house',
+                                                                                                      pk=pk)),
         InlineKeyboardButton(text=_('Удалить'), callback_data=user_callback.get_detail_callback(action='delete_house',
                                                                                                 pk=pk))
     ).add(
