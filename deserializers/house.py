@@ -90,3 +90,32 @@ class FlatDeserializer(BaseDeserializer):
                           doc=data.get('foundation_doc_display'),
                           )
         return await self.get_namedtuple(data['id'], info)
+
+
+class RequestDeserializer(BaseDeserializer):
+    async def for_detail(self, data: Dict) -> Tuple:
+        info = _('<b>Квартира: </b> №{number}\n' +
+                 '<b>Этаж: </b> {floor}\n' +
+                 '<b>{house}</b>\n' +
+                 '<b>Телефон клиента: </b> {phone}\n' +
+                 '<b>{name}</b>\n' +
+                 '<b>Отправлено: </b> {date}\n' +
+                 '<b>Статус: </b> {status}\n').format(number=data['flat_display']['number'],
+                                                      floor=data['flat_display']['floor'],
+                                                      date=data['created'],
+                                                      house=data['flat_display']['house'],
+                                                      phone=data['flat_display']['client_phone_number'],
+                                                      name=data['flat_display'].get('full_name',
+                                                                                    _('Фамилия, имя не указаны')),
+                                                      status=_('Одобрено') if data['approved'] else _('Отказано'))
+        return await self.get_namedtuple(data['id'], info)
+
+    async def for_list(self, data: Dict) -> Tuple:
+        info = _('<b>Квартира: </b> №{number}\n' +
+                 '<b>Этаж: </b> {floor}\n' +
+                 '<b>{house}</b>\n' +
+                 '<b>Отправлено: </b> {date}\n').format(number=data['flat_display']['number'],
+                                                        floor=data['flat_display']['floor'],
+                                                        date=data['created'],
+                                                        house=data['flat_display']['house'])
+        return await self.get_namedtuple(data['id'], info)

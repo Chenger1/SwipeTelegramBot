@@ -10,6 +10,8 @@ async def get_user_keyboard() -> ReplyKeyboardMarkup:
     ).row(
         KeyboardButton(_('Избранное'))
     ).row(
+        KeyboardButton(_('Входящие запросы на добавление в шахматку'))
+    ).row(
         KeyboardButton(_('Настройки'))
     )
     return markup
