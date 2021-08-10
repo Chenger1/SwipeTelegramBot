@@ -80,8 +80,13 @@ async def go_to_type(message: types.Message):
 
 @dp.callback_query_handler(DETAIL_CB.filter(action='add_promotion'))
 async def add_promotion(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
-    await CreatePromotion.STARTER.set()
     pk = callback_data.get('pk')
+    resp = await Conn.get(REL_URLS['promotions'], params={'post': pk}, user_id=call.from_user.id)
+    if resp.get('results'):
+        await call.answer(_('Для этой публикации уже заказано продвижение'))
+        return
+
+    await CreatePromotion.STARTER.set()
     keyboard, path = await dispatcher('LEVEL_3_ADD_PROMOTION', call.from_user.id)
     await call.message.answer(_('Заказ продвижения объявления\n' +
                                 'Фраза: 50 грн'), reply_markup=keyboard)
