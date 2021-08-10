@@ -8,7 +8,6 @@ from middlewares import _
 
 import emoji
 
-
 lang_markup = InlineKeyboardMarkup().add(
     InlineKeyboardButton(text='Русский', callback_data=user_callback.LANG_CB.new(action='lang',
                                                                                  lang='ru')),
@@ -74,36 +73,39 @@ async def get_keyboard_for_post_detail(page: str, pk: int, flat_pk: int, key: st
     )
     if key == 'posts_public':
         markup.row(
-                InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='post_list_new',
-                                                                                               page=page,
-                                                                                               key=key)),
-                InlineKeyboardButton(_('Пожаловаться'), callback_data=user_callback.COMPLAINT_CB.new(action='complaint', pk=pk,
-                                                                                                     type='_'))
-                )
+            InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='post_list_new',
+                                                                                           page=page,
+                                                                                           key=key)),
+            InlineKeyboardButton(_('Пожаловаться'),
+                                 callback_data=user_callback.COMPLAINT_CB.new(action='complaint', pk=pk,
+                                                                              type='_'))
+        )
         if user_id in favorites:
             markup.insert(InlineKeyboardButton(_('Убрать из избранного'),
-                                               callback_data=user_callback.get_detail_callback_with_page(action='delete_from_favorites',
-                                                                                                         pk=pk,
-                                                                                                         key=key,
-                                                                                                         page=page)))
+                                               callback_data=user_callback.get_detail_callback_with_page(
+                                                   action='delete_from_favorites',
+                                                   pk=pk,
+                                                   key=key,
+                                                   page=page)))
         else:
             markup.insert(InlineKeyboardButton(_('В избранное'),
                                                callback_data=user_callback.DETAIL_CB.new(action='save_to_favorites',
                                                                                          pk=pk)))
     elif key == 'favorites':
         markup.row(
-                InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='post_list_new',
-                                                                                               page=page,
-                                                                                               key=key)),
-                InlineKeyboardButton(_('Пожаловаться'), callback_data=user_callback.COMPLAINT_CB.new(action='complaint',
-                                                                                                     pk=pk,
-                                                                                                     type='_'))
-                ).row(
-                InlineKeyboardButton(_('Убрать из избранного'),
-                                     callback_data=user_callback.get_detail_callback_with_page(action='delete_from_favorites',
-                                                                                               pk=pk,
-                                                                                               key=key,
-                                                                                               page=page))
+            InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='post_list_new',
+                                                                                           page=page,
+                                                                                           key=key)),
+            InlineKeyboardButton(_('Пожаловаться'), callback_data=user_callback.COMPLAINT_CB.new(action='complaint',
+                                                                                                 pk=pk,
+                                                                                                 type='_'))
+        ).row(
+            InlineKeyboardButton(_('Убрать из избранного'),
+                                 callback_data=user_callback.get_detail_callback_with_page(
+                                     action='delete_from_favorites',
+                                     pk=pk,
+                                     key=key,
+                                     page=page))
         )
     return markup
 
@@ -118,9 +120,10 @@ async def get_post_complaint_types(post_pk: int) -> InlineKeyboardMarkup:
                                                                                                   pk=post_pk,
                                                                                                   type='PHOTO'))
     ).row(
-        InlineKeyboardButton(_('Неккоректное описание'), callback_data=user_callback.COMPLAINT_CB.new(action='complaint',
-                                                                                                      pk=post_pk,
-                                                                                                      type='DESC'))
+        InlineKeyboardButton(_('Неккоректное описание'),
+                             callback_data=user_callback.COMPLAINT_CB.new(action='complaint',
+                                                                          pk=post_pk,
+                                                                          type='DESC'))
     )
     return inline_markup
 
@@ -152,7 +155,7 @@ async def get_keyboard_for_filter_detail(pk: int) -> InlineKeyboardMarkup:
     return markup
 
 
-async def get_keyboard_for_my_post_detail(page: str, pk: int, flat_pk: int, key: str,) -> InlineKeyboardMarkup:
+async def get_keyboard_for_my_post_detail(page: str, pk: int, flat_pk: int, key: str, ) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     markup.add(
         InlineKeyboardButton(text=_('О квартире'),
@@ -160,16 +163,17 @@ async def get_keyboard_for_my_post_detail(page: str, pk: int, flat_pk: int, key:
                                                                              pk=flat_pk))
     )
     markup.row(
-            InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='my_post_list_new',
-                                                                                           page=page,
-                                                                                           key=key)),
-            InlineKeyboardButton(_('Редактировать'), callback_data=user_callback.get_detail_callback(action='edit_post',
-                                                                                                     pk=pk)),
-            InlineKeyboardButton(_('Удалить'), callback_data=user_callback.get_detail_callback_with_page(action='delete_post',
-                                                                                                         page=page,
-                                                                                                         key=key,
-                                                                                                         pk=pk))
-            )
+        InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='my_post_list_new',
+                                                                                       page=page,
+                                                                                       key=key)),
+        InlineKeyboardButton(_('Редактировать'), callback_data=user_callback.get_detail_callback(action='edit_post',
+                                                                                                 pk=pk)),
+        InlineKeyboardButton(_('Удалить'),
+                             callback_data=user_callback.get_detail_callback_with_page(action='delete_post',
+                                                                                       page=page,
+                                                                                       key=key,
+                                                                                       pk=pk))
+    )
     return markup
 
 
@@ -195,26 +199,44 @@ async def get_keyboard_for_my_house(key: str, page: str, action: str, pk: int) -
                                                                                                  page='1',
                                                                                                  key='flats',
                                                                                                  pk=pk)),
-        InlineKeyboardButton(text=_('Редактировать'), callback_data=user_callback.get_detail_callback(action='edit_house',
-                                                                                                      pk=pk)),
+        InlineKeyboardButton(text=_('Редактировать'),
+                             callback_data=user_callback.get_detail_callback(action='edit_house',
+                                                                             pk=pk)),
         InlineKeyboardButton(text=_('Удалить'), callback_data=user_callback.get_detail_callback(action='delete_house',
                                                                                                 pk=pk))
     ).add(
-        InlineKeyboardButton(_('Добавить корпус'), callback_data=user_callback.get_detail_callback_with_page(action='add_building',
-                                                                                                             pk=pk,
-                                                                                                             key=key,
-                                                                                                             page=page)),
-        InlineKeyboardButton(_('Добавить секцию'), callback_data=user_callback.get_detail_callback_with_page(action='add_section',
-                                                                                                             pk=pk,
-                                                                                                             key=key,
-                                                                                                             page=page)),
-        InlineKeyboardButton(_('Добавить этаж'), callback_data=user_callback.get_detail_callback_with_page(action='add_floor',
-                                                                                                           pk=pk,
-                                                                                                           key=key,
-                                                                                                           page=page))
+        InlineKeyboardButton(_('Добавить корпус'),
+                             callback_data=user_callback.get_detail_callback_with_page(action='add_building',
+                                                                                       pk=pk,
+                                                                                       key=key,
+                                                                                       page=page)),
+        InlineKeyboardButton(_('Добавить секцию'),
+                             callback_data=user_callback.get_detail_callback_with_page(action='add_section',
+                                                                                       pk=pk,
+                                                                                       key=key,
+                                                                                       page=page)),
+        InlineKeyboardButton(_('Добавить этаж'),
+                             callback_data=user_callback.get_detail_callback_with_page(action='add_floor',
+                                                                                       pk=pk,
+                                                                                       key=key,
+                                                                                       page=page))
     ).add(
-      InlineKeyboardButton(_('Добавить квартиру'), callback_data=user_callback.get_detail_callback(action='add_flat',
-                                                                                                   pk=pk))
+        InlineKeyboardButton(_('Корпуса'),
+                             callback_data=user_callback.LIST_CB_WITH_PK.new(action='house_structure_list',
+                                                                             page='1',
+                                                                             key='buildings',
+                                                                             pk=pk)),
+        InlineKeyboardButton(_('Секции'), callback_data=user_callback.LIST_CB_WITH_PK.new(action='house_structure_list',
+                                                                                          page='1',
+                                                                                          key='sections',
+                                                                                          pk=pk)),
+        InlineKeyboardButton(_('Этажи'), callback_data=user_callback.LIST_CB_WITH_PK.new(action='house_structure_list',
+                                                                                         page='1',
+                                                                                         key='floors',
+                                                                                         pk=pk))
+    ).add(
+        InlineKeyboardButton(_('Добавить квартиру'), callback_data=user_callback.get_detail_callback(action='add_flat',
+                                                                                                     pk=pk))
     ).add(
         InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.get_list_callback(action=action,
                                                                                             page=page,

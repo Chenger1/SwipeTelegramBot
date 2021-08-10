@@ -316,7 +316,7 @@ async def add_section(call: types.CallbackQuery, callback_data: dict):
                                                             page=page, key=key)
         text = ''
         for index, item in enumerate(buildings, start=1):
-            text += f'{index}. {item["building_full_name"]}\n'
+            text += f'{index}. {item["full_name"]}\n'
         await call.message.answer(text, reply_markup=keyboard)
         await call.answer()
     else:
@@ -349,7 +349,7 @@ async def add_floor(call: types.CallbackQuery, callback_data: dict):
                                                             page=page, key=key)
         text = ''
         for index, item in enumerate(sections, start=1):
-            text += f'{index}. {item["section_full_name"]}\n'
+            text += f'{index}. {item["full_name"]}\n'
         await call.message.answer(text, reply_markup=keyboard)
         await call.answer()
     else:
@@ -384,3 +384,40 @@ async def delete_flat(call: types.CallbackQuery, callback_data: dict):
         await get_house(call, data, 'my_house_detail')
     else:
         await call.answer(_('Произошла ошибка. Попробуйте ещё раз'))
+
+
+@dp.callback_query_handler(LIST_CB_WITH_PK.filter(action='house_structure_list'))
+async def house_structure_list(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    key = callback_data.get('key')
+    resp = await Conn.get(REL_URLS[key], params={'house': pk}, user_id=call.from_user.id)
+    objects = resp.get('results')
+    if objects:
+        keyboard = await create_house.get_building_keyboard(items=objects,
+                                                            page=callback_data.get('page'),
+                                                            key=key,
+                                                            action='delete_house_structure')
+        text = ''
+        for index, item in enumerate(objects, start=1):
+            text += f'{index}. {item["full_name"]}\n'
+            text += f'Есть связанные объекты\n' if item.get('has_related') is True else 'Пусто\n'
+        await call.message.answer(text, reply_markup=keyboard)
+        await call.answer()
+    else:
+        await call.answer(_('Ничего нет'), show_alert=True)
+
+
+@dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='delete_house_structure'))
+async def delete_house_structure(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    key = callback_data.get('key')
+    url = f'{REL_URLS[key]}{pk}/'
+    resp_detail = await Conn.get(url, user_id=call.from_user.id)
+    resp, status = await Conn.delete(url, user_id=call.from_user.id)
+    if status == 204:
+        await call.answer(_('Объект удален'))
+        callback_data['pk'] = resp_detail.get('house')
+        callback_data['key'] = 'houses'
+        await get_house(call, callback_data, 'my_house_detail')
+    else:
+        await call.answer(_('Произошла ошибка: ' + status))
