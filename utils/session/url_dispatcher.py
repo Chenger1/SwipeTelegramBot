@@ -20,6 +20,8 @@ REL_URLS = {
     'filters': 'main/user_filters/',
     #   #POSTS - user posts
     'posts': 'main/posts/',
+    'promotions': 'main/promotion/',
+    'promotion_types': 'main/promotion_type/',
 
     # HOUSES
     'houses': 'main/houses/',

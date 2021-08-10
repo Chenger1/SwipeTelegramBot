@@ -15,7 +15,9 @@ menu_storage = {
         'LEVEL_2_POSTS': user_keyboards.get_level_2_post_keyboard,
         'LEVEL_2_POSTS:LEVEL_3_POSTS': {
             'LEVEL_3_FILTER_POSTS': user_keyboards.get_level_2_filter_post_keyboard,
-            'LEVEL_3_CREATE_POST': user_keyboards.get_level_3_create_post_keyboard
+            'LEVEL_3_CREATE_POST': user_keyboards.get_level_3_create_post_keyboard,
+            'LEVEL_3_ADD_PROMOTION': user_keyboards.get_level_3_add_promotion
+
         },
         'LEVEL_2_HOUSES': user_keyboards.get_level_2_house_keyboard,
         'LEVEL_2_HOUSES:LEVEL_3_MY_HOUSES': {

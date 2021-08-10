@@ -1,5 +1,4 @@
 import logging
-from aiohttp.client_exceptions import ContentTypeError
 
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text

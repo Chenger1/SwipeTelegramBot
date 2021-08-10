@@ -106,3 +106,11 @@ class CreateDocument(StatesGroup):
     NAME = State()
     FILE = State()
     SAVE = State()
+
+
+class CreatePromotion(StatesGroup):
+    STARTER = State()
+    PHRASE = State()
+    TYPE = State()
+    SAVE = State()
+    PAYMENT = State()

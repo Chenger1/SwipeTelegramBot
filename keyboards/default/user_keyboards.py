@@ -172,6 +172,17 @@ async def get_level_3_user_subscription_settings(is_admin: int) -> ReplyKeyboard
     )
 
 
+async def get_level_3_add_promotion(is_admin: int) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(resize_keyboard=True).add(
+        KeyboardButton(_('Сохранить'))
+    ).add(
+        KeyboardButton(_('Перейти к фразе')),
+        KeyboardButton(_('Перейти к типу'))
+    ).add(
+        KeyboardButton(_('Вернуться'))
+    )
+
+
 async def get_level_4_add_flat(is_admin: int) -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(resize_keyboard=True).add(
         KeyboardButton(_('Сохранить'))
