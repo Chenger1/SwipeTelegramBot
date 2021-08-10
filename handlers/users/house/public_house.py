@@ -421,3 +421,36 @@ async def delete_house_structure(call: types.CallbackQuery, callback_data: dict)
         await get_house(call, callback_data, 'my_house_detail')
     else:
         await call.answer(_('Произошла ошибка: ' + status))
+
+
+@dp.callback_query_handler(LIST_CB_WITH_PK.filter(action='news_list'))
+async def news_list(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    resp = await Conn.get(REL_URLS['news'], params={'house': pk}, user_id=call.from_user.id)
+    objects = resp.get('results')
+    if objects:
+        keyboard = await create_house.get_building_keyboard('delete_news', objects,
+                                                            'news', '1')
+        text = ''
+        for index, item in enumerate(objects, start=1):
+            text += f'{index}. {item["title"]}'
+        await call.message.answer(text, reply_markup=keyboard)
+    else:
+        await call.answer(_('Новостей нет'))
+
+
+@dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='delete_news'))
+async def delete_news(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    url = f'{REL_URLS["news"]}{pk}/'
+    resp_detail = await Conn.get(url, user_id=call.from_user.id)
+    resp, status = await Conn.delete(url, user_id=call.from_user.id)
+    if status == 204:
+        await call.answer(_('Удалено'))
+        callback_data['pk'] = resp_detail.get('house')
+        callback_data['key'] = 'houses'
+        await get_house(call, callback_data, 'my_house_detail')
+    else:
+        await call.answer(_('Ошибка'))
+        for key, value in resp.items():
+            logging.info(f'{key} - {value}')

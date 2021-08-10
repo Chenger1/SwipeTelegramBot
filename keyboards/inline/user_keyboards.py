@@ -238,9 +238,10 @@ async def get_keyboard_for_my_house(key: str, page: str, action: str, pk: int) -
         InlineKeyboardButton(_('Добавить квартиру'), callback_data=user_callback.get_detail_callback(action='add_flat',
                                                                                                      pk=pk))
     ).add(
-        InlineKeyboardButton(_('Новости'), callback_data=user_callback.get_list_callback(action='news_list',
-                                                                                         page='1',
-                                                                                         key='news')),
+        InlineKeyboardButton(_('Новости'), callback_data=user_callback.LIST_CB_WITH_PK.new(action='news_list',
+                                                                                           page='1',
+                                                                                           key='news',
+                                                                                           pk=pk)),
         InlineKeyboardButton(_('Добавить новость'), callback_data=user_callback.get_detail_callback(action='add_news',
                                                                                                     pk=pk))
     ).add(
