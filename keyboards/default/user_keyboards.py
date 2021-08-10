@@ -206,3 +206,14 @@ async def get_level_4_add_news(is_admin: int) -> ReplyKeyboardMarkup:
     ).add(
         KeyboardButton(_('Вернуться'))
     )
+
+
+async def get_level_4_add_doc(is_admin: int) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(resize_keyboard=True).add(
+        KeyboardButton(_('Сохранить'))
+    ).add(
+        KeyboardButton(_('Перейти к названию')),
+        KeyboardButton(_('Перейти к файлу'))
+    ).add(
+        KeyboardButton(_('Вернуться'))
+    )

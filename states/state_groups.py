@@ -99,3 +99,10 @@ class CreateNewsItem(StatesGroup):
     TITLE = State()
     TEXT = State()
     SAVE = State()
+
+
+class CreateDocument(StatesGroup):
+    STARTER = State()
+    NAME = State()
+    FILE = State()
+    SAVE = State()
