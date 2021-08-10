@@ -85,7 +85,7 @@ async def get_flat(call: types.CallbackQuery, callback_data: dict,
     elif keyboard_key == 'my_flat_detail':
         keyboard = await keyboard_cor(key=callback_data.get('key'),
                                       page=callback_data.get('page'),
-                                      action='my_flats_list',
+                                      action='flats_list',
                                       pk=pk,
                                       house_pk=resp.get('house_pk'))
     else:
