@@ -38,13 +38,13 @@ async def back(message: types.Message, state: FSMContext):
 @dp.message_handler(Text(equals=['Сохранить', 'Save']), state=CreateNewsItem)
 async def go_to_save_news(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
-    if not state_data.get('title'):
+    if not state_data['create_news'].get('title'):
         await message.answer(_('Вы не ввели заголовок'))
         return
     await message.answer(_('Подтверждаете?\n' +
                            '<b>{title}</b>\n' +
                            '{desc}').format(title=state_data['create_news']['title'],
-                                            desc=state_data['create_news']['text']),
+                                            desc=state_data['create_news'].get('text', '')),
                          reply_markup=confirm_keyboard)
     await CreateNewsItem.SAVE.set()
 
