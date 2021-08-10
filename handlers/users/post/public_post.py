@@ -4,6 +4,7 @@ from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.exceptions import MessageNotModified, MessageTextIsEmpty
 
+from keyboards.callbacks.user_callback import DETAIL_CB
 from loader import dp, Conn
 from utils.session.url_dispatcher import REL_URLS
 from deserializers.post import PostDeserializer, PostFilterDeserializer
@@ -285,3 +286,19 @@ async def back(message: types.Message, state: FSMContext):
     keyboard, path = await back_button(data.get('path'), message.from_user.id)
     await message.answer(text=await get_menu_label(path), reply_markup=keyboard)
     await state.update_data(path=path)
+
+
+@dp.callback_query_handler(DETAIL_CB.filter(action='delete_promotion'))
+async def delete_promotion(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    resp = await Conn.get(REL_URLS['promotions'], params={'post': pk}, user_id=call.from_user.id)
+    if resp.get('results'):
+        promo = resp.get('results')[0]
+        url = f'{REL_URLS["promotions"]}{promo["id"]}/'
+        resp_delete, status = await Conn.delete(url, user_id=call.from_user.id)
+        if status == 204:
+            await call.answer(_('Продвижение убрано'))
+        else:
+            await call.answer(_('Произошла ошибка'))
+    else:
+        await call.answer(_('Для этой публикации продвижение не заказано'))

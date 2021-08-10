@@ -160,9 +160,13 @@ async def get_keyboard_for_my_post_detail(page: str, pk: int, flat_pk: int, key:
     markup.add(
         InlineKeyboardButton(text=_('О квартире'),
                              callback_data=user_callback.get_detail_callback(action='flat_detail',
-                                                                             pk=flat_pk)),
+                                                                             pk=flat_pk))
+    ).add(
         InlineKeyboardButton(text=_('Заказать продвижение'),
                              callback_data=user_callback.get_detail_callback(action='add_promotion',
+                                                                             pk=pk)),
+        InlineKeyboardButton(text=_('Убрать продвижение'),
+                             callback_data=user_callback.get_detail_callback(action='delete_promotion',
                                                                              pk=pk))
     )
     markup.row(
