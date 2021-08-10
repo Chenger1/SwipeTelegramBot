@@ -76,20 +76,15 @@ async def get_flat(call: types.CallbackQuery, callback_data: dict,
     url = f'{REL_URLS["flats_public"]}{pk}/'
     resp = await Conn.get(url, user_id=call.from_user.id)
     inst = await flat_des.for_detail(resp)
-    if keyboard_key == 'flat_detail':
-        keyboard = await keyboard_cor(key=callback_data.get('key'),
-                                      page=callback_data.get('page'),
-                                      action='flats_list',
-                                      pk=pk,
-                                      house_pk=resp.get('house_pk'))
-    elif keyboard_key == 'my_flat_detail':
-        keyboard = await keyboard_cor(key=callback_data.get('key'),
-                                      page=callback_data.get('page'),
-                                      action='flats_list',
-                                      pk=pk,
-                                      house_pk=resp.get('house_pk'))
+    if keyboard_key == 'booked_flat':
+        action = 'my_flats_list'
     else:
-        keyboard = None
+        action = 'flats_list'
+    keyboard = await keyboard_cor(key=callback_data.get('key'),
+                                  page=callback_data.get('page'),
+                                  action=action,
+                                  pk=pk,
+                                  house_pk=resp.get('house_pk'))
     await send_with_image(call, resp, pk, inst.data, keyboard, 'schema')
     await call.answer()
 
