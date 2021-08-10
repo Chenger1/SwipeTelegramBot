@@ -473,5 +473,6 @@ async def docs_list(call: types.CallbackQuery, callback_data: dict):
                 await File.create(filename=filename,
                                   file_id=file_id,
                                   parent_id=pk)
+        await call.answer()
     else:
         await call.answer(_('Документов нет'))
