@@ -378,3 +378,21 @@ async def get_keyboard_for_document_detail(pk: int) -> InlineKeyboardMarkup:
                                                                                                pk=pk))
     )
 
+
+async def get_keyboard_for_request_detail(pk: int, page: str, key: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup().add(
+        InlineKeyboardButton(_('Одобрить'), callback_data=user_callback.get_detail_callback_with_page(action='approve_request',
+                                                                                                      page=page,
+                                                                                                      key=key,
+                                                                                                      pk=pk)),
+        InlineKeyboardButton(_('Отказать'),
+                             callback_data=user_callback.get_detail_callback_with_page(action='disapprove_request',
+                                                                                       page=page,
+                                                                                       key=key,
+                                                                                       pk=pk))
+    ).add(
+        InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='request_list',
+                                                                                       page=page,
+                                                                                       key=key))
+    )
+
