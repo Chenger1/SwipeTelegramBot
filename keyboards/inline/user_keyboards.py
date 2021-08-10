@@ -195,10 +195,6 @@ async def get_keyboard_for_house(key: str, page: str, action: str, pk: int) -> I
 async def get_keyboard_for_my_house(key: str, page: str, action: str, pk: int) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     markup.add(
-        InlineKeyboardButton(text=_('Квартиры'), callback_data=user_callback.LIST_CB_WITH_PK.new(action='flats_list',
-                                                                                                 page='1',
-                                                                                                 key='flats',
-                                                                                                 pk=pk)),
         InlineKeyboardButton(text=_('Редактировать'),
                              callback_data=user_callback.get_detail_callback(action='edit_house',
                                                                              pk=pk)),
@@ -235,8 +231,18 @@ async def get_keyboard_for_my_house(key: str, page: str, action: str, pk: int) -
                                                                                          key='floors',
                                                                                          pk=pk))
     ).add(
+        InlineKeyboardButton(text=_('Квартиры'), callback_data=user_callback.LIST_CB_WITH_PK.new(action='flats_list',
+                                                                                                 page='1',
+                                                                                                 key='flats',
+                                                                                                 pk=pk)),
         InlineKeyboardButton(_('Добавить квартиру'), callback_data=user_callback.get_detail_callback(action='add_flat',
                                                                                                      pk=pk))
+    ).add(
+        InlineKeyboardButton(_('Новости'), callback_data=user_callback.get_list_callback(action='news_list',
+                                                                                         page='1',
+                                                                                         key='news')),
+        InlineKeyboardButton(_('Добавить новость'), callback_data=user_callback.get_detail_callback(action='add_news',
+                                                                                                    pk=pk))
     ).add(
         InlineKeyboardButton(text=_('Назад'), callback_data=user_callback.get_list_callback(action=action,
                                                                                             page=page,

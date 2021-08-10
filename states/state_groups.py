@@ -92,3 +92,10 @@ class CreateFlat(StatesGroup):
     SCHEMA = State()
 
     SAVE = State()
+
+
+class CreateNewsItem(StatesGroup):
+    STARTER = State()
+    TITLE = State()
+    TEXT = State()
+    SAVE = State()

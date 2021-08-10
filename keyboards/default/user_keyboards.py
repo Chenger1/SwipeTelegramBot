@@ -195,3 +195,14 @@ async def get_level_4_add_flat(is_admin: int) -> ReplyKeyboardMarkup:
     ).add(
         KeyboardButton(_('Вернуться'))
     )
+
+
+async def get_level_4_add_news(is_admin: int) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(resize_keyboard=True).add(
+        KeyboardButton(_('Сохранить'))
+    ).add(
+        KeyboardButton(_('Перейти к заголовку')),
+        KeyboardButton(_('Перейти к описанию'))
+    ).add(
+        KeyboardButton(_('Вернуться'))
+    )
