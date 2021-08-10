@@ -1,4 +1,6 @@
 import logging
+import os
+
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
@@ -8,7 +10,8 @@ from loader import dp, Conn
 from keyboards.default.dispatcher import dispatcher
 from keyboards.inline.user_keyboards import (get_keyboard_for_list, get_keyboard_for_house, get_keyboard_for_my_house,
                                              get_keyboard_for_flat, get_keyboard_for_flat_list, get_keyboard_for_booked_flat,
-                                             get_keyboard_for_flat_detail_house, get_keyboard_for_my_flat)
+                                             get_keyboard_for_flat_detail_house, get_keyboard_for_my_flat,
+                                             get_keyboard_for_document_detail)
 from keyboards.inline import create_house
 from keyboards.callbacks.user_callback import LIST_CB, DETAIL_WITH_PAGE_CB, DETAIL_CB, LIST_CB_WITH_PK
 
@@ -19,8 +22,7 @@ from middlewares import _
 from handlers.users.utils import handle_list, send_with_image
 
 from utils.session.url_dispatcher import REL_URLS
-from utils.db_api.models import User
-
+from utils.db_api.models import User, File
 
 house_des = HouseDeserializer()
 flat_des = FlatDeserializer()
@@ -416,9 +418,11 @@ async def delete_house_structure(call: types.CallbackQuery, callback_data: dict)
     resp, status = await Conn.delete(url, user_id=call.from_user.id)
     if status == 204:
         await call.answer(_('Объект удален'))
-        callback_data['pk'] = resp_detail.get('house')
-        callback_data['key'] = 'houses'
-        await get_house(call, callback_data, 'my_house_detail')
+        if resp_detail.get('house'):
+            callback_data['pk'] = resp_detail.get('house')
+            callback_data['key'] = 'houses'
+            await get_house(call, callback_data, 'my_house_detail')
+        await call.message.delete()
     else:
         await call.answer(_('Произошла ошибка: ' + status))
 
@@ -437,3 +441,37 @@ async def news_list(call: types.CallbackQuery, callback_data: dict):
         await call.message.answer(text, reply_markup=keyboard)
     else:
         await call.answer(_('Новостей нет'))
+
+
+@dp.callback_query_handler(LIST_CB_WITH_PK.filter(action='doc_list'))
+async def docs_list(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    resp = await Conn.get(REL_URLS['documents'], params={'house': pk}, user_id=call.from_user.id)
+    documents = resp.get('results')
+    if documents:
+        for item in documents:
+            resp_file = await Conn.get(item.get('file'), user_id=call.from_user.id)
+            filename = os.path.split(item.get('file'))[-1]
+            file_data = await File.get_or_none(filename=filename, parent_id=pk)
+
+            if resp_file.get('file_type') in ('image/png', 'image/jpeg', 'image/jpg'):
+                method = call.bot.send_photo
+                file_attr = 'photo'
+            else:
+                method = call.bot.send_document
+                file_attr = 'document'
+            if file_data:
+                await method(call.from_user.id, file_data.file_id,
+                             reply_markup=await get_keyboard_for_document_detail(item['id']))
+            else:
+                msg = await method(call.from_user.id, resp_file.get('file'),
+                                   reply_markup=await get_keyboard_for_document_detail(item['id']))
+                if file_attr == 'photo':
+                    file_id = msg.photo[-1].file_id
+                else:
+                    file_id = getattr(msg, file_attr).file_id
+                await File.create(filename=filename,
+                                  file_id=file_id,
+                                  parent_id=pk)
+    else:
+        await call.answer(_('Документов нет'))
