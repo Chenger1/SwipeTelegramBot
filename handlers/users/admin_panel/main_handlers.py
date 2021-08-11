@@ -176,3 +176,11 @@ async def disapprove_complaint(call: types.CallbackQuery, callback_data: dict):
         await call.answer(_('Произошла ошибка'))
         for key, value in resp_post_detail.items():
             log.info(f'{key} - {value}')
+
+
+@dp.message_handler(Text(equals=['Получить логи', 'Get logs']), is_admin=True)
+async def get_logs_file(message: types.Message):
+    log.info(f'User: {message.from_user.id} - gets logs')
+    with open('app.log', 'rb') as file:
+        await message.bot.send_document(chat_id=message.from_user.id, document=file,
+                                        caption=_('Файл логов'))

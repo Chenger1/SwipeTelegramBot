@@ -165,6 +165,8 @@ async def get_level_2_admin_panel(is_admin: int) -> ReplyKeyboardMarkup:
     ).add(
         KeyboardButton(_('Рассылка'))
     ).add(
+        KeyboardButton(_('Получить логи'))
+    ).add(
         KeyboardButton(_('Вернуться'))
     )
 

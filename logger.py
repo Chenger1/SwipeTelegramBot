@@ -2,7 +2,7 @@ import logging
 import sys
 
 
-def get_logger(name=__file__, file='app.txt', encoding='utf-8'):
+def get_logger(name=__file__, file='app.log', encoding='utf-8'):
     log = logging.getLogger(name)
 
     fh = logging.FileHandler(file, encoding=encoding)
