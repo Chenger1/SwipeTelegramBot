@@ -119,3 +119,9 @@ class CreatePromotion(StatesGroup):
 class InputAdminToken(StatesGroup):
     INPUT = State()
     SECOND_INPUT = State()
+
+
+class Mailing(StatesGroup):
+    STARTER = State()
+    TEXT = State()
+
