@@ -2,11 +2,11 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import CommandStart
 
-from loader import dp, Conn
+from loader import dp, Conn, log
 
 from states.state_groups import StartState
 
-from utils.db_api.models import User, AdminToken
+from utils.db_api.models import User
 from utils.session.url_dispatcher import REL_URLS
 
 from keyboards.default import defaults
@@ -76,7 +76,7 @@ async def phone_number(message: types.Message, state: FSMContext):
         user.language = data.get('language', message.from_user.locale)
         await user.save()
     if user.is_admin:
-        result = await authorize_user(user)
+        result = await authorize_user(user.user_id)
         if result:
             await message.answer(_('Вы вошли в систему как администратор'))
             if created:
@@ -100,13 +100,14 @@ async def phone_number(message: types.Message, state: FSMContext):
 @dp.message_handler(state=StartState.CHECK_TOKEN)
 async def check_admin_token(message: types.Message, state: FSMContext):
     """ If user write token - check it. If token right - set user as admin """
-    data = message.text
-    if await AdminToken.filter(token=data).exists():
-        data = await state.get_data()
-        user_id = data.get('user')
-        user = await User.get(user_id=user_id)
+    token = message.text
+    user = await User.get(user_id=message.from_user.id)
+    url = f'{REL_URLS["users"]}{user.swipe_id}/'
+    resp = await Conn.patch(url, data={'is_staff': True, 'admin_token': token}, user_id=message.from_user.id)
+    if resp.get('pk'):
         user.is_admin = True
-        result = await authorize_user(user)
+        await user.save()
+        result = await authorize_user(user.user_id)
         if result:
             keyboard, path = await dispatcher('LEVEL_1', message.from_user.id)
             await message.answer(_('Вы успешно зарегестрированы в системе'),
