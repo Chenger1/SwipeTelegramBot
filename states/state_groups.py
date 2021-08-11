@@ -114,3 +114,7 @@ class CreatePromotion(StatesGroup):
     TYPE = State()
     SAVE = State()
     PAYMENT = State()
+
+
+class InputAdminToken(StatesGroup):
+    INPUT = State()

@@ -139,12 +139,23 @@ async def get_level_4_create_house(is_admin: int) -> ReplyKeyboardMarkup:
 
 
 async def get_level_2_user_settings_keyboard(is_admin: int) -> ReplyKeyboardMarkup:
-    return ReplyKeyboardMarkup(resize_keyboard=True).add(
+    markup = ReplyKeyboardMarkup(resize_keyboard=True).add(
         KeyboardButton(_('Изменить данные')),
         KeyboardButton(_('Настройки подписки'))
-    ).add(
+
+    )
+    if is_admin:
+        markup.add(
+            KeyboardButton(_('Отключить режим администратора'))
+        )
+    else:
+        markup.add(
+            KeyboardButton(_('Ввести токен администратора'))
+        )
+    markup.add(
         KeyboardButton(_('Вернуться'))
     )
+    return markup
 
 
 async def get_level_3_user_settings_edit_data(is_admin: int) -> ReplyKeyboardMarkup:

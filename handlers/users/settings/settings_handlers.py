@@ -9,13 +9,13 @@ from loader import dp, Conn
 from keyboards.default.dispatcher import dispatcher
 
 from middlewares import _
-from utils.db_api.models import User
+from utils.db_api.models import User, AdminToken
 
 from utils.session.url_dispatcher import REL_URLS
 
 from data.config import PAYMENT_PROVIDER_TOKEN
 
-from states.state_groups import Subscription
+from states.state_groups import Subscription, InputAdminToken
 
 
 Subscription_price = types.LabeledPrice(label=_('Пользовательская подписка'), amount=1000)
@@ -113,3 +113,58 @@ async def cancel_subscription(message: types.Message):
         await message.answer(_('Ваша пользовательская подписка отменена'))
     else:
         await message.answer(_('Произошла ошибка. Повторите попытку'))
+
+
+@dp.message_handler(Text(equals=['Ввести токен администратора', 'Add admin token']))
+async def add_admin_token(message: types.Message):
+    user = await User.get(user_id=message.from_user.id)
+    if user.is_admin:
+        await message.answer(_('Вы уже имеете статус администратора'))
+    else:
+        await InputAdminToken.INPUT.set()
+        await message.answer(_('Введите токен'))
+
+
+@dp.message_handler(state=InputAdminToken.INPUT)
+async def check_token(message: types.Message, state: FSMContext):
+    answer = message.text
+    token = await AdminToken.get_or_none(token=answer)
+    state_data = await state.get_data()
+    if token:
+        user = await User.get(user_id=message.from_user.id)
+        url = f'{REL_URLS["users"]}{user.swipe_id}/'
+        resp = await Conn.patch(url, data={'is_staff': True}, user_id=message.from_user.id)
+        if resp.get('pk'):
+            user.is_admin = True
+            await user.save()
+            keyboard, path = await dispatcher('LEVEL_2_SETTINGS', message.from_user.id)
+            await message.answer(_('Теперь вы имеете статус администратора'), reply_markup=keyboard)
+            state_data['path'] = path
+        else:
+            await message.answer(_('Произошла ошибка'))
+            for key, value in resp.items():
+                logging.info(f'{key} - {value}')
+    else:
+        await message.answer(_('Токен неправильный'))
+    await state.finish()
+    await state.update_data(**state_data)
+
+
+@dp.message_handler(Text(equals=['Отключить режим администратора', 'Remove admin mode']))
+async def remove_admin_move(message: types.Message, state: FSMContext):
+    user = await User.get(user_id=message.from_user.id)
+    if user.is_admin:
+        url = f'{REL_URLS["users"]}{user.swipe_id}/'
+        resp = await Conn.patch(url, data={'is_staff': False}, user_id=message.from_user.id)
+        if resp.get('pk'):
+            user.is_admin = False
+            await user.save()
+            keyboard, path = await dispatcher('LEVEL_2_SETTINGS', message.from_user.id)
+            await message.answer(_('Вы больше не администратор'), reply_markup=keyboard)
+            await state.update_data(path=path)
+        else:
+            await message.answer(_('Произошла ошибка'))
+            for key, value in resp.items():
+                logging.info(f'{key} - {value}')
+    else:
+        await message.answer(_('У вас нет статуса администратора'))
