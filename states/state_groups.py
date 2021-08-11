@@ -118,3 +118,4 @@ class CreatePromotion(StatesGroup):
 
 class InputAdminToken(StatesGroup):
     INPUT = State()
+    SECOND_INPUT = State()
