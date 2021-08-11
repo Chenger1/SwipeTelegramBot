@@ -7,9 +7,11 @@ from aiogram.dispatcher import FSMContext
 from loader import dp, Conn
 
 from keyboards.default.dispatcher import dispatcher
-from keyboards.inline.user_keyboards import get_keyboard_for_list, get_keyboard_for_notary_list
+from keyboards.inline.user_keyboards import (get_keyboard_for_list, get_keyboard_for_notary_list,
+                                             get_keyboard_for_complaint_list)
 from keyboards.callbacks.user_callback import LIST_CB, DETAIL_WITH_PAGE_CB
 from deserializers.user import UserDeserializer
+from deserializers.post import ComplaintDeserializer
 
 from middlewares import _
 
@@ -17,6 +19,7 @@ from utils.session.url_dispatcher import REL_URLS
 from handlers.users.utils import handle_list
 
 user_des = UserDeserializer()
+complaint_des = ComplaintDeserializer()
 
 
 @dp.message_handler(Text(equals=['Панель администратора', 'Admin Panel']), is_admin=True)
@@ -28,14 +31,9 @@ async def admin_panel(message: types.Message, state: FSMContext):
 
 @dp.message_handler(Text(equals=['Список нотариусов', 'Notary List']), is_admin=True)
 async def notary_list(message: types.Message):
-    resp = await Conn.get(REL_URLS['users'], params={'role': 'NOTARY'}, user_id=message.from_user.id)
-    users = resp.get('results')
-    if users:
-        await handle_list(message, page='1', key='users', params={'role': 'NOTARY'},
-                          deserializer=user_des, detail_action='user_notary_detail',
-                          list_action='user_notary_list', keyboard=get_keyboard_for_list)
-    else:
-        await message.answer(_('Таких пользователей нет'))
+    await handle_list(message, page='1', key='users', params={'role': 'NOTARY'},
+                      deserializer=user_des, detail_action='user_notary_detail',
+                      list_action='user_notary_list', keyboard=get_keyboard_for_list)
 
 
 @dp.callback_query_handler(LIST_CB.filter(action='user_notary_list'), is_admin=True)
@@ -78,3 +76,33 @@ async def remove_from_notary(call: types.CallbackQuery, callback_data: dict):
         for key, value in resp.items():
             logging.info(f'{key} - {value}')
 
+
+@dp.message_handler(Text(equals=['Жалобы', 'Complaints']), is_admin=True)
+async def complaints_list(message: types.Message):
+    await handle_list(message, page='1', key='complaint_admin', deserializer=complaint_des,
+                      detail_action='complaint_detail', list_action='complaint_list',
+                      keyboard=get_keyboard_for_list)
+
+
+@dp.callback_query_handler(LIST_CB.filter(action='complaint_list'))
+async def complaints_list_callback(call: types.CallbackQuery, callback_data: dict):
+    page = callback_data.get('page')
+    key = callback_data.get('key')
+    await handle_list(call, page=page, key=key, deserializer=complaint_des,
+                      detail_action='complaint_detail', list_action='complaint_list',
+                      keyboard=get_keyboard_for_list)
+
+
+@dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='complaint_detail'))
+async def complaint_detail(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    url = f'{REL_URLS["complaint_admin"]}{pk}/'
+    resp = await Conn.get(url, user_id=call.from_user.id)
+    if resp.get('id'):
+        keyboard = await get_keyboard_for_complaint_list(pk=pk, page=callback_data.get('page'),
+                                                         key=callback_data.get('key'))
+        inst = await complaint_des.for_detail(resp)
+        await call.answer()
+        await call.message.edit_text(inst.data, reply_markup=keyboard)
+    else:
+        await call.answer(_('Произошла ошибка'))

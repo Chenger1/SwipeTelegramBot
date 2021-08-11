@@ -416,3 +416,22 @@ async def get_keyboard_for_notary_list(pk: int, page: str, key: str) -> InlineKe
                                                                                        page=page,
                                                                                        key=key))
     )
+
+
+async def get_keyboard_for_complaint_list(pk: int, page: str, key: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup().add(
+        InlineKeyboardButton(_('Удовлетворить'),
+                             callback_data=user_callback.get_detail_callback_with_page(action='approve_complaint',
+                                                                                       page=page,
+                                                                                       key=key,
+                                                                                       pk=pk)),
+        InlineKeyboardButton(_('Отказать'),
+                             callback_data=user_callback.get_detail_callback_with_page(action='disapprove_complaint',
+                                                                                       page=page,
+                                                                                       key=key,
+                                                                                       pk=pk))
+    ).add(
+        InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='complaint_list',
+                                                                                       page=page,
+                                                                                       key=key))
+    )

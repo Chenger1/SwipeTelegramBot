@@ -12,6 +12,7 @@ REL_URLS = {
     # POST
     #   #COMPLAINT
     'complaint': 'main/complaints/',
+    'complaint_admin': 'main/complaints_admin/',
     #   #FAVORITES
     'favorites': 'main/favorites_posts/',
     #   #Like/Dislike
