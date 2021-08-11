@@ -106,24 +106,21 @@ class FlatForCreatePost(BaseDeserializer):
 class ComplaintDeserializer(BaseDeserializer):
     async def for_detail(self, data: Dict) -> namedtuple:
         rejected = data['post_display']['rejected']
-        message = data['post_display']['rejected_message'] or _('Нет')
         info = _('{house}. {flat}\n' +
                  '<b>Цена: </b>{price}\n' +
                  '<b>Просмотры: </b>{views}\n' +
-                 '<b>Заблокирован:</b>{rejected}\n' +
-                 '<b>Причина: </b> {message}\n' +
+                 '<b>Заблокирован:</b>  {rejected}\n' +
                  'Причина жалобы: {type}\n').format(house=data['post_display']['house'],
-                                                  flat=data['post_display']['flat_floor'],
-                                                  views=data['post_display']['views'],
-                                                  price=data['post_display']['price'],
-                                                  rejected=_('Да') if rejected else _('Нет'),
-                                                  message=message,
-                                                  type=data['type_display'])
+                                                    flat=data['post_display']['flat_floor'],
+                                                    views=data['post_display']['views'],
+                                                    price=data['post_display']['price'],
+                                                    rejected=_('Да') if rejected else _('Нет'),
+                                                    type=data['type_display'])
         return await self.get_namedtuple(data['id'], info)
 
     async def for_list(self, data: Dict) -> namedtuple:
         info = _('{house}. {flat}\n' +
                  'Причина жалобы: {type}\n').format(house=data['post_display']['house'],
-                                                  flat=data['post_display']['flat_floor'],
-                                                  type=data['type_display'])
+                                                    flat=data['post_display']['flat_floor'],
+                                                    type=data['type_display'])
         return await self.get_namedtuple(data['id'], info)

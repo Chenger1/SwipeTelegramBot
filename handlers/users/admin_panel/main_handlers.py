@@ -14,6 +14,7 @@ from deserializers.user import UserDeserializer
 from deserializers.post import ComplaintDeserializer
 
 from middlewares import _
+from utils.db_api.models import User
 
 from utils.session.url_dispatcher import REL_URLS
 from handlers.users.utils import handle_list
@@ -106,3 +107,74 @@ async def complaint_detail(call: types.CallbackQuery, callback_data: dict):
         await call.message.edit_text(inst.data, reply_markup=keyboard)
     else:
         await call.answer(_('Произошла ошибка'))
+
+
+@dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='approve_complaint'), is_admin=True)
+async def approve_complaint(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    url = f'{REL_URLS["complaint_admin"]}{pk}/'
+    resp_detail = await Conn.get(url, user_id=call.from_user.id)
+    rejected_type = resp_detail.get('type')
+    post_pk = resp_detail.get('post')
+    url_post = f'{REL_URLS["posts"]}{post_pk}/'
+    data = {
+        'rejected': True,
+        'reject_message': rejected_type
+    }
+    resp_reject = await Conn.patch(url_post, data=data, params={'for_user': resp_detail['post_author']},
+                                   user_id=call.from_user.id)
+    if resp_reject.get('id'):
+        user = await User.get_or_none(user_id=resp_reject.get('user'))
+        await call.answer(_('Объявление заблокировано'))
+        if user:
+            flat = f'{resp_reject["flat_info"]["floor"]} №{resp_reject["flat_info"]["number"]}'
+            text = _('<b>** Системное сообщение **</b>' +
+                     'Ваша публикации для квартиры {flat} в доме {house}' +
+                     'была заблокирована по причине {message}').format(flat=flat,
+                                                                       house=resp_reject['flat_info']['house'],
+                                                                       message=resp_reject['reject_message_display'])
+            await call.bot.send_message(chat_id=user.user_id, text=text)
+    else:
+        await call.answer(_('Произошла ошибка'))
+        for key, value in resp_reject.items():
+            logging.info(f'{key} - {value}')
+
+
+@dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='disapprove_complaint'), is_admin=True)
+async def disapprove_complaint(call: types.CallbackQuery, callback_data: dict):
+    pk = callback_data.get('pk')
+    url = f'{REL_URLS["complaint_admin"]}{pk}/'
+    resp_detail = await Conn.get(url, user_id=call.from_user.id)
+    post_pk = resp_detail.get('post')
+    url_post_detail = f'{REL_URLS["posts"]}{post_pk}/'
+    data = {
+        'rejected': False,
+        'reject_message': ''
+    }
+    resp_post_detail = await Conn.patch(url_post_detail, data=data, params={'for_user': resp_detail['post_author']},
+                                        user_id=call.from_user.id)
+    if resp_post_detail.get('id'):
+
+        resp, status = await Conn.delete(url, user_id=call.from_user.id)
+        if status == 204:
+
+            user = await User.get_or_none(user_id=resp_detail['user'])
+            if user:
+                flat = f'{resp_post_detail["flat_info"]["floor"]} №{resp_post_detail["flat_info"]["number"]}'
+                text = _('<b>** Системное сообщение **</b>' +
+                         'Ваша жалоба на объявление для квартиры {flat} в доме {house}' +
+                         'была отвергнута').format(flat=flat,
+                                                   house=resp_post_detail['flat_info']['house'])
+                await call.bot.send_message(chat_id=user.user_id, text=text)
+            await call.answer(_('В жалобе отказано'))
+            await handle_list(call, page='1', key='complaint_admin', deserializer=complaint_des,
+                              detail_action='complaint_detail', list_action='complaint_list',
+                              keyboard=get_keyboard_for_list)
+        else:
+            await call.answer(_('Произошла ошибка'))
+            for key, value in resp.items():
+                logging.info(f'{key} - {value}')
+    else:
+        await call.answer(_('Произошла ошибка'))
+        for key, value in resp_post_detail.items():
+            logging.info(f'{key} - {value}')
