@@ -103,6 +103,9 @@ async def save_news(call: types.CallbackQuery, callback_data: dict, state: FSMCo
         resp, status = await Conn.post(REL_URLS['news'], data=news_data, user_id=call.from_user.id)
         if status == 201:
             await call.answer(_('Новость добавлена'), show_alert=True)
+            state_data.pop('create_news')
+            await state.finish()
+            await state.update_data(**state_data)
         else:
             await call.answer(_('Произошла ошибка'), show_alert=True)
             for key, value in resp.items():

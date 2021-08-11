@@ -436,8 +436,9 @@ async def news_list(call: types.CallbackQuery, callback_data: dict):
                                                             'news', '1')
         text = ''
         for index, item in enumerate(objects, start=1):
-            text += f'{index}. {item["title"]}'
+            text += f'{index}. {item["title"]}\n'
         await call.message.answer(text, reply_markup=keyboard)
+        await call.answer()
     else:
         await call.answer(_('Новостей нет'))
 
