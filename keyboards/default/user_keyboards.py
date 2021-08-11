@@ -158,6 +158,17 @@ async def get_level_2_user_settings_keyboard(is_admin: int) -> ReplyKeyboardMark
     return markup
 
 
+async def get_level_2_admin_panel(is_admin: int) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(resize_keyboard=True).add(
+        KeyboardButton(_('Список нотариусов')),
+        KeyboardButton(_('Жалобы'))
+    ).add(
+        KeyboardButton(_('Рассылка'))
+    ).add(
+        KeyboardButton(_('Вернуться'))
+    )
+
+
 async def get_level_3_user_settings_edit_data(is_admin: int) -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(resize_keyboard=True).add(
         KeyboardButton(_('Сохранить'))

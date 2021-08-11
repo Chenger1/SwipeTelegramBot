@@ -33,7 +33,8 @@ menu_storage = {
         'LEVEL_2_SETTINGS:LEVEL_3_USER_SETTINGS': {
             'LEVEL_3_EDIT_DATA': user_keyboards.get_level_3_user_settings_edit_data,
             'LEVEL_3_SUBSCRIPTION': user_keyboards.get_level_3_user_subscription_settings
-        }
+        },
+        'LEVEL_2_ADMIN_PANEL': user_keyboards.get_level_2_admin_panel
     }
 }
 menu_label = {

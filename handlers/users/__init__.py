@@ -5,3 +5,4 @@ from . import house
 from . import utils
 from . import settings
 from . import request_to_chest
+from . import admin_panel
