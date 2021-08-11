@@ -6,8 +6,8 @@ from middlewares import _
 class UserDeserializer(BaseDeserializer):
     async def for_detail(self, data: dict) -> tuple:
         info = _('{name} - {phone}\n Email: {email}').format(
-            name = (data['first_name'] or '') + (data['last_name'] or ''),
-            phone=data['phone_number'], email=data['email']
+            name=(data['first_name'] or '') + ' ' + (data['last_name'] or '') or _('Не указано'),
+            phone=data['phone_number'], email=data['email'] or _('Не указано')
         )
         return await self.get_namedtuple(data['pk'], info)
 

@@ -403,3 +403,16 @@ async def get_keyboard_for_request_detail(pk: int, page: str, key: str) -> Inlin
                                                                                        key=key))
     )
 
+
+async def get_keyboard_for_notary_list(pk: int, page: str, key: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup().add(
+        InlineKeyboardButton(_('Убрать из списка нотариусов'),
+                             callback_data=user_callback.get_detail_callback_with_page(action='remove_from_notary',
+                                                                                       page=page,
+                                                                                       key=key,
+                                                                                       pk=pk))
+    ).add(
+        InlineKeyboardButton(_('Назад'), callback_data=user_callback.get_list_callback(action='user_notary_list',
+                                                                                       page=page,
+                                                                                       key=key))
+    )
