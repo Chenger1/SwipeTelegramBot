@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-07-31 16:06+0300\n"
+"POT-Creation-Date: 2021-08-11 17:17+0300\n"
 "PO-Revision-Date: 2021-07-31 15:07+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -19,37 +19,1599 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: handlers/users/start.py:45
+#: deserializers/house.py:10
+msgid ""
+"<b>{name}</b>\n"
+"<i>{address}.{city}</i>\n"
+msgstr ""
+
+#: deserializers/house.py:17
+msgid ""
+"<b>{name}</b>\n"
+"<i>{address}.{city}</i>\n"
+"<b>Предназначение:</b> {role}\n"
+"<b>Тип:</b> {type}\n"
+"<b>Класс:</b> {klass}\n"
+"<b>Технология:</b> {tech}\n"
+"<b>Территория:</b> {terr}\n"
+"<b>Расстояние до моря:</b> {sea}\n"
+"<b>Высота потолков:</b> {height}\n"
+"<b>Отопление:</b> {heating}\n"
+"<b>Газопровод:</b> {gas}\n"
+"<b>Электричество:</b> {electricity}\n"
+"<b>Канализация:</b> {sewerage}\n"
+"<b>Водоснабжение:</b> {water}\n"
+"<b>Количество корпусов:</b> {build}\n"
+"<b>Количество секций:</b> {section}\n"
+"<b>Количество этажей:</b> {floor_count}\n"
+"<b>Количество квартир:</b> {flat}\n"
+"----------------------------------------\n"
+"{description}\n"
+msgstr ""
+
+#: deserializers/house.py:41 deserializers/post.py:35 deserializers/user.py:9
+#: deserializers/user.py:10 handlers/users/post/create_post.py:137
+#: handlers/users/post/create_post.py:167
+#: handlers/users/post/create_post.py:170 handlers/users/post/filter_post.py:69
+#: handlers/users/post/filter_post.py:70 handlers/users/post/filter_post.py:80
+#: handlers/users/post/filter_post.py:81 handlers/users/post/filter_post.py:90
+#: handlers/users/post/filter_post.py:100
+#: handlers/users/post/filter_post.py:111
+#: handlers/users/post/filter_post.py:122
+#: handlers/users/post/filter_post.py:133
+#: handlers/users/post/filter_post.py:230 handlers/users/post/public_post.py:82
+#: handlers/users/settings/edit_data.py:77
+#: handlers/users/settings/edit_data.py:105
+msgid "Не указано"
+msgstr ""
+
+#: deserializers/house.py:46
+msgid "Нет описания"
+msgstr ""
+
+#: deserializers/house.py:57
+msgid ""
+"<b>№:</b> {number}\n"
+"<b>Площадь:</b> {square}\n"
+"<b>Количество комнат:</b> {rooms}\n"
+"<b>Цена:</b> {price}\n"
+"<b>Состояние:</b> {state}\n"
+"<b>Этаж:</b> {floor}\n"
+msgstr ""
+
+#: deserializers/house.py:71
+msgid ""
+"<b>№:</b> {number}\n"
+"<b>Площадь:</b> {square}\n"
+"<b>Количество комнат:</b> {rooms}\n"
+"<b>Цена:</b> {price}\n"
+"<b>Состояние:</b> {state}\n"
+"<b>Этаж:</b> {floor}\n"
+"<b>Тип:</b> {type}\n"
+"<b>Планировка:</b> {plan}\n"
+"<b>Балкон/Лоджия:</b> {balcony}\n"
+"<b>Документ:</b> {doc}\n"
+msgstr ""
+
+#: deserializers/house.py:97
+msgid ""
+"<b>Квартира: </b> №{number}\n"
+"<b>Этаж: </b> {floor}\n"
+"<b>{house}</b>\n"
+"<b>Телефон клиента: </b> {phone}\n"
+"<b>{name}</b>\n"
+"<b>Отправлено: </b> {date}\n"
+"<b>Статус: </b> {status}\n"
+msgstr ""
+
+#: deserializers/house.py:109
+msgid "Фамилия, имя не указаны"
+msgstr ""
+
+#: deserializers/house.py:110
+#: handlers/users/request_to_chest/public_requests.py:91
+msgid "Одобрено"
+msgstr ""
+
+#: deserializers/house.py:110
+#: handlers/users/request_to_chest/public_requests.py:115
+msgid "Отказано"
+msgstr ""
+
+#: deserializers/house.py:114
+msgid ""
+"<b>Квартира: </b> №{number}\n"
+"<b>Этаж: </b> {floor}\n"
+"<b>{house}</b>\n"
+"<b>Отправлено: </b> {date}\n"
+msgstr ""
+
+#: deserializers/post.py:12
+msgid "<b>Квартира:</b> №{number}\n"
+msgstr ""
+
+#: deserializers/post.py:13
+msgid "<b>Город:</b> {city}\n"
+msgstr ""
+
+#: deserializers/post.py:14
+msgid "<b>Документы:</b> {doc}\n"
+msgstr ""
+
+#: deserializers/post.py:15
+msgid "<b>Планировка:</b> {plan}\n"
+msgstr ""
+
+#: deserializers/post.py:16
+msgid "<b>Кухня:</b> {kitchen}\n"
+msgstr ""
+
+#: deserializers/post.py:17
+msgid "<b>Тип квартиры:</b> {type}\n"
+msgstr ""
+
+#: deserializers/post.py:18
+msgid "<b>Территория:</b> {terr}\n"
+msgstr ""
+
+#: deserializers/post.py:19
+msgid "<b>Тип оплаты:</b> {pay}\n"
+msgstr ""
+
+#: deserializers/post.py:20
+msgid "<b>О предложении:</b> {desc}\n"
+msgstr ""
+
+#: deserializers/post.py:21
+msgid "<b>Цена:</b> {price}\n"
+msgstr ""
+
+#: deserializers/post.py:22
+msgid "<i>Посмотрели:</i> {views}\n"
+msgstr ""
+
+#: deserializers/post.py:23
+msgid "<i>Рейтинг:</i> {rate}\n"
+msgstr ""
+
+#: deserializers/post.py:27
+msgid "<b>Город:</b> {about}\n"
+msgstr ""
+
+#: deserializers/post.py:28
+msgid "<b>Площадь</b> {square} | "
+msgstr ""
+
+#: deserializers/post.py:29
+msgid "<b>Связь:</b> {comm}\n"
+msgstr ""
+
+#: deserializers/post.py:30
+msgid "<b>Цена:</b> {price} грн."
+msgstr ""
+
+#: deserializers/post.py:38
+msgid ""
+"<b>{name}</b>\n"
+"<b>Цена:</b> {price__gte}:{price__lte}\n"
+"<b>Площадь:</b> {square__gte}:{square__lte}\n"
+"<b>Город:</b> {city}\n"
+"<b>Состояние:</b> {state}\n"
+"<b>Планировка:</b> {plan}\n"
+"<b>Территория:</b> {terr}\n"
+msgstr ""
+
+#: deserializers/post.py:56
+msgid "<b>{name}</b>"
+msgstr ""
+
+#: deserializers/post.py:62 deserializers/post.py:72
+msgid ""
+"<b>{name}</b>\n"
+"<b>{address}</b>\n"
+"<b>{city}</b>"
+msgstr ""
+
+#: deserializers/post.py:85
+msgid ""
+"<b>Квартира </>№ {number}\n"
+"<b>Площадь:</b> {square} м2\n"
+"<b>Цена:</b> {price}\n"
+"<b>Кол-во комнат:</b> {rooms}\n"
+"<b>Свободна:</b> {free}\n"
+msgstr ""
+
+#: deserializers/post.py:93 deserializers/post.py:102 deserializers/post.py:117
+#: handlers/users/house/create_house.py:232
+#: handlers/users/house/create_house.py:243
+#: handlers/users/house/create_house.py:254
+#: handlers/users/house/create_house.py:265
+#: handlers/users/house/create_house.py:276
+#: handlers/users/house/create_house.py:287
+#: handlers/users/house/create_house.py:578
+#: handlers/users/house/create_house.py:592
+#: handlers/users/house/create_house.py:606
+#: handlers/users/house/create_house.py:620
+#: handlers/users/house/create_house.py:635
+#: handlers/users/house/create_house.py:649 keyboards/inline/create_flat.py:50
+#: keyboards/inline/create_house.py:76 keyboards/inline/create_house.py:83
+#: keyboards/inline/create_house.py:92 keyboards/inline/create_house.py:99
+#: keyboards/inline/create_house.py:108 keyboards/inline/create_house.py:119
+#: keyboards/inline/create_house.py:128
+msgid "Нет"
+msgstr ""
+
+#: deserializers/post.py:93 deserializers/post.py:102 deserializers/post.py:117
+#: keyboards/inline/create_house.py:117
+msgid "Да"
+msgstr ""
+
+#: deserializers/post.py:100
+msgid ""
+"<b>Квартира </>№ {number}\n"
+"<b>Свободна:</b> {free}"
+msgstr ""
+
+#: deserializers/post.py:109
+msgid ""
+"{house}. {flat}\n"
+"<b>Цена: </b>{price}\n"
+"<b>Просмотры: </b>{views}\n"
+"<b>Заблокирован:</b>  {rejected}\n"
+"Причина жалобы: {type}\n"
+msgstr ""
+
+#: deserializers/post.py:122
+msgid ""
+"{house}. {flat}\n"
+"Причина жалобы: {type}\n"
+msgstr ""
+
+#: deserializers/user.py:8
+msgid ""
+"{name} - {phone}\n"
+" Email: {email}"
+msgstr ""
+
+#: deserializers/user.py:15
+msgid "{phone}"
+msgstr ""
+
+#: handlers/users/help.py:11
+msgid ""
+"Список команд: \n"
+"/start - Начать диалог\n"
+"/help - Получить справку\n"
+"SwipeTelegramBot поможет вам получить информацию об актуальных "
+"предложениях аренды"
+msgstr ""
+
+#: handlers/users/start.py:47
 msgid "Отправьте ваш номер для регистрации"
 msgstr ""
 
-#: handlers/users/start.py:55 handlers/users/start.py:78
-#: handlers/users/start.py:103
+#: handlers/users/start.py:58 handlers/users/start.py:84
+#: handlers/users/start.py:114
 msgid "Вы успешно зарегестрированы в системе"
 msgstr ""
 
-#: handlers/users/start.py:59 handlers/users/start.py:107
+#: handlers/users/start.py:63 handlers/users/start.py:119
 msgid "Произошла ошибка. Нажмите /start снова"
 msgstr ""
 
-#: handlers/users/start.py:66
+#: handlers/users/start.py:70
 msgid "Пожалуйста, отправьте ваш номер для регистрации"
 msgstr ""
 
-#: handlers/users/start.py:76
+#: handlers/users/start.py:81
 msgid "Вы вошли в систему как администратор"
 msgstr ""
 
-#: handlers/users/start.py:81
+#: handlers/users/start.py:89
 msgid "Вы уже в системе. Добро пожаловать"
 msgstr ""
 
-#: handlers/users/start.py:88
+#: handlers/users/start.py:95
 msgid "Вы можете ввести токен администратора или нажать \"/cancel\""
 msgstr ""
 
-#: handlers/users/start.py:110
+#: handlers/users/start.py:122
 msgid "Токен неправильный. Попробуйте снова или нажмите \"/cancel\""
+msgstr ""
+
+#: handlers/users/utils.py:82
+msgid "Больше ничего нет"
+msgstr ""
+
+#: handlers/users/house/public_house.py:408 handlers/users/utils.py:119
+msgid "Ничего нет"
+msgstr ""
+
+#: handlers/users/admin_panel/mailing.py:41
+msgid "Введите сообщение для отправки"
+msgstr ""
+
+#: handlers/users/admin_panel/main_handlers.py:27
+msgid "Панель администратора"
+msgstr ""
+
+#: handlers/users/admin_panel/main_handlers.py:58
+#: handlers/users/admin_panel/main_handlers.py:74
+#: handlers/users/admin_panel/main_handlers.py:107
+#: handlers/users/admin_panel/main_handlers.py:136
+#: handlers/users/admin_panel/main_handlers.py:172
+#: handlers/users/admin_panel/main_handlers.py:176
+#: handlers/users/house/create_news.py:107
+#: handlers/users/house/public_house.py:192
+#: handlers/users/house/public_house.py:241
+#: handlers/users/house/public_house.py:283
+#: handlers/users/house/public_house.py:303
+#: handlers/users/house/public_house.py:336
+#: handlers/users/house/public_house.py:369
+#: handlers/users/post/create_promotion.py:180
+#: handlers/users/post/public_post.py:301
+#: handlers/users/request_to_chest/public_requests.py:47
+#: handlers/users/request_to_chest/public_requests.py:81
+#: handlers/users/request_to_chest/public_requests.py:122
+#: handlers/users/settings/settings_handlers.py:142
+#: handlers/users/settings/settings_handlers.py:173
+msgid "Произошла ошибка"
+msgstr ""
+
+#: handlers/users/admin_panel/main_handlers.py:67
+msgid "Пользователь убран из списка нотариусов"
+msgstr ""
+
+#: handlers/users/admin_panel/main_handlers.py:126
+msgid "Объявление заблокировано"
+msgstr ""
+
+#: handlers/users/admin_panel/main_handlers.py:129
+msgid ""
+"<b>** Системное сообщение **</b>Ваша публикации для квартиры {flat} в "
+"доме {house}была заблокирована по причине {message}"
+msgstr ""
+
+#: handlers/users/admin_panel/main_handlers.py:162
+msgid ""
+"<b>** Системное сообщение **</b>Ваша жалоба на объявление для квартиры "
+"{flat} в доме {house}была отвергнута"
+msgstr ""
+
+#: handlers/users/admin_panel/main_handlers.py:167
+msgid "В жалобе отказано"
+msgstr ""
+
+#: handlers/users/admin_panel/main_handlers.py:186
+msgid "Файл логов"
+msgstr ""
+
+#: handlers/users/house/create_document.py:46
+#: handlers/users/house/create_news.py:42
+#: handlers/users/house/create_news.py:89
+msgid ""
+"Подтверждаете?\n"
+"<b>{title}</b>\n"
+"{desc}"
+msgstr ""
+
+#: handlers/users/house/create_document.py:53
+#: handlers/users/house/create_flat.py:51
+#: handlers/users/house/create_house.py:55
+#: handlers/users/post/create_post.py:70
+#: handlers/users/post/create_promotion.py:49
+msgid "Вы не указали: \n"
+msgstr ""
+
+#: handlers/users/house/create_document.py:55
+#: handlers/users/house/create_house.py:57
+msgid "Название\n"
+msgstr ""
+
+#: handlers/users/house/create_document.py:57
+msgid "Файл\n"
+msgstr ""
+
+#: handlers/users/house/create_document.py:63
+msgid "Введите название документа"
+msgstr ""
+
+#: handlers/users/house/create_document.py:69
+#: handlers/users/house/create_document.py:92
+msgid "Добавьте файл"
+msgstr ""
+
+#: handlers/users/house/create_document.py:80
+msgid "Введите название файла"
+msgstr ""
+
+#: handlers/users/house/create_document.py:89
+msgid "Название не может быть пустым"
+msgstr ""
+
+#: handlers/users/house/create_document.py:114
+#: handlers/users/house/create_document.py:126
+#: handlers/users/house/create_flat.py:47
+#: handlers/users/house/create_flat.py:441
+#: handlers/users/house/create_house.py:51
+#: handlers/users/house/create_house.py:672
+#: handlers/users/post/create_post.py:66 handlers/users/post/create_post.py:386
+#: handlers/users/post/create_promotion.py:45
+#: handlers/users/post/create_promotion.py:121
+#: handlers/users/settings/edit_data.py:38
+#: handlers/users/settings/edit_data.py:142
+msgid "Подтверждаете?"
+msgstr ""
+
+#: handlers/users/house/create_document.py:147
+msgid "Документ добавлен"
+msgstr ""
+
+#: handlers/users/house/create_document.py:153
+#: handlers/users/house/public_house.py:387
+#: handlers/users/settings/edit_data.py:166
+#: handlers/users/settings/settings_handlers.py:87
+msgid "Произошла ошибка. Попробуйте ещё раз"
+msgstr ""
+
+#: handlers/users/house/create_document.py:158
+#: handlers/users/house/create_news.py:111
+#: handlers/users/post/create_promotion.py:154
+msgid "Вы можете выбрать этап через меню"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:53
+msgid "Номер\n"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:55
+msgid "Площадь\n"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:57
+msgid "Площадь кухни"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:59
+msgid "Цену"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:61
+msgid "Цену за кв. метр"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:63
+msgid "Количество комнат"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:65
+msgid "Состояние"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:67
+msgid "Формат собственности"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:69
+msgid "Тип"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:71
+msgid "Планировку"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:73
+msgid "Наличие или отсутствие балкона"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:75
+msgid "Схему квартиры"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:89
+#: handlers/users/house/create_flat.py:258
+msgid "Выберите этаж"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:91
+#: handlers/users/house/create_flat.py:100
+#: handlers/users/house/create_flat.py:110
+#: handlers/users/house/create_flat.py:120
+#: handlers/users/house/create_flat.py:130
+#: handlers/users/house/create_flat.py:140
+#: handlers/users/house/create_flat.py:150
+#: handlers/users/house/create_flat.py:160
+#: handlers/users/house/create_flat.py:170
+#: handlers/users/house/create_flat.py:180
+#: handlers/users/house/create_flat.py:190
+msgid ""
+"\n"
+"Сейчас: {value}"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:98
+msgid "Укажите номер"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:108
+msgid "Укажите площадь"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:118
+msgid "Укажите площадь кухни"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:128
+msgid "Укажите цену"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:138
+msgid "Укажите цену за квадратный метр"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:148
+msgid "Укажите число комнат"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:158
+msgid "Укажите состояние"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:168
+#: handlers/users/house/create_flat.py:376
+msgid "Укажите формат собственности"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:178
+#: handlers/users/house/create_flat.py:389
+msgid "Укажите тип"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:188
+#: handlers/users/house/create_flat.py:415
+msgid "Есть ли балкон/лоджия?"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:197
+msgid "Загрузие схему квартиры"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:232
+msgid ""
+"Редактируте информацию. \n"
+"Выберите этаж. \n"
+"Сейчас: {floor}"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:263
+msgid "Нет этажей. Добавьте их сперва"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:274
+msgid "Укажите номер квартиры"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:276
+#: handlers/users/house/create_house.py:78
+#: handlers/users/house/create_house.py:87
+#: handlers/users/house/create_house.py:96
+#: handlers/users/house/create_house.py:105
+#: handlers/users/house/create_house.py:114
+#: handlers/users/house/create_house.py:123
+#: handlers/users/house/create_house.py:132
+#: handlers/users/house/create_house.py:141
+#: handlers/users/house/create_house.py:150
+#: handlers/users/house/create_house.py:159
+#: handlers/users/house/create_house.py:168
+#: handlers/users/house/create_house.py:177
+#: handlers/users/house/create_house.py:186
+#: handlers/users/house/create_house.py:195
+#: handlers/users/house/create_house.py:204
+#: handlers/users/house/create_house.py:213
+#: handlers/users/house/create_house.py:222
+#: handlers/users/house/create_house.py:418
+#: handlers/users/house/create_house.py:431
+#: handlers/users/house/create_house.py:447
+#: handlers/users/house/create_house.py:458
+#: handlers/users/house/create_house.py:470
+#: handlers/users/house/create_house.py:482
+#: handlers/users/house/create_house.py:498
+#: handlers/users/house/create_house.py:515
+#: handlers/users/house/create_house.py:528
+#: handlers/users/house/create_house.py:540
+#: handlers/users/house/create_house.py:552
+#: handlers/users/house/create_house.py:564
+#: handlers/users/post/create_post.py:104
+#: handlers/users/post/create_post.py:125
+#: handlers/users/post/create_post.py:147
+#: handlers/users/post/create_post.py:157
+#: handlers/users/post/create_post.py:317
+#: handlers/users/post/create_post.py:346
+msgid "Сейчас: {value}"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:287
+msgid "Введите площадь квартиры"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:290
+msgid ""
+"\n"
+"Текущая площадь - {value}"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:294
+#: handlers/users/house/create_flat.py:309
+#: handlers/users/house/create_flat.py:324
+#: handlers/users/house/create_flat.py:339
+#: handlers/users/house/create_flat.py:354
+#: handlers/users/house/create_flat.py:369
+msgid "Введите <b>номер</b>"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:302
+msgid "Введите площадь кухни"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:305
+msgid ""
+"\n"
+"Текущая площадь кухни - {value}"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:317
+#: handlers/users/post/create_post.py:330
+msgid "Введите цену"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:320
+msgid ""
+"\n"
+"Текущая цена - {value}"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:332
+msgid "Введите цену за квадратный метр"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:335
+msgid ""
+"\n"
+"Текущая цена за кв.м- {value}"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:347
+msgid "Введите количество комнат"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:350
+msgid ""
+"\n"
+"Текущая количество - {value}"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:362
+msgid "Укажите состояние квартиры"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:365
+msgid ""
+"\n"
+"Текущее состояние - {value}"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:379
+msgid ""
+"\n"
+"Текущий формат - {value}"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:392
+msgid ""
+"\n"
+"Текущий тип - {value}"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:402
+msgid "Укажите планировку"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:405
+msgid ""
+"\n"
+"Текущая планировка - {value}"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:418
+msgid ""
+"\n"
+"Сейчас - {value}"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:428
+msgid "Загрузите схему квартиры"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:465
+msgid "Произошла ошибка попробуйте снова"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:467
+msgid "Информация о квартире изменена"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:477
+msgid "Квартира добавлена"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:487
+#: handlers/users/house/create_house.py:722
+#: handlers/users/post/create_post.py:410
+#: handlers/users/post/create_post.py:426
+msgid "Произошла ошибка. Повторите попытке"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:489
+#: handlers/users/house/create_house.py:727
+#: handlers/users/post/create_post.py:430
+msgid "Вы можете выбрать нужные этап через меню"
+msgstr ""
+
+#: handlers/users/house/create_house.py:59
+msgid "Адрес\n"
+msgstr ""
+
+#: handlers/users/house/create_house.py:61
+msgid "Город\n"
+msgstr ""
+
+#: handlers/users/house/create_house.py:63
+msgid "Технологию строительства\n"
+msgstr ""
+
+#: handlers/users/house/create_house.py:65
+msgid "Тип территории\n"
+msgstr ""
+
+#: handlers/users/house/create_house.py:67
+msgid "Предпочитаемый способ оплаты\n"
+msgstr ""
+
+#: handlers/users/house/create_house.py:69
+#: handlers/users/post/create_post.py:82
+msgid "Описание\n"
+msgstr ""
+
+#: handlers/users/house/create_house.py:75
+#: handlers/users/house/create_house.py:360
+msgid "Введите название дома"
+msgstr ""
+
+#: handlers/users/house/create_house.py:84
+#: handlers/users/house/create_house.py:373
+#: handlers/users/post/filter_post.py:185
+msgid "Введите город"
+msgstr ""
+
+#: handlers/users/house/create_house.py:93
+msgid "Введите адрес дома"
+msgstr ""
+
+#: handlers/users/house/create_house.py:102
+msgid "Выберите технологию строительства"
+msgstr ""
+
+#: handlers/users/house/create_house.py:111
+#: handlers/users/house/create_house.py:407
+msgid "Выберите тип территории"
+msgstr ""
+
+#: handlers/users/house/create_house.py:120
+msgid "Выберите предпочитаемые способы платежа"
+msgstr ""
+
+#: handlers/users/house/create_house.py:129
+msgid "Добавьте описание"
+msgstr ""
+
+#: handlers/users/house/create_house.py:138
+#: handlers/users/house/create_house.py:444
+msgid "Выберите статус дома"
+msgstr ""
+
+#: handlers/users/house/create_house.py:147
+msgid "Введите тип дома"
+msgstr ""
+
+#: handlers/users/house/create_house.py:156
+msgid "Выберите класс дома дома"
+msgstr ""
+
+#: handlers/users/house/create_house.py:165
+msgid "Введите расстояние до моря"
+msgstr ""
+
+#: handlers/users/house/create_house.py:174
+#: handlers/users/house/create_house.py:495
+msgid "Введите высоту потолков"
+msgstr ""
+
+#: handlers/users/house/create_house.py:183
+#: handlers/users/house/create_house.py:512
+msgid "Выберите тип газопровода"
+msgstr ""
+
+#: handlers/users/house/create_house.py:192
+#: handlers/users/house/create_house.py:526
+msgid "Выберите тип отопления"
+msgstr ""
+
+#: handlers/users/house/create_house.py:201
+msgid "Выберите тип электроподачи"
+msgstr ""
+
+#: handlers/users/house/create_house.py:210
+#: handlers/users/house/create_house.py:550
+msgid "Выберите тип канализации"
+msgstr ""
+
+#: handlers/users/house/create_house.py:219
+msgid "Выберите тип водоснабжения"
+msgstr ""
+
+#: handlers/users/house/create_house.py:228
+#: handlers/users/house/create_house.py:575
+msgid "Есть ли в вашем доме(или рядом с ним) спортивная площадка?"
+msgstr ""
+
+#: handlers/users/house/create_house.py:232
+#: handlers/users/house/create_house.py:243
+#: handlers/users/house/create_house.py:254
+#: handlers/users/house/create_house.py:265
+#: handlers/users/house/create_house.py:276
+#: handlers/users/house/create_house.py:287
+#: handlers/users/house/create_house.py:578
+#: handlers/users/house/create_house.py:592
+#: handlers/users/house/create_house.py:606
+#: handlers/users/house/create_house.py:620
+#: handlers/users/house/create_house.py:635
+#: handlers/users/house/create_house.py:649 keyboards/inline/create_flat.py:48
+#: keyboards/inline/create_house.py:126
+msgid "Есть"
+msgstr ""
+
+#: handlers/users/house/create_house.py:239
+#: handlers/users/house/create_house.py:589
+msgid "Есть ли в вашем доме(или рядом с ним) парковка?"
+msgstr ""
+
+#: handlers/users/house/create_house.py:250
+#: handlers/users/house/create_house.py:603
+msgid "Есть ли в вашем доме(или рядом с ним) магазин?"
+msgstr ""
+
+#: handlers/users/house/create_house.py:261
+#: handlers/users/house/create_house.py:617
+msgid "Есть ли в вашем доме(или рядом с ним) детская площадка?"
+msgstr ""
+
+#: handlers/users/house/create_house.py:272
+#: handlers/users/house/create_house.py:632
+msgid "Есть ли в вашем доме лифт?"
+msgstr ""
+
+#: handlers/users/house/create_house.py:283
+#: handlers/users/house/create_house.py:646
+msgid "Есть ли в вашем доме охрана?"
+msgstr ""
+
+#: handlers/users/house/create_house.py:294
+#: handlers/users/post/create_post.py:177
+#: handlers/users/post/create_post.py:371
+msgid "Добавьте изображение"
+msgstr ""
+
+#: handlers/users/house/create_house.py:341
+msgid "Сейчас: \n"
+msgstr ""
+
+#: handlers/users/house/create_house.py:347
+msgid ""
+"Редактируйте информацию\n"
+"Введите новое название дома\n"
+"Сейчас: {name}"
+msgstr ""
+
+#: handlers/users/house/create_house.py:372
+msgid "Текущий город: {city}"
+msgstr ""
+
+#: handlers/users/house/create_house.py:383
+msgid "Текущий адрес {address}"
+msgstr ""
+
+#: handlers/users/house/create_house.py:384
+msgid "Введите адрес"
+msgstr ""
+
+#: handlers/users/house/create_house.py:394
+msgid "Сейчас: {tech}"
+msgstr ""
+
+#: handlers/users/house/create_house.py:395
+msgid "Выберите технологию строительства дома"
+msgstr ""
+
+#: handlers/users/house/create_house.py:406
+msgid "Сейчас: {terr}"
+msgstr ""
+
+#: handlers/users/house/create_house.py:419
+msgid "Выберите предпочитаемый вариант оплаты"
+msgstr ""
+
+#: handlers/users/house/create_house.py:432
+msgid "Дайте описание дома"
+msgstr ""
+
+#: handlers/users/house/create_house.py:442
+msgid ""
+"<b>Далее идут опциональные параметры. Можете их пропустить.</b>\n"
+"<b>Часть из них получат стандартное значение</b>"
+msgstr ""
+
+#: handlers/users/house/create_house.py:456
+msgid "Дайте тип дома"
+msgstr ""
+
+#: handlers/users/house/create_house.py:468
+msgid "Дайте класс дома"
+msgstr ""
+
+#: handlers/users/house/create_house.py:480
+msgid "Введите расстояние до моря. Или пропустите если такового нет"
+msgstr ""
+
+#: handlers/users/house/create_house.py:501
+#: handlers/users/house/create_house.py:518
+msgid "Введите число"
+msgstr ""
+
+#: handlers/users/house/create_house.py:538
+msgid "Выберите тип электропровода"
+msgstr ""
+
+#: handlers/users/house/create_house.py:562
+msgid "Выберите тип водопровода"
+msgstr ""
+
+#: handlers/users/house/create_house.py:574
+msgid "Далее идут дополнительные параметры"
+msgstr ""
+
+#: handlers/users/house/create_house.py:659
+msgid "Добавьте изображение дома"
+msgstr ""
+
+#: handlers/users/house/create_house.py:701
+#: handlers/users/post/public_post.py:275
+#: handlers/users/settings/settings_handlers.py:113
+msgid "Произошла ошибка. Повторите попытку"
+msgstr ""
+
+#: handlers/users/house/create_house.py:703
+msgid "Информация о доме изменена"
+msgstr ""
+
+#: handlers/users/house/create_house.py:714
+msgid "Дом создан"
+msgstr ""
+
+#: handlers/users/house/create_news.py:40
+msgid "Вы не ввели заголовок"
+msgstr ""
+
+#: handlers/users/house/create_news.py:52
+#: handlers/users/house/create_news.py:69
+msgid "Введите заголовок"
+msgstr ""
+
+#: handlers/users/house/create_news.py:58
+msgid "Введите текст"
+msgstr ""
+
+#: handlers/users/house/create_news.py:78
+msgid "Заголовок не может быть пустым"
+msgstr ""
+
+#: handlers/users/house/create_news.py:81
+msgid "Добавьте текст новости"
+msgstr ""
+
+#: handlers/users/house/create_news.py:105
+msgid "Новость добавлена"
+msgstr ""
+
+#: handlers/users/house/public_house.py:97
+msgid "Меню домов"
+msgstr ""
+
+#: handlers/users/house/public_house.py:104
+msgid "Список всех домов"
+msgstr ""
+
+#: handlers/users/house/public_house.py:144
+#: keyboards/default/user_keyboards.py:83
+msgid "Мои дома"
+msgstr ""
+
+#: handlers/users/house/public_house.py:190
+msgid "Дом был удален"
+msgstr ""
+
+#: handlers/users/house/public_house.py:244
+msgid ""
+"Квартира забронирована. Запрос на добавление в шахматку отправлен "
+"администратору дома"
+msgstr ""
+
+#: handlers/users/house/public_house.py:250
+msgid "Список забронированных квартир"
+msgstr ""
+
+#: handlers/users/house/public_house.py:286
+msgid "Бронь снята"
+msgstr ""
+
+#: handlers/users/house/public_house.py:300
+msgid "Корпус добавлен"
+msgstr ""
+
+#: handlers/users/house/public_house.py:324
+msgid "Нет корпусов. Сперва добавьте их"
+msgstr ""
+
+#: handlers/users/house/public_house.py:333
+msgid "Секция добавлена"
+msgstr ""
+
+#: handlers/users/house/public_house.py:357
+msgid "Нет секций. Добавьте их сперва"
+msgstr ""
+
+#: handlers/users/house/public_house.py:366
+msgid "Этаж добавлен"
+msgstr ""
+
+#: handlers/users/house/public_house.py:419
+msgid "Объект удален"
+msgstr ""
+
+#: handlers/users/house/public_house.py:426
+msgid "Произошла ошибка: "
+msgstr ""
+
+#: handlers/users/house/public_house.py:442
+msgid "Новостей нет"
+msgstr ""
+
+#: handlers/users/house/public_house.py:477
+msgid "Документов нет"
+msgstr ""
+
+#: handlers/users/post/create_post.py:72
+msgid "Дом\n"
+msgstr ""
+
+#: handlers/users/post/create_post.py:74
+msgid "Квартиру\n"
+msgstr ""
+
+#: handlers/users/post/create_post.py:76
+msgid "Метод оплаты\n"
+msgstr ""
+
+#: handlers/users/post/create_post.py:78
+msgid "Цену\n"
+msgstr ""
+
+#: handlers/users/post/create_post.py:80
+msgid "Способ коммуникации с вами\n"
+msgstr ""
+
+#: handlers/users/post/create_post.py:84
+msgid "Фото к объявлению\n"
+msgstr ""
+
+#: handlers/users/post/create_post.py:91 handlers/users/post/create_post.py:220
+#: handlers/users/post/create_post.py:247
+msgid "Домов нет. Добавьте дом, преждем чем создавать объявление"
+msgstr ""
+
+#: handlers/users/post/create_post.py:102
+#: handlers/users/post/create_post.py:258
+msgid "Выберите дом"
+msgstr ""
+
+#: handlers/users/post/create_post.py:112
+msgid "Квартир нет. Добавьте квартиру, преждем чем создавать объявление"
+msgstr ""
+
+#: handlers/users/post/create_post.py:123
+#: handlers/users/post/create_post.py:290
+msgid "Выберите квартиру"
+msgstr ""
+
+#: handlers/users/post/create_post.py:138
+msgid ""
+"Текущая цена: {price}\n"
+"Введите новую цену"
+msgstr ""
+
+#: handlers/users/post/create_post.py:148
+#: handlers/users/post/create_post.py:315
+msgid "Выберите метод оплаты"
+msgstr ""
+
+#: handlers/users/post/create_post.py:158
+#: handlers/users/post/create_post.py:344
+msgid "Выберите метод коммуникации"
+msgstr ""
+
+#: handlers/users/post/create_post.py:168
+msgid ""
+"Текущее описание\n"
+" {desc}"
+msgstr ""
+
+#: handlers/users/post/create_post.py:217
+msgid "Редактируйте информацию"
+msgstr ""
+
+#: handlers/users/post/create_post.py:231
+msgid ""
+"Выберите дом\n"
+"Сейчас {house}"
+msgstr ""
+
+#: handlers/users/post/create_post.py:243
+msgid "Заполните форму для создания объявления"
+msgstr ""
+
+#: handlers/users/post/create_post.py:273
+msgid "Выбранный дом:\n"
+msgstr ""
+
+#: handlers/users/post/create_post.py:279
+msgid "Квартир нет. Добавьте квартиру, преждем чем работать с объявлением"
+msgstr ""
+
+#: handlers/users/post/create_post.py:292
+msgid "Сейчас: {flat}"
+msgstr ""
+
+#: handlers/users/post/create_post.py:297
+msgid "Такого дома нет в системе. Выберите другой"
+msgstr ""
+
+#: handlers/users/post/create_post.py:309
+msgid "Выбранная квартира:\n"
+msgstr ""
+
+#: handlers/users/post/create_post.py:320
+msgid "Нет такой квартиры в системе. Выберите другую"
+msgstr ""
+
+#: handlers/users/post/create_post.py:329
+msgid "Метод оплаты добавлен"
+msgstr ""
+
+#: handlers/users/post/create_post.py:332
+msgid "Сейчас {price}"
+msgstr ""
+
+#: handlers/users/post/create_post.py:343
+msgid "Цена добавлена"
+msgstr ""
+
+#: handlers/users/post/create_post.py:349
+msgid "Неправильный формат ввода"
+msgstr ""
+
+#: handlers/users/post/create_post.py:358
+msgid "Способ связи добавлен"
+msgstr ""
+
+#: handlers/users/post/create_post.py:361
+msgid ""
+"Сейчас:\n"
+" {desc}"
+msgstr ""
+
+#: handlers/users/post/create_post.py:370
+msgid "Описание добавлено"
+msgstr ""
+
+#: handlers/users/post/create_post.py:379
+#: handlers/users/settings/edit_data.py:135
+msgid "Вы не добавили изображение"
+msgstr ""
+
+#: handlers/users/post/create_post.py:414
+msgid "Объявление изменено"
+msgstr ""
+
+#: handlers/users/post/create_post.py:421
+msgid "Объявление создано"
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:51
+msgid "Фразу\n"
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:53
+msgid "Тип\n"
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:59
+msgid "Выберите фразу"
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:66
+msgid "Выберите тип продвижения"
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:71
+msgid ""
+"{index}. {name}.\n"
+" Эффективность {efficiency}\n"
+" Цена {price} грн.\n"
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:84
+msgid "Для этой публикации уже заказано продвижение"
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:89
+msgid ""
+"Заказ продвижения объявления\n"
+"Фраза: 50 грн"
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:91
+msgid "Выберите специальную фразу"
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:104
+msgid "Выберите тип"
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:108
+msgid ""
+"{index}. {name}.\n"
+" Эффективность {efficiency}\n"
+" Цена {price} грн."
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:134
+msgid "Необходимо оплатить заказ"
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:135
+msgid ""
+"Можете использовать следующие данные тестовой платежной карты: \n"
+"Номер: 4242 4242 4242 4242\n"
+"Дата: 01/22\n"
+"CVV: 123"
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:142
+msgid "Оплата заказа на продвижение объявления"
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:143
+msgid "Без оплаты продвижения не случится"
+msgstr ""
+
+#: handlers/users/post/create_promotion.py:175
+msgid "Продвижение успешно заказано до {date}"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:41
+msgid "Нет выбранных опций"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:43
+msgid "Добавьте имя для фильтра"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:56
+msgid "Фильтры успешно сохранены"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:62 handlers/users/post/my_posts.py:49
+#: handlers/users/post/public_post.py:156
+#: handlers/users/post/public_post.py:254
+msgid "Произошла ошибка. Попробуйте снова"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:63
+msgid "Подробный код ошибки: {code}"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:72
+msgid "Введите новое значение цены для поиска"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:83
+msgid "Введите новое значение площади для поиска"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:92
+msgid "Введите новый город для поиска"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:102
+msgid "Выберите новое состояние для поиска"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:113
+msgid "Выберите новую планировку для поиска"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:124
+msgid "Выберите новую территорию для поиска"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:147
+#: handlers/users/post/filter_post.py:244
+msgid "Подтвердите"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:154
+msgid "Заполните форму для фильтрации"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:157
+msgid "Укажите цену в формате от:до"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:170
+msgid "Введите площадь в формате \"от:до\""
+msgstr ""
+
+#: handlers/users/post/filter_post.py:188
+msgid "Неправильнй формат ввода"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:195
+msgid "Укажите желаемое состояние квартиры"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:206
+msgid "Выберите желаемый тип территории"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:217
+msgid "Выберите желаемый тип планировки"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:263
+msgid "Используйте меню чтобы выбрать етап фильтрации"
+msgstr ""
+
+#: handlers/users/post/my_posts.py:25
+msgid "Список моих публикаций"
+msgstr ""
+
+#: handlers/users/post/public_post.py:40 handlers/users/post/public_post.py:51
+msgid "Фильтров нет"
+msgstr ""
+
+#: handlers/users/post/public_post.py:104
+msgid "Фильтры сброшены"
+msgstr ""
+
+#: handlers/users/post/public_post.py:130
+msgid "Фильтра не найден"
+msgstr ""
+
+#: handlers/users/post/public_post.py:144
+msgid "Фильтр установлен"
+msgstr ""
+
+#: handlers/users/post/public_post.py:153
+msgid "Фильтр удален"
+msgstr ""
+
+#: handlers/users/post/public_post.py:163
+msgid "Список объявлений"
+msgstr ""
+
+#: handlers/users/post/public_post.py:214
+msgid "Успешно"
+msgstr ""
+
+#: handlers/users/post/public_post.py:224
+msgid "Добавлено"
+msgstr ""
+
+#: handlers/users/post/public_post.py:226
+msgid "Это объявление уже в вашем списке избранного"
+msgstr ""
+
+#: handlers/users/post/public_post.py:230
+msgid "Произошла ошибка. Попробуйте еще раз"
+msgstr ""
+
+#: handlers/users/post/public_post.py:270
+msgid "Жалоба отправлена"
+msgstr ""
+
+#: handlers/users/post/public_post.py:272
+msgid "Вы уже отправили жалобу."
+msgstr ""
+
+#: handlers/users/post/public_post.py:278
+msgid "Укажите причину жалобы"
+msgstr ""
+
+#: handlers/users/post/public_post.py:299
+msgid "Продвижение убрано"
+msgstr ""
+
+#: handlers/users/post/public_post.py:303
+msgid "Для этой публикации продвижение не заказано"
+msgstr ""
+
+#: handlers/users/request_to_chest/public_requests.py:86
+msgid ""
+"<b>*Системное сообщение*</b>\n"
+"Ваш запрос на квартиру №{flat} в {house} <b>Одобрен</b>\n"
+msgstr ""
+
+#: handlers/users/request_to_chest/public_requests.py:110
+msgid ""
+"<b>*Системное сообщение*</b>\n"
+"Ваш запрос на квартиру №{flat} в {house} <b>Одобрен</b>\n"
+"Бронь квартиры отменена"
+msgstr ""
+
+#: handlers/users/settings/edit_data.py:45
+msgid "Введите имя и фамилию через пробел"
+msgstr ""
+
+#: handlers/users/settings/edit_data.py:54
+msgid "Введите ваш email"
+msgstr ""
+
+#: handlers/users/settings/edit_data.py:60
+#: handlers/users/settings/edit_data.py:127
+msgid "Добавьте фото профиля"
+msgstr ""
+
+#: handlers/users/settings/edit_data.py:66
+msgid "Выберите вашу пользовательскую роль"
+msgstr ""
+
+#: handlers/users/settings/edit_data.py:85
+msgid ""
+"<b>{name}</b>\n"
+"<b>Email:</b>: {email}\n"
+"<b>Роль:</b> {role}"
+msgstr ""
+
+#: handlers/users/settings/edit_data.py:88
+msgid "Текущие данные:\n"
+msgstr ""
+
+#: handlers/users/settings/edit_data.py:89
+msgid ""
+"Введите имя и фамилию через пробел.\n"
+"Сейчас - <b>{name}</b>"
+msgstr ""
+
+#: handlers/users/settings/edit_data.py:104
+msgid ""
+"Введите ваш email.\n"
+"Сейчас: <b>{email}</b>"
+msgstr ""
+
+#: handlers/users/settings/edit_data.py:113
+msgid "Неверный формат электронной почты"
+msgstr ""
+
+#: handlers/users/settings/edit_data.py:117
+msgid ""
+"Выбериет вашу пользовательскую роль.\n"
+"Сейчас: <b>{role}</b>"
+msgstr ""
+
+#: handlers/users/settings/edit_data.py:161
+msgid "Данные обновлены"
+msgstr ""
+
+#: handlers/users/settings/edit_data.py:169
+msgid "Вы можете выбрать нужный этап через меню"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:19
+#: handlers/users/settings/settings_handlers.py:55
+msgid "Пользовательская подписка"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:25
+msgid "Настройки пользователя"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:32
+msgid "Премиум подписка"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:42
+msgid ""
+"У вас уже оформлена подписка.\n"
+"Она закончится - {end_date}"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:45
+msgid ""
+"Вы можете оформить подписку за 1 грн. \n"
+"<b>**Для тестировщиков:**</b> Платежи <b>тестовые</b>.\n"
+"Никакие суммы взыматься не будут"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:48
+msgid ""
+"Можете использовать следующие данные платежной карты: \n"
+"Номер: 4242 4242 4242 4242\n"
+"Дата: 01/22\n"
+"CVV: 123"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:52
+msgid ""
+"Пользовательская подписка дает преимущества на тех кто ищет, и тех кто "
+"продает"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:84
+msgid ""
+"Оплата прошла успешно.\n"
+"Ваша подписка активирована до {date}"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:99
+msgid "Ваша пользовательская подписка активирована до {date}"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:101
+msgid "Ваша пользовательская подписка не активирована"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:111
+msgid "Ваша пользовательская подписка отменена"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:120
+msgid "Вы уже имеете статус администратора"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:123
+#: handlers/users/settings/settings_handlers.py:154
+msgid "Введите токен"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:137
+msgid "Теперь вы имеете статус администратора"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:156
+msgid "У вас нет статуса администратора"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:170
+msgid "Вы больше не администратор"
 msgstr ""
 
 #: keyboards/default/defaults.py:7
@@ -60,8 +1622,24 @@ msgstr ""
 msgid "Пропустить"
 msgstr ""
 
-#: keyboards/default/user_keyboards.py:8
+#: keyboards/default/dispatcher.py:41
+msgid "Главное меню"
+msgstr ""
+
+#: keyboards/default/dispatcher.py:42 keyboards/default/user_keyboards.py:8
 msgid "Список публикаций"
+msgstr ""
+
+#: keyboards/default/dispatcher.py:43 keyboards/default/user_keyboards.py:24
+msgid "Фильтрация объявлений"
+msgstr ""
+
+#: keyboards/default/dispatcher.py:44
+msgid "Дома"
+msgstr ""
+
+#: keyboards/default/dispatcher.py:108
+msgid "Возврат"
 msgstr ""
 
 #: keyboards/default/user_keyboards.py:9
@@ -73,7 +1651,729 @@ msgid "Избранное"
 msgstr ""
 
 #: keyboards/default/user_keyboards.py:13
+msgid "Входящие запросы на добавление в шахматку"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:15
 msgid "Настройки"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:22
+#: keyboards/default/user_keyboards.py:52
+#: keyboards/default/user_keyboards.py:73
+#: keyboards/default/user_keyboards.py:85
+#: keyboards/default/user_keyboards.py:94
+#: keyboards/default/user_keyboards.py:136
+#: keyboards/default/user_keyboards.py:156
+#: keyboards/default/user_keyboards.py:170
+#: keyboards/default/user_keyboards.py:184
+#: keyboards/default/user_keyboards.py:193
+#: keyboards/default/user_keyboards.py:206
+#: keyboards/default/user_keyboards.py:233
+#: keyboards/default/user_keyboards.py:244
+#: keyboards/default/user_keyboards.py:255
+msgid "Вернуться"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:26
+msgid "Текущие фильтры"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:27
+msgid "Мои фильтры"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:28
+msgid "Сбросить фильтры"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:30
+msgid "Добавить новую публикацию"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:31
+msgid "Мои публикации"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:38
+msgid "Фильтровать"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:40
+#: keyboards/default/user_keyboards.py:65
+#: keyboards/default/user_keyboards.py:220
+msgid "Перейти к цене"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:42
+#: keyboards/default/user_keyboards.py:217
+msgid "Перейти к площади"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:44
+#: keyboards/default/user_keyboards.py:105
+msgid "Перейти к городу"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:46
+msgid "Перейти к состоянию квартиры"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:48
+msgid "Перейти к планировке"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:50
+#: keyboards/default/user_keyboards.py:109
+msgid "Перейти к территории"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:53
+msgid "Сохранить фильтр"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:60
+#: keyboards/default/user_keyboards.py:102
+#: keyboards/default/user_keyboards.py:176
+#: keyboards/default/user_keyboards.py:201
+#: keyboards/default/user_keyboards.py:212
+#: keyboards/default/user_keyboards.py:239
+#: keyboards/default/user_keyboards.py:250
+msgid "Сохранить"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:62
+msgid "Перейти к дому"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:63
+msgid "Перейти к квартире"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:66
+msgid "Перейти к способу платежа"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:68
+msgid "Перейти к вариантам связи"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:70
+#: keyboards/default/user_keyboards.py:112
+#: keyboards/default/user_keyboards.py:242
+msgid "Перейти к описанию"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:71
+#: keyboards/default/user_keyboards.py:181
+msgid "Перейти к фото"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:80
+msgid "Все дома"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:82
+msgid "Мои квартиры"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:92
+msgid "Добавить дом"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:104
+#: keyboards/default/user_keyboards.py:252
+msgid "Перейти к названию"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:106
+msgid "Перейти к адресу"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:108
+msgid "Перейти к технологии строительства"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:111
+msgid "Перейти к платежным способами"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:114
+msgid "Перейти к статусу"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:115
+#: keyboards/default/user_keyboards.py:204
+#: keyboards/default/user_keyboards.py:227
+msgid "Перейти к типу"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:116
+msgid "Перейти к классу дома"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:118
+msgid "Перейти к расстоянию до моря"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:119
+msgid "Перейти к высоте потолков"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:121
+msgid "Перейти к газопроводу"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:122
+#: keyboards/default/user_keyboards.py:229
+msgid "Перейти к отоплению"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:123
+msgid "Перейти к электричеству"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:124
+msgid "Перейти к канализации"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:125
+msgid "Перейти к водоснабжению"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:127
+msgid "Перейти к спортивной площадке"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:128
+msgid "Перейти к парковке"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:129
+msgid "Перейти к магазину"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:130
+msgid "Перейти к детской площадке"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:131
+msgid "Перейти к лифту"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:132
+msgid "Перейти к охране"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:134
+msgid "Перейти к картинке"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:143
+msgid "Изменить данные"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:144
+msgid "Настройки подписки"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:149
+msgid "Отключить режим администратора"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:153
+msgid "Ввести токен администратора"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:163
+msgid "Список нотариусов"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:164
+msgid "Жалобы"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:166
+msgid "Рассылка"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:168
+msgid "Получить логи"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:178
+msgid "Перейти к имени и фамилии"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:179
+msgid "Перейти к электронной почте"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:182
+msgid "Перейти к роли"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:190
+msgid "Получить подписку"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:191
+msgid "Проверить статус подписки"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:195
+msgid "Отменить подписку"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:203
+msgid "Перейти к фразе"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:214
+msgid "Перейти к этажу"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:216
+msgid "Перейти к номеру"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:218
+msgid "Перейти к площади кухи"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:221
+msgid "Перейти к цене за кв. метр"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:222
+msgid "Перейти к числу комнат"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:224
+msgid "Перейти к состоянию"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:225
+msgid "Перейти к типу собственности"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:228
+msgid "Перейти к балкону"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:231
+msgid "Перейти к схеме"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:241
+msgid "Перейти к заголовку"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:253
+msgid "Перейти к файлу"
+msgstr ""
+
+#: keyboards/inline/create_flat.py:11 keyboards/inline/filter_post.py:9
+#: keyboards/inline/filter_post.py:27
+msgid "После ремонта"
+msgstr ""
+
+#: keyboards/inline/create_flat.py:13 keyboards/inline/filter_post.py:10
+#: keyboards/inline/filter_post.py:29
+msgid "Черновая"
+msgstr ""
+
+#: keyboards/inline/create_flat.py:15 keyboards/inline/filter_post.py:11
+#: keyboards/inline/filter_post.py:32
+msgid "Евроремонт"
+msgstr ""
+
+#: keyboards/inline/create_flat.py:17
+msgid "Требуте ремонта"
+msgstr ""
+
+#: keyboards/inline/create_flat.py:23
+msgid "Собственность"
+msgstr ""
+
+#: keyboards/inline/create_flat.py:25
+msgid "Аренда"
+msgstr ""
+
+#: keyboards/inline/create_flat.py:31 keyboards/inline/filter_post.py:15
+#: keyboards/inline/filter_post.py:54
+msgid "Свободная планировка"
+msgstr ""
+
+#: keyboards/inline/create_flat.py:33 keyboards/inline/create_flat.py:60
+#: keyboards/inline/filter_post.py:16 keyboards/inline/filter_post.py:56
+msgid "Студия"
+msgstr ""
+
+#: keyboards/inline/create_flat.py:35 keyboards/inline/filter_post.py:17
+#: keyboards/inline/filter_post.py:59
+msgid "Смежные комнаты"
+msgstr ""
+
+#: keyboards/inline/create_flat.py:38 keyboards/inline/filter_post.py:18
+#: keyboards/inline/filter_post.py:61
+msgid "Изолированные комнаты"
+msgstr ""
+
+#: keyboards/inline/create_flat.py:40 keyboards/inline/filter_post.py:64
+msgid "Малосемейка"
+msgstr ""
+
+#: keyboards/inline/create_flat.py:42 keyboards/inline/filter_post.py:20
+#: keyboards/inline/filter_post.py:66
+msgid "Гостинка"
+msgstr ""
+
+#: keyboards/inline/create_flat.py:56
+msgid "Апартаменты"
+msgstr ""
+
+#: keyboards/inline/create_flat.py:58
+msgid "Офис"
+msgstr ""
+
+#: keyboards/inline/create_house.py:10
+msgid "Монолитный каркас с керамзитно-блочным заполнением"
+msgstr ""
+
+#: keyboards/inline/create_house.py:13
+msgid "Монолитно-кирпичный"
+msgstr ""
+
+#: keyboards/inline/create_house.py:16
+msgid "Монолитно-каркасный"
+msgstr ""
+
+#: keyboards/inline/create_house.py:20
+msgid "Панельный"
+msgstr ""
+
+#: keyboards/inline/create_house.py:23
+msgid "Пеноблок"
+msgstr ""
+
+#: keyboards/inline/create_house.py:26
+msgid "Газобетон"
+msgstr ""
+
+#: keyboards/inline/create_house.py:32 keyboards/inline/filter_post.py:13
+#: keyboards/inline/filter_post.py:43
+msgid "Открытая"
+msgstr ""
+
+#: keyboards/inline/create_house.py:34 keyboards/inline/filter_post.py:14
+#: keyboards/inline/filter_post.py:45
+msgid "Закрытая"
+msgstr ""
+
+#: keyboards/inline/create_house.py:39 keyboards/inline/create_post.py:26
+msgid "Ипотека"
+msgstr ""
+
+#: keyboards/inline/create_house.py:41 keyboards/inline/create_post.py:32
+msgid "Материнский капитал"
+msgstr ""
+
+#: keyboards/inline/create_house.py:43
+msgid "Прямая оплата"
+msgstr ""
+
+#: keyboards/inline/create_house.py:48 keyboards/inline/user_keyboards.py:190
+#: keyboards/inline/user_keyboards.py:245
+msgid "Квартиры"
+msgstr ""
+
+#: keyboards/inline/create_house.py:50
+msgid "Офисы"
+msgstr ""
+
+#: keyboards/inline/create_house.py:55
+msgid "Многоквартирный"
+msgstr ""
+
+#: keyboards/inline/create_house.py:57
+msgid "Частный"
+msgstr ""
+
+#: keyboards/inline/create_house.py:60
+msgid "Новострой"
+msgstr ""
+
+#: keyboards/inline/create_house.py:62
+msgid "Вторичный рынок"
+msgstr ""
+
+#: keyboards/inline/create_house.py:64
+msgid "Коттеджи"
+msgstr ""
+
+#: keyboards/inline/create_house.py:69
+msgid "Обычный"
+msgstr ""
+
+#: keyboards/inline/create_house.py:71
+msgid "Элитный"
+msgstr ""
+
+#: keyboards/inline/create_house.py:78
+msgid "Центрилизированный"
+msgstr ""
+
+#: keyboards/inline/create_house.py:85 keyboards/inline/create_house.py:110
+msgid "Центральное"
+msgstr ""
+
+#: keyboards/inline/create_house.py:87 keyboards/inline/create_house.py:112
+msgid "Индивидуальное"
+msgstr ""
+
+#: keyboards/inline/create_house.py:94
+msgid "Подключено"
+msgstr ""
+
+#: keyboards/inline/create_house.py:101
+msgid "Центральная"
+msgstr ""
+
+#: keyboards/inline/create_house.py:103
+msgid "Индивидуальная"
+msgstr ""
+
+#: keyboards/inline/create_post.py:29
+msgid "Пряма оплата"
+msgstr ""
+
+#: keyboards/inline/create_post.py:40
+msgid "Звонок"
+msgstr ""
+
+#: keyboards/inline/create_post.py:43
+msgid "Сообщение"
+msgstr ""
+
+#: keyboards/inline/create_post.py:46
+msgid "Звонок + сообщение"
+msgstr ""
+
+#: keyboards/inline/create_post.py:55 keyboards/inline/filter_post.py:75
+msgid "Подтверждаю"
+msgstr ""
+
+#: keyboards/inline/create_post.py:57 keyboards/inline/filter_post.py:77
+msgid "Ещё подумаю"
+msgstr ""
+
+#: keyboards/inline/create_promotion.py:10
+msgid "Подарок при покупке"
+msgstr ""
+
+#: keyboards/inline/create_promotion.py:12
+msgid "Возможен торг"
+msgstr ""
+
+#: keyboards/inline/create_promotion.py:15
+msgid "Квартира у моря"
+msgstr ""
+
+#: keyboards/inline/create_promotion.py:17
+msgid "В спальном районе"
+msgstr ""
+
+#: keyboards/inline/create_promotion.py:20
+msgid "Вам повезло с ценой"
+msgstr ""
+
+#: keyboards/inline/create_promotion.py:22
+msgid "Для большой семьи"
+msgstr ""
+
+#: keyboards/inline/create_promotion.py:25
+msgid "Семейное гнездышко"
+msgstr ""
+
+#: keyboards/inline/create_promotion.py:27
+msgid "Отдельная парковка"
+msgstr ""
+
+#: keyboards/inline/filter_post.py:12 keyboards/inline/filter_post.py:34
+msgid "Требует ремонта"
+msgstr ""
+
+#: keyboards/inline/filter_post.py:19
+msgid "Малосемейки"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:38 keyboards/inline/user_keyboards.py:76
+#: keyboards/inline/user_keyboards.py:96 keyboards/inline/user_keyboards.py:146
+#: keyboards/inline/user_keyboards.py:173
+#: keyboards/inline/user_keyboards.py:199
+#: keyboards/inline/user_keyboards.py:266
+#: keyboards/inline/user_keyboards.py:281
+#: keyboards/inline/user_keyboards.py:301
+#: keyboards/inline/user_keyboards.py:328
+#: keyboards/inline/user_keyboards.py:349
+#: keyboards/inline/user_keyboards.py:360
+#: keyboards/inline/user_keyboards.py:401
+#: keyboards/inline/user_keyboards.py:415
+#: keyboards/inline/user_keyboards.py:434
+msgid "Назад"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:41 keyboards/inline/user_keyboards.py:305
+msgid "Новое"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:45 keyboards/inline/user_keyboards.py:310
+msgid "Вперед"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:57 keyboards/inline/user_keyboards.py:161
+msgid "О квартире"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:79 keyboards/inline/user_keyboards.py:99
+msgid "Пожаловаться"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:84 keyboards/inline/user_keyboards.py:103
+msgid "Убрать из избранного"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:91
+msgid "В избранное"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:115
+msgid "Неккоректная цена"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:119
+msgid "Неккоректное фото"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:123
+msgid "Неккоректное описание"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:149
+msgid "Применить"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:152
+#: keyboards/inline/user_keyboards.py:178
+#: keyboards/inline/user_keyboards.py:212
+#: keyboards/inline/user_keyboards.py:325
+#: keyboards/inline/user_keyboards.py:382
+msgid "Удалить"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:165
+msgid "Заказать продвижение"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:168
+msgid "Убрать продвижение"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:176
+#: keyboards/inline/user_keyboards.py:209
+#: keyboards/inline/user_keyboards.py:322
+msgid "Редактировать"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:194
+#: keyboards/inline/user_keyboards.py:259
+msgid "Документы"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:215
+msgid "Добавить корпус"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:220
+msgid "Добавить секцию"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:225
+msgid "Добавить этаж"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:231
+msgid "Корпуса"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:236
+msgid "Секции"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:240
+msgid "Этажи"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:249
+msgid "Добавить квартиру"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:252
+msgid "Новости"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:256
+msgid "Добавить новость"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:263
+msgid "Добавить документ"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:277
+msgid "Забронировать"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:340
+msgid "Отменить бронь"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:343
+msgid "Дом"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:369
+msgid "Клиент"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:371
+msgid "Агент"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:373
+msgid "Нотариус"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:375
+msgid "Отдел продаж"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:391
+msgid "Одобрить"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:395
+#: keyboards/inline/user_keyboards.py:428
+msgid "Отказать"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:409
+msgid "Убрать из списка нотариусов"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:423
+msgid "Удовлетворить"
 msgstr ""
 
 #: utils/set_bot_commands.py:9
