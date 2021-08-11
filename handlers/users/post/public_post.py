@@ -1,11 +1,10 @@
-import logging
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.exceptions import MessageNotModified, MessageTextIsEmpty
 
 from keyboards.callbacks.user_callback import DETAIL_CB
-from loader import dp, Conn
+from loader import dp, Conn, log
 from utils.session.url_dispatcher import REL_URLS
 from deserializers.post import PostDeserializer, PostFilterDeserializer
 
@@ -57,7 +56,7 @@ async def handle_filters(message: Union[types.Message, types.CallbackQuery]):
 async def get_post(call: types.CallbackQuery, callback_data: dict,
                    keyboard_key: str):
     keyboard_cor = keyboard_post_detail[keyboard_key]
-    logging.info(callback_data)
+    log.info(callback_data)
     page = callback_data.get('page')
     pk = callback_data['pk']
     key = callback_data.get('key')
@@ -119,7 +118,7 @@ async def user_filters_callback(call: types.CallbackQuery, callback_data: dict):
 
 @dp.callback_query_handler(user_callback.DETAIL_CB.filter(action='filter_detail'))
 async def filter_detail(call: types.CallbackQuery, callback_data: dict):
-    logging.info(callback_data)
+    log.debug(callback_data)
     pk = callback_data['pk']
     url = f'{REL_URLS["filters"]}{pk}/'
     resp = await Conn.get(url, user_id=call.from_user.id)
@@ -141,7 +140,7 @@ async def set_filter(call: types.CallbackQuery, callback_data: dict, state: FSMC
         if value and key not in ('name', 'saved_filter_pk'):
             data[key] = value
     await state.update_data(data)
-    logging.info(data)
+    log.info(data)
     await call.answer(_('Фильтр установлен'))
 
 
@@ -196,7 +195,7 @@ async def post_detail(call: types.CallbackQuery, callback_data: dict):
 
 @dp.callback_query_handler(user_callback.LIKE_DISLIKE_CB.filter(action='like_post'))
 async def list_post(call: types.CallbackQuery, callback_data: dict):
-    logging.info(callback_data)
+    log.debug(callback_data)
     pk = callback_data['pk']
     key = callback_data.get('key')
     url = REL_URLS['like_dislike'].format(pk=pk)
@@ -217,7 +216,7 @@ async def list_post(call: types.CallbackQuery, callback_data: dict):
 
 @dp.callback_query_handler(user_callback.DETAIL_CB.filter(action='save_to_favorites'))
 async def save_to_favorites(call: types.CallbackQuery, callback_data: dict):
-    logging.info(callback_data)
+    log.debug(callback_data)
     pk = callback_data['pk']
     resp, status = await Conn.post(REL_URLS['favorites'], data={'post': pk},
                                    user_id=call.from_user.id)
@@ -227,7 +226,7 @@ async def save_to_favorites(call: types.CallbackQuery, callback_data: dict):
         await call.answer(text=_('Это объявление уже в вашем списке избранного'),
                           show_alert=True)
     else:
-        logging.error(resp)
+        log.error(resp)
         await call.answer(text=_('Произошла ошибка. Попробуйте еще раз'),
                           show_alert=True)
 
@@ -240,7 +239,7 @@ async def public_post(message: types.Message):
 
 @dp.callback_query_handler(user_callback.DETAIL_WITH_PAGE_CB.filter(action='delete_from_favorites'))
 async def delete_from_favorites(call: types.CallbackQuery, callback_data: dict):
-    logging.info(callback_data)
+    log.debug(callback_data)
     pk = callback_data['pk']
     page = callback_data['page']
     key = callback_data['key']
@@ -251,7 +250,7 @@ async def delete_from_favorites(call: types.CallbackQuery, callback_data: dict):
                           deserializer=post_des, keyboard=user_keyboards.get_keyboard_for_list,
                           new_callback_answer=True)
     else:
-        logging.error(resp)
+        log.error(resp)
         await call.answer(_('Произошла ошибка. Попробуйте снова'))
 
 
@@ -261,7 +260,7 @@ async def complaint(call: types.CallbackQuery, callback_data: dict):
         If callback_data contains - 'type' key - uses this type to create new complaint.
         Otherwise, create inline keyboard with complaint types for user.
     """
-    logging.info(callback_data)
+    log.info(callback_data)
     pk = callback_data['pk']
     if callback_data.get('type') != '_':
         resp, status = await Conn.post(REL_URLS['complaint'],
@@ -272,7 +271,7 @@ async def complaint(call: types.CallbackQuery, callback_data: dict):
         elif status == 409:
             await call.answer(_('Вы уже отправили жалобу.'), show_alert=True)
         else:
-            logging.error(resp)
+            log.error(resp)
             await call.answer(_('Произошла ошибка. Повторите попытку'))
     else:
         keyboard = await user_keyboards.get_post_complaint_types(post_pk=pk)

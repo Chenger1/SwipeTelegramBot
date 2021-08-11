@@ -1,13 +1,11 @@
-import logging
 import os
-from typing import Union
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import Text
 
 from keyboards.inline import create_house
-from loader import dp, Conn
+from loader import dp, Conn, log
 
 from keyboards.callbacks.user_callback import DETAIL_CB
 from keyboards.default.dispatcher import dispatcher, back_button, get_menu_label
@@ -77,7 +75,7 @@ async def add_doc(call: types.CallbackQuery, callback_data: dict, state: FSMCont
     await CreateDocument.STARTER.set()
     house_pk = callback_data.get('pk')
     keyboard, path = await dispatcher('LEVEL_4_ADD_DOC', call.from_user.id)
-    logging.info({'path': path})
+    log.debug({'path': path})
     await update_state(state, house_pk, 'house', 'create_doc')
     await call.message.answer(_('Введите название файла'), reply_markup=keyboard)
     await CreateDocument.NAME.set()
@@ -154,6 +152,7 @@ async def save_news(call: types.CallbackQuery, callback_data: dict, state: FSMCo
             else:
                 await call.answer(_('Произошла ошибка. Попробуйте ещё раз'))
                 for key, value in resp.items():
-                    logging.info(f'{key} - {value}')
+                    log.info('Save document')
+                    log.info(f'{key} - {value}')
     else:
         await call.answer(_('Вы можете выбрать этап через меню'))

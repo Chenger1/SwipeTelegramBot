@@ -1,9 +1,8 @@
-import logging
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
 
-from loader import dp, Conn
+from loader import dp, Conn, log
 
 from states.state_groups import FilterPost
 
@@ -154,7 +153,7 @@ async def filter_post_handler(message: types.Message, state: FSMContext):
     keyboard, path = await dispatcher('LEVEL_3_FILTER_POSTS', message.from_user.id)
     await message.answer(text=_('Заполните форму для фильтрации'), reply_markup=keyboard)
     await state.update_data(path=path)
-    logging.info({'path': path})
+    log.info({'path': path})
     await message.answer(text=_('Укажите цену в формате от:до'))
     await FilterPost.PRICE.set()
 
@@ -200,7 +199,7 @@ async def filter_city(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(POST_FILTER_CB.filter(action='filter_state'), state=FilterPost.STATE)
 async def filter_state(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
-    logging.info(callback_data)
+    log.debug(callback_data)
     value = callback_data.get('value')
     await state.update_data(flat__state=value)
     await call.answer()
@@ -211,7 +210,7 @@ async def filter_state(call: types.CallbackQuery, callback_data: dict, state: FS
 
 @dp.callback_query_handler(POST_FILTER_CB.filter(action='filter_territory'), state=FilterPost.TERR)
 async def filter_state(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
-    logging.info(callback_data)
+    log.debug(callback_data)
     value = callback_data.get('value')
     await state.update_data(house__territory=value)
     await call.answer()
@@ -222,7 +221,7 @@ async def filter_state(call: types.CallbackQuery, callback_data: dict, state: FS
 
 @dp.callback_query_handler(POST_FILTER_CB.filter(action='filter_plan'), state=FilterPost.PLAN)
 async def filter_state(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
-    logging.info(callback_data)
+    log.debug(callback_data)
     value = callback_data.get('value')
     await state.update_data(flat__plan=value)
     await call.answer()
@@ -249,7 +248,7 @@ async def filter_state(call: types.CallbackQuery, callback_data: dict, state: FS
 
 @dp.callback_query_handler(POST_FILTER_CB.filter(action='filter_confirm'), state=FilterPost.FILTERING)
 async def filter_state(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
-    logging.info(callback_data)
+    log.debug(callback_data)
     value = callback_data.get('value')
     if value == 'YES':
         params = await state.get_data()

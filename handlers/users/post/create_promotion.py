@@ -1,11 +1,9 @@
-import logging
-
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import Text
 
 from data.config import PAYMENT_PROVIDER_TOKEN
-from loader import dp, Conn
+from loader import dp, Conn, log
 
 from keyboards.callbacks.user_callback import DETAIL_CB, POST_FILTER_CB as ITEM_CB
 from keyboards.default.dispatcher import dispatcher, get_menu_label, back_button
@@ -165,7 +163,7 @@ async def process_pre_checkout_query_subscribe(query: types.PreCheckoutQuery):
 async def process_successful_promotion_payment(message: types.Message, state: FSMContext):
     pmnt = message.successful_payment.to_python()
     for key, val in pmnt.items():
-        logging.info(f'{key} = {val}')
+        log.info(f'{key} = {val}')
 
     state_data = await state.get_data()
     promo_data = state_data.get('create_promotion')
@@ -181,4 +179,5 @@ async def process_successful_promotion_payment(message: types.Message, state: FS
     else:
         await message.answer(_('Произошла ошибка'))
         for key, value in resp.items():
-            logging.info(f'{key} - {value}')
+            log.info('Promotion payment')
+            log.info(f'{key} - {value}')

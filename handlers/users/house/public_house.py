@@ -1,11 +1,10 @@
-import logging
 import os
 
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
 
-from loader import dp, Conn
+from loader import dp, Conn, log
 
 from keyboards.default.dispatcher import dispatcher
 from keyboards.inline.user_keyboards import (get_keyboard_for_list, get_keyboard_for_house, get_keyboard_for_my_house,
@@ -43,7 +42,7 @@ keyboard_flat_detail = {
 async def get_house(call: types.CallbackQuery, callback_data: dict,
                     keyboard_key: str):
     keyboard_cor = keyboard_house_detail[keyboard_key]
-    logging.info(callback_data)
+    log.debug(callback_data)
     pk = callback_data.get('pk')
     url = f'{REL_URLS["houses_public"]}{pk}/'
     resp = await Conn.get(url, user_id=call.from_user.id)
@@ -73,7 +72,7 @@ async def get_house(call: types.CallbackQuery, callback_data: dict,
 async def get_flat(call: types.CallbackQuery, callback_data: dict,
                    keyboard_key: str):
     keyboard_cor = keyboard_flat_detail[keyboard_key]
-    logging.info(callback_data)
+    log.debug(callback_data)
     pk = callback_data.get('pk')
     url = f'{REL_URLS["flats_public"]}{pk}/'
     resp = await Conn.get(url, user_id=call.from_user.id)
@@ -94,7 +93,7 @@ async def get_flat(call: types.CallbackQuery, callback_data: dict,
 @dp.message_handler(Text(equals=['Список домов', 'Houses list']))
 async def get_house_keyboard(message: types.Message, state: FSMContext):
     keyboard, path = await dispatcher('LEVEL_2_HOUSES', message.from_user.id)
-    logging.info(path)
+    log.debug(path)
     await message.answer(_('Меню домов'), reply_markup=keyboard)
     await state.update_data(path=path)
 
@@ -303,7 +302,7 @@ async def add_building(call: types.CallbackQuery, callback_data: dict):
     else:
         await call.answer(_('Произошла ошибка'))
         for key, value in resp.items():
-            logging.info(f'{key}: {value}\n')
+            log.info(f'{key}: {value}\n')
 
 
 @dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='add_section'))
@@ -336,7 +335,7 @@ async def save_section(call: types.CallbackQuery, callback_data: dict):
     else:
         await call.answer(_('Произошла ошибка'))
         for key, value in resp.items():
-            logging.info(f'{key}: {value}\n')
+            log.info(f'{key}: {value}\n')
 
 
 @dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='add_floor'))
@@ -369,7 +368,7 @@ async def save_floor(call: types.CallbackQuery, callback_data: dict):
     else:
         await call.answer(_('Произошла ошибка'))
         for key, value in resp.items():
-            logging.info(f'{key}: {value}\n')
+            log.info(f'{key}: {value}\n')
 
 
 @dp.callback_query_handler(DETAIL_CB.filter(action='delete_flat'))

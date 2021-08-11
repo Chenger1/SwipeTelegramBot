@@ -1,11 +1,8 @@
-import logging
-
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
-from aiogram.dispatcher import FSMContext
 
 from keyboards.inline.user_keyboards import get_keyboard_for_list
-from loader import dp, Conn
+from loader import dp, Conn, log
 from utils.db_api.models import User
 
 from utils.session.url_dispatcher import REL_URLS
@@ -28,7 +25,7 @@ keyboard_request_detail = {
 
 async def get_request(call: types.CallbackQuery, callback_data: dict, keyboard_key: str):
     keyboard_cor = keyboard_request_detail[keyboard_key]
-    logging.info(callback_data)
+    log.debug(callback_data)
     pk = callback_data.get('pk')
     url = f'{REL_URLS["requests"]}{pk}/'
     resp = await Conn.get(url, user_id=call.from_user.id)

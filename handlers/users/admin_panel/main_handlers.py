@@ -1,10 +1,8 @@
-import logging
-
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
 
-from loader import dp, Conn
+from loader import dp, Conn, log
 
 from keyboards.default.dispatcher import dispatcher
 from keyboards.inline.user_keyboards import (get_keyboard_for_list, get_keyboard_for_notary_list,
@@ -75,7 +73,7 @@ async def remove_from_notary(call: types.CallbackQuery, callback_data: dict):
     else:
         await call.answer(_('Произошла ошибка'))
         for key, value in resp.items():
-            logging.info(f'{key} - {value}')
+            log.info(f'{key} - {value}')
 
 
 @dp.message_handler(Text(equals=['Жалобы', 'Complaints']), is_admin=True)
@@ -137,7 +135,7 @@ async def approve_complaint(call: types.CallbackQuery, callback_data: dict):
     else:
         await call.answer(_('Произошла ошибка'))
         for key, value in resp_reject.items():
-            logging.info(f'{key} - {value}')
+            log.info(f'{key} - {value}')
 
 
 @dp.callback_query_handler(DETAIL_WITH_PAGE_CB.filter(action='disapprove_complaint'), is_admin=True)
@@ -173,8 +171,8 @@ async def disapprove_complaint(call: types.CallbackQuery, callback_data: dict):
         else:
             await call.answer(_('Произошла ошибка'))
             for key, value in resp.items():
-                logging.info(f'{key} - {value}')
+                log.info(f'{key} - {value}')
     else:
         await call.answer(_('Произошла ошибка'))
         for key, value in resp_post_detail.items():
-            logging.info(f'{key} - {value}')
+            log.info(f'{key} - {value}')

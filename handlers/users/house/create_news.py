@@ -1,10 +1,8 @@
-import logging
-
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import Text
 
-from loader import dp, Conn
+from loader import dp, Conn, log
 
 from keyboards.callbacks.user_callback import DETAIL_CB
 from keyboards.default.dispatcher import dispatcher, back_button, get_menu_label
@@ -66,7 +64,7 @@ async def add_news(call: types.CallbackQuery, callback_data: dict, state: FSMCon
     await CreateNewsItem.STARTER.set()
     house_pk = callback_data.get('pk')
     keyboard, path = await dispatcher('LEVEL_4_ADD_NEWS', call.from_user.id)
-    logging.info({'path': path})
+    log.debug({'path': path})
     await update_state(state, house_pk, 'house', 'create_news')
     await call.message.answer(_('Введите заголовок'), reply_markup=keyboard)
     await CreateNewsItem.TITLE.set()
@@ -108,6 +106,6 @@ async def save_news(call: types.CallbackQuery, callback_data: dict, state: FSMCo
         else:
             await call.answer(_('Произошла ошибка'), show_alert=True)
             for key, value in resp.items():
-                logging.info(f'{key} - {value}')
+                log.info(f'{key} - {value}')
     else:
         await call.answer(_('Вы можете выбрать этап через меню'))

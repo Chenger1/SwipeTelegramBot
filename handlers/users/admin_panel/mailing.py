@@ -1,12 +1,11 @@
 import asyncio
-import logging
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.utils import exceptions
 
-from loader import dp
+from loader import dp, log
 
 from states.state_groups import Mailing
 
@@ -19,19 +18,19 @@ async def send_message(user_id: int, text: str, bot) -> bool:
     try:
         await bot.send_message(user_id, text)
     except exceptions.BotBlocked:
-        logging.error(f"Target [ID:{user_id}]: blocked by user")
+        log.error(f"Target [ID:{user_id}]: blocked by user")
     except exceptions.ChatNotFound:
-        logging.error(f"Target [ID:{user_id}]: invalid user ID")
+        log.error(f"Target [ID:{user_id}]: invalid user ID")
     except exceptions.RetryAfter as e:
-        logging.error(f"Target [ID:{user_id}]: Flood limit is exceeded. Sleep {e.timeout} seconds.")
+        log.error(f"Target [ID:{user_id}]: Flood limit is exceeded. Sleep {e.timeout} seconds.")
         await asyncio.sleep(e.timeout)
         return await send_message(user_id, text, bot)
     except exceptions.UserDeactivated:
-        logging.error(f"Target [ID:{user_id}]: user is deactivated")
+        log.error(f"Target [ID:{user_id}]: user is deactivated")
     except exceptions.TelegramAPIError:
-        logging.error(f"Target [ID:{user_id}]: failed")
+        log.error(f"Target [ID:{user_id}]: failed")
     else:
-        logging.info(f"Target [ID:{user_id}]: success")
+        log.info(f"Target [ID:{user_id}]: success")
         return True
     return False
 
@@ -53,7 +52,7 @@ async def broadcast(message: types.Message, state: FSMContext):
                 count +=1
             await asyncio.sleep(.05)
     finally:
-        logging.info(f'{count} messages successful sent.')
+        log.info(f'{count} messages successful sent.')
     state_data = await state.get_data()
     await state.finish()
     await state.update_data(**state_data)

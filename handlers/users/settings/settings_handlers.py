@@ -1,15 +1,13 @@
-import logging
-
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
 
-from loader import dp, Conn
+from loader import dp, Conn, log
 
 from keyboards.default.dispatcher import dispatcher
 
 from middlewares import _
-from utils.db_api.models import User, AdminToken
+from utils.db_api.models import User
 
 from utils.session.url_dispatcher import REL_URLS
 
@@ -73,10 +71,10 @@ async def process_pre_checkout_query_subscribe(query: types.PreCheckoutQuery):
 
 @dp.message_handler(content_types=types.ContentType.SUCCESSFUL_PAYMENT, state=Subscription.PAYMENT)
 async def process_successful_payment_subscription(message: types.Message, state: FSMContext):
-    logging.info('successful_payment')
+    log.info('successful_payment')
     pmnt = message.successful_payment.to_python()
     for key, val in pmnt.items():
-        logging.info(f'{key} = {val}')
+        log.info(f'{key} = {val}')
 
     user = await User.get(user_id=message.from_user.id)
     url = REL_URLS['subscription'].format(pk=user.swipe_id)
@@ -143,7 +141,7 @@ async def check_token(message: types.Message, state: FSMContext):
     else:
         await message.answer(_('Произошла ошибка'))
         for key, value in resp.items():
-            logging.info(f'{key} - {value}')
+            log.info(f'{key} - {value}')
     await state.finish()
     await state.update_data(**state_data)
 
@@ -174,6 +172,6 @@ async def off_admin_status(message: types.Message, state: FSMContext):
     else:
         await message.answer(_('Произошла ошибка'))
         for key, value in resp.items():
-            logging.info(f'{key} - {value}')
+            log.info(f'{key} - {value}')
     await state.finish()
     await state.update_data(**state_data)

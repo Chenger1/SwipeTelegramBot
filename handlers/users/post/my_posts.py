@@ -1,9 +1,8 @@
-import logging
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
 
-from loader import dp, Conn
+from loader import dp, Conn, log
 from utils.session.url_dispatcher import REL_URLS
 from deserializers.post import PostDeserializer
 
@@ -46,7 +45,7 @@ async def delete_post(call: types.CallbackQuery, callback_data: dict):
                           detail_action='my_post_detail', list_action='my_post_list', deserializer=post_des,
                           new_callback_answer=True)
     else:
-        logging.error(resp)
+        log.error(resp)
         await call.answer(_('Произошла ошибка. Попробуйте снова'))
 
 

@@ -1,11 +1,10 @@
-import logging
 import os
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import Text
 
-from loader import dp, Conn
+from loader import dp, Conn, log
 
 from keyboards.callbacks.user_callback import DETAIL_CB, POST_FILTER_CB
 from keyboards.default.dispatcher import dispatcher, back_button, get_menu_label
@@ -233,7 +232,7 @@ async def edit_flat(call: types.CallbackQuery, callback_data: dict, state: FSMCo
     await call.message.answer(_('Редактируте информацию. \nВыберите этаж. \n' +
                                 'Сейчас: {floor}').format(floor=resp.get('floor_display')),
                               reply_markup=keyboard)
-    logging.info({'path': path})
+    log.debug({'path': path})
     keyboard = await create_flat.get_floors_keyboard(floor_resp['results'])
     text = ''
     for index, item in enumerate(floor_resp['results'], start=1):
@@ -449,7 +448,7 @@ async def flat_save(call: types.CallbackQuery, callback_data: dict, state: FSMCo
     keys_to_delete = ('create_flat', 'flat_info', 'house_pk')
     if value:
         data = await state.get_data()
-        logging.info(data)
+        log.info(data)
         flat_data = data.get('create_flat')
         schema = await File.get(file_id=flat_data.get('schema'))
         if not schema.file_path:

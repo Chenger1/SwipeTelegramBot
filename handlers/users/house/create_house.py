@@ -1,4 +1,3 @@
-import logging
 import os
 
 from aiogram import types
@@ -6,7 +5,7 @@ from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
 
 from keyboards.callbacks.user_callback import DETAIL_CB
-from loader import dp, Conn
+from loader import dp, Conn, log
 
 from deserializers.house import HouseDeserializer
 
@@ -676,12 +675,12 @@ async def get_image(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(create_house.ITEM_CB.filter(action='create_confirm'), state=CreateHouse.SAVE)
 async def get_confirm_house(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
-    logging.info(callback_data)
+    log.debug(callback_data)
     value = callback_data.get('value')
     keys_to_delete = ('create_house', 'house_info')
     if value:
         data = await state.get_data()
-        logging.info(data)
+        log.info(data)
         house_data = data.get('create_house')
         if house_data.get('image'):
             image = await File.get(file_id=house_data.get('image'))
@@ -721,7 +720,8 @@ async def get_confirm_house(call: types.CallbackQuery, callback_data: dict, stat
                     await state.update_data(**new_dict)
                 else:
                     await call.answer(_('Произошла ошибка. Повторите попытке'))
-                    if resp.get('Error'):
-                        await call.answer(resp.get('Error'))
+                    for key, value in resp.items():
+                        log.info('Create house')
+                        log.info(f'{key} - {value}')
     else:
         await call.answer(_('Вы можете выбрать нужные этап через меню'))

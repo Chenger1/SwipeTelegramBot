@@ -1,9 +1,8 @@
-import logging
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
 
-from loader import dp, Conn
+from loader import dp, Conn, log
 
 from states.state_groups import CreatePost
 from deserializers.post import HouseForCreatePost, BaseDeserializer, FlatForCreatePost, PostDeserializer
@@ -217,7 +216,7 @@ async def edit_post(call: types.CallbackQuery, callback_data: dict, state: FSMCo
     await call.message.answer(inst.data)
     await call.message.answer(_('Редактируйте информацию'),
                               reply_markup=keyboard)
-    logging.info({'path': path})
+    log.info({'path': path})
     error_text = _('Домов нет. Добавьте дом, преждем чем создавать объявление')
     text, keyboard_cor, status = await list_items(user_id=call.from_user.id,
                                                   url=REL_URLS['houses'],
@@ -244,7 +243,7 @@ async def add_post(message: types.Message, state: FSMContext):
     await message.answer(_('Заполните форму для создания объявления'),
                          reply_markup=keyboard)
     await state.update_data(path=path)
-    logging.info({'path': path})
+    log.info({'path': path})
     error_text = _('Домов нет. Добавьте дом, преждем чем создавать объявление')
     text, keyboard_cor, status = await list_items(user_id=message.from_user.id,
                                                   url=REL_URLS['houses'],
@@ -300,7 +299,7 @@ async def add_house(call: types.CallbackQuery, callback_data: dict, state: FSMCo
 
 @dp.callback_query_handler(DETAIL_CB.filter(action='add_flat'), state=CreatePost.FLAT)
 async def get_flat(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
-    logging.info(callback_data)
+    log.debug(callback_data)
     state_data = await state.get_data()
     pk = callback_data.get('pk')
     url = f'{REL_URLS["flats"]}{pk}/'
@@ -324,7 +323,7 @@ async def get_flat(call: types.CallbackQuery, callback_data: dict, state: FSMCon
 @dp.callback_query_handler(ITEM_CB.filter(action='add_payment'), state=CreatePost.PAYMENT)
 async def get_payment(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
     state_data = await state.get_data()
-    logging.info(callback_data)
+    log.debug(callback_data)
     value = callback_data.get('value')
     await update_state(state, new_data=value, key='payment_options', root_key='create_post')
     await call.answer(_('Метод оплаты добавлен'))
@@ -352,7 +351,7 @@ async def get_price(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(ITEM_CB.filter(action='add_comm'), state=CreatePost.COMMUNICATION)
 async def get_communication(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
-    logging.info(callback_data)
+    log.debug(callback_data)
     value = callback_data.get('value')
     state_data = await state.get_data()
     await update_state(state, new_data=value, key='communications', root_key='create_post')
@@ -391,7 +390,7 @@ async def get_photo(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(ITEM_CB.filter(action='create_confirm'), state=CreatePost.SAVE)
 async def get_confirm(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
-    logging.info(callback_data)
+    log.debug(callback_data)
     value = callback_data.get('value')
     if value == 'YES':
         data = await state.get_data()

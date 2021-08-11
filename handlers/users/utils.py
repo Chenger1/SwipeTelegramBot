@@ -1,5 +1,3 @@
-import logging
-
 from aiogram import types
 from aiogram.utils.exceptions import MessageNotModified, MessageTextIsEmpty
 from aiogram.dispatcher import FSMContext
@@ -12,7 +10,7 @@ from utils.helpers import get_page
 
 from deserializers.base import BaseDeserializer
 
-from loader import Conn
+from loader import Conn, log
 
 from middlewares import _
 
@@ -148,6 +146,6 @@ async def send_with_image(call: types.CallbackQuery, resp: dict, pk: int,
 
 async def update_state(state: FSMContext, new_data: Union[int, str, dict],
                        key: str, root_key: str):
-    logging.info(f'{new_data} - {key}')
+    log.info(f'{new_data} - {key}')
     async with state.proxy() as data:
         data.setdefault(root_key, {})[key] = new_data
