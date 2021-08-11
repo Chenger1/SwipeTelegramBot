@@ -109,6 +109,7 @@ async def check_admin_token(message: types.Message, state: FSMContext):
         await user.save()
         result = await authorize_user(user.user_id)
         if result:
+            log.info(f'User: {user.user_id} is admin now')
             keyboard, path = await dispatcher('LEVEL_1', message.from_user.id)
             await message.answer(_('Вы успешно зарегестрированы в системе'),
                                  reply_markup=keyboard)
