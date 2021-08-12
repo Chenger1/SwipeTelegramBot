@@ -50,7 +50,7 @@ async def send_request_answer(call: types.CallbackQuery, data: dict, pk: int):
     return resp_detail
 
 
-@dp.message_handler(Text(equals=['Входящие запросы на добавление в шахматку', 'Income request to chest']))
+@dp.message_handler(Text(equals=['Входящие запросы на добавление в шахматку', 'Income requests to chest']))
 async def requests_to_chest(message: types.Message):
     await handle_list(message, key='requests', page='1', deserializer=request_des,
                       keyboard=get_keyboard_for_list, detail_action='request_detail',

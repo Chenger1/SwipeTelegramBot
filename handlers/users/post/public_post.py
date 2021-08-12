@@ -95,7 +95,7 @@ async def current_filters(message: types.Message, state: FSMContext):
     await message.answer(_(text))
 
 
-@dp.message_handler(Text(equals=['Сбросить фильтры', 'Current filters']))
+@dp.message_handler(Text(equals=['Сбросить фильтры', 'Remove filters']))
 async def current_filters(message: types.Message, state: FSMContext):
     data = await state.get_data()
     path = data.get('path')

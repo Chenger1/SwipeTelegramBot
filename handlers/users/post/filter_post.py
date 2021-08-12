@@ -148,7 +148,7 @@ async def go_to_filter(message: types.Message, state: FSMContext):
     await FilterPost.FILTERING.set()
 
 
-@dp.message_handler(Text(equals=['Фильтрация объявлений', 'Filter ads']))
+@dp.message_handler(Text(equals=['Фильтрация объявлений', 'Post filter']))
 async def filter_post_handler(message: types.Message, state: FSMContext):
     keyboard, path = await dispatcher('LEVEL_3_FILTER_POSTS', message.from_user.id)
     await message.answer(text=_('Заполните форму для фильтрации'), reply_markup=keyboard)

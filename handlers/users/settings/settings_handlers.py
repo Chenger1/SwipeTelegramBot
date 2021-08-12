@@ -28,7 +28,7 @@ async def user_settings(message: types.Message, state: FSMContext):
     await state.update_data(path=path)
 
 
-@dp.message_handler(Text(equals=['Настройки подписки', 'Subscription']))
+@dp.message_handler(Text(equals=['Настройки подписки', 'Subscription settings']))
 async def subscription_settings(message: types.Message, state: FSMContext):
     keyboard, path = await dispatcher('LEVEL_3_SUBSCRIPTION', message.from_user.id)
     await message.answer(_('Премиум подписка'), reply_markup=keyboard)
@@ -148,7 +148,7 @@ async def check_token(message: types.Message, state: FSMContext):
     await state.update_data(**state_data)
 
 
-@dp.message_handler(Text(equals=['Отключить режим администратора', 'Remove admin mode']))
+@dp.message_handler(Text(equals=['Отключить режим администратора', 'Remove admin status']))
 async def remove_admin_mode(message: types.Message):
     user = await User.get(user_id=message.from_user.id)
     if user.is_admin:
@@ -182,16 +182,12 @@ async def off_admin_status(message: types.Message, state: FSMContext):
 @dp.message_handler(Text(equals=['Язык', 'Language']))
 async def set_language(message: types.Message):
     await message.answer(_('Выберите язык'), reply_markup=lang_markup)
-    await SetLanguageState.LANG.set()
 
 
-@dp.callback_query_handler(LANG_CB.filter(action='lang'), state=SetLanguageState.LANG)
-async def set_language_callback(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
+@dp.callback_query_handler(LANG_CB.filter(action='lang'))
+async def set_language_callback(call: types.CallbackQuery, callback_data: dict):
     value = callback_data.get('lang')
     user = await User.get(user_id=call.from_user.id)
     user.language = value
     await user.save()
-    await call.answer(_('Язык обновлен'))
-    state_data = await state.get_data()
-    await state.finish()
-    await state.update_data(**state_data)
+    await call.answer(_('Язык обновлен. Выйдите этого меню чтобы обновления вступили в силу'))

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-08-11 17:17+0300\n"
+"POT-Creation-Date: 2021-08-13 01:22+0300\n"
 "PO-Revision-Date: 2021-07-31 15:07+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -405,6 +405,7 @@ msgid "Введите сообщение для отправки"
 msgstr "Input message to send"
 
 #: handlers/users/admin_panel/main_handlers.py:27
+#: keyboards/default/admin_keyboards.py:11
 msgid "Панель администратора"
 msgstr "Admin panel"
 
@@ -414,7 +415,7 @@ msgstr "Admin panel"
 #: handlers/users/admin_panel/main_handlers.py:136
 #: handlers/users/admin_panel/main_handlers.py:172
 #: handlers/users/admin_panel/main_handlers.py:176
-#: handlers/users/house/create_news.py:107
+#: handlers/users/house/create_news.py:110
 #: handlers/users/house/public_house.py:192
 #: handlers/users/house/public_house.py:241
 #: handlers/users/house/public_house.py:283
@@ -426,8 +427,8 @@ msgstr "Admin panel"
 #: handlers/users/request_to_chest/public_requests.py:47
 #: handlers/users/request_to_chest/public_requests.py:81
 #: handlers/users/request_to_chest/public_requests.py:122
-#: handlers/users/settings/settings_handlers.py:142
-#: handlers/users/settings/settings_handlers.py:173
+#: handlers/users/settings/settings_handlers.py:144
+#: handlers/users/settings/settings_handlers.py:175
 msgid "Произошла ошибка"
 msgstr "Error"
 
@@ -444,16 +445,16 @@ msgid ""
 "<b>** Системное сообщение **</b>Ваша публикации для квартиры {flat} в "
 "доме {house}была заблокирована по причине {message}"
 msgstr ""
-"<b>** System message **</b>Your post for {flat} in "
-"house {house} was banned by reason: {message}"
+"<b>** System message **</b>Your post for {flat} in house {house} was "
+"banned by reason: {message}"
 
 #: handlers/users/admin_panel/main_handlers.py:162
 msgid ""
 "<b>** Системное сообщение **</b>Ваша жалоба на объявление для квартиры "
 "{flat} в доме {house}была отвергнута"
 msgstr ""
-"<b>** System message **</b>Your complaint for flat: "
-"{flat} in house {house} was disapproved"
+"<b>** System message **</b>Your complaint for flat: {flat} in house "
+"{house} was disapproved"
 
 #: handlers/users/admin_panel/main_handlers.py:167
 msgid "В жалобе отказано"
@@ -530,12 +531,12 @@ msgstr "Document has been added"
 #: handlers/users/house/create_document.py:153
 #: handlers/users/house/public_house.py:387
 #: handlers/users/settings/edit_data.py:166
-#: handlers/users/settings/settings_handlers.py:87
+#: handlers/users/settings/settings_handlers.py:89
 msgid "Произошла ошибка. Попробуйте ещё раз"
 msgstr "Error. Try again"
 
 #: handlers/users/house/create_document.py:158
-#: handlers/users/house/create_news.py:111
+#: handlers/users/house/create_news.py:114
 #: handlers/users/post/create_promotion.py:154
 msgid "Вы можете выбрать этап через меню"
 msgstr "You can choose stage using menu"
@@ -1107,7 +1108,7 @@ msgstr "Add house image"
 
 #: handlers/users/house/create_house.py:701
 #: handlers/users/post/public_post.py:275
-#: handlers/users/settings/settings_handlers.py:113
+#: handlers/users/settings/settings_handlers.py:115
 #, fuzzy
 msgid "Произошла ошибка. Повторите попытку"
 msgstr "Error. Please, make '/start' again"
@@ -1167,9 +1168,7 @@ msgstr "House has been deleted"
 msgid ""
 "Квартира забронирована. Запрос на добавление в шахматку отправлен "
 "администратору дома"
-msgstr ""
-"Flat booked. Request to chest has been sent "
-"to house administrator"
+msgstr "Flat booked. Request to chest has been sent to house administrator"
 
 #: handlers/users/house/public_house.py:250
 msgid "Список забронированных квартир"
@@ -1207,11 +1206,11 @@ msgstr "Objects has been deleted"
 msgid "Произошла ошибка: "
 msgstr "Error"
 
-#: handlers/users/house/public_house.py:442
+#: handlers/users/house/public_house.py:443
 msgid "Новостей нет"
 msgstr "No news"
 
-#: handlers/users/house/public_house.py:477
+#: handlers/users/house/public_house.py:478
 msgid "Документов нет"
 msgstr "No documents"
 
@@ -1648,8 +1647,9 @@ msgstr ""
 "<b>Role:</b> {role}"
 
 #: handlers/users/settings/edit_data.py:88
-msgid "Current data:\n"
-msgstr ""
+#, fuzzy
+msgid "Текущие данные:\n"
+msgstr "Change data"
 
 #: handlers/users/settings/edit_data.py:89
 msgid ""
@@ -1687,20 +1687,20 @@ msgstr "Data has been updated"
 msgid "Вы можете выбрать нужный этап через меню"
 msgstr "You can choose stage using menu"
 
-#: handlers/users/settings/settings_handlers.py:19
-#: handlers/users/settings/settings_handlers.py:55
+#: handlers/users/settings/settings_handlers.py:21
+#: handlers/users/settings/settings_handlers.py:57
 msgid "Пользовательская подписка"
 msgstr "Subscription"
 
-#: handlers/users/settings/settings_handlers.py:25
+#: handlers/users/settings/settings_handlers.py:27
 msgid "Настройки пользователя"
 msgstr "Settings"
 
-#: handlers/users/settings/settings_handlers.py:32
+#: handlers/users/settings/settings_handlers.py:34
 msgid "Премиум подписка"
 msgstr "Premium subscription"
 
-#: handlers/users/settings/settings_handlers.py:42
+#: handlers/users/settings/settings_handlers.py:44
 msgid ""
 "У вас уже оформлена подписка.\n"
 "Она закончится - {end_date}"
@@ -1708,7 +1708,7 @@ msgstr ""
 "You already have subscription.\n"
 "It will end - {end_date}"
 
-#: handlers/users/settings/settings_handlers.py:45
+#: handlers/users/settings/settings_handlers.py:47
 msgid ""
 "Вы можете оформить подписку за 1 грн. \n"
 "<b>**Для тестировщиков:**</b> Платежи <b>тестовые</b>.\n"
@@ -1718,7 +1718,7 @@ msgstr ""
 "<b>**For testers:**</b>\n"
 "Use test credentials"
 
-#: handlers/users/settings/settings_handlers.py:48
+#: handlers/users/settings/settings_handlers.py:50
 msgid ""
 "Можете использовать следующие данные платежной карты: \n"
 "Номер: 4242 4242 4242 4242\n"
@@ -1730,14 +1730,13 @@ msgstr ""
 "Data: 01/22\n"
 "CVV: 123"
 
-#: handlers/users/settings/settings_handlers.py:52
+#: handlers/users/settings/settings_handlers.py:54
 msgid ""
 "Пользовательская подписка дает преимущества на тех кто ищет, и тех кто "
 "продает"
-msgstr ""
-"Subscription gives an advantages for everyone"
+msgstr "Subscription gives an advantages for everyone"
 
-#: handlers/users/settings/settings_handlers.py:84
+#: handlers/users/settings/settings_handlers.py:86
 msgid ""
 "Оплата прошла успешно.\n"
 "Ваша подписка активирована до {date}"
@@ -1745,40 +1744,49 @@ msgstr ""
 "Success.\n"
 "Your subscription activated until {date}"
 
-#: handlers/users/settings/settings_handlers.py:99
+#: handlers/users/settings/settings_handlers.py:101
 msgid "Ваша пользовательская подписка активирована до {date}"
 msgstr "Your subscription activated until {date}"
 
-#: handlers/users/settings/settings_handlers.py:101
+#: handlers/users/settings/settings_handlers.py:103
 msgid "Ваша пользовательская подписка не активирована"
 msgstr "Your subscription is not activated"
 
-#: handlers/users/settings/settings_handlers.py:111
+#: handlers/users/settings/settings_handlers.py:113
 msgid "Ваша пользовательская подписка отменена"
 msgstr "Your subscription has been canceled"
 
-#: handlers/users/settings/settings_handlers.py:120
+#: handlers/users/settings/settings_handlers.py:122
 msgid "Вы уже имеете статус администратора"
 msgstr "You already have admin status"
 
-#: handlers/users/settings/settings_handlers.py:123
-#: handlers/users/settings/settings_handlers.py:154
+#: handlers/users/settings/settings_handlers.py:125
+#: handlers/users/settings/settings_handlers.py:156
 msgid "Введите токен"
 msgstr "Input token"
 
-#: handlers/users/settings/settings_handlers.py:137
+#: handlers/users/settings/settings_handlers.py:139
 msgid "Теперь вы имеете статус администратора"
 msgstr "Now you has admin status"
 
-#: handlers/users/settings/settings_handlers.py:156
+#: handlers/users/settings/settings_handlers.py:158
 #, fuzzy
 msgid "У вас нет статуса администратора"
 msgstr "You have logged in as an administrator"
 
-#: handlers/users/settings/settings_handlers.py:170
+#: handlers/users/settings/settings_handlers.py:172
 #, fuzzy
 msgid "Вы больше не администратор"
 msgstr "You have logged in as an administrator"
+
+#: handlers/users/settings/settings_handlers.py:184
+#, fuzzy
+msgid "Выберите язык"
+msgstr "Choose language"
+
+#: handlers/users/settings/settings_handlers.py:193
+msgid "Язык обновлен. Выйдите этого меню чтобы обновления вступили в силу"
+msgstr "Language has been changed. Quit from this menu for changes to be applied"
 
 #: keyboards/default/defaults.py:7
 msgid "Отправить номер телефона"
@@ -1818,7 +1826,7 @@ msgstr "Favorites"
 
 #: keyboards/default/user_keyboards.py:13
 msgid "Входящие запросы на добавление в шахматку"
-msgstr "Input requests to chest"
+msgstr "Income requests to chest"
 
 #: keyboards/default/user_keyboards.py:15
 msgid "Настройки"
@@ -1858,9 +1866,8 @@ msgid "Добавить новую публикацию"
 msgstr "Add new post"
 
 #: keyboards/default/user_keyboards.py:31
-#, fuzzy
-msgid "Мои публикации"
-msgstr "List ads"
+msgid "Мои объявления"
+msgstr "My ads"
 
 #: keyboards/default/user_keyboards.py:38
 msgid "Фильтровать"
@@ -2044,6 +2051,10 @@ msgstr "Change data"
 msgid "Настройки подписки"
 msgstr "Subscription settings"
 
+#: keyboards/default/user_keyboards.py:145
+msgid "Язык"
+msgstr "Language"
+
 #: keyboards/default/user_keyboards.py:149
 msgid "Отключить режим администратора"
 msgstr "Remove admin status"
@@ -2212,13 +2223,11 @@ msgstr "Monolithic frame with expanded clay-block filling"
 
 #: keyboards/inline/create_house.py:13
 msgid "Монолитно-кирпичный"
-msgstr "Monolithic brick
-"
+msgstr "Monolithic brice"
 
 #: keyboards/inline/create_house.py:16
 msgid "Монолитно-каркасный"
-msgstr "Monolithic frame
-"
+msgstr "Monolithic frame"
 
 #: keyboards/inline/create_house.py:20
 msgid "Панельный"
@@ -2851,4 +2860,13 @@ msgid "{len_type} values are required, but {len_value} was given."
 msgid_plural "{len_type} values are required, but {len_value} were given."
 msgstr[0] ""
 msgstr[1] ""
+
+#~ msgid "Current data:\n"
+#~ msgstr "Текущая дата:\n"
+
+#~ msgid "Язык обновлен"
+#~ msgstr "Data has been updated"
+
+#~ msgid "Мои публикации"
+#~ msgstr "List ads"
 

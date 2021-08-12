@@ -2,11 +2,13 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 from keyboards.default.user_keyboards import get_user_keyboard
 
+from middlewares import _
+
 
 async def get_admin_keyboard() -> ReplyKeyboardMarkup:
     markup = await get_user_keyboard()
     markup.add(
-        KeyboardButton('Панель администратора')
+        KeyboardButton(_('Панель администратора'))
     )
     return markup
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-08-11 17:17+0300\n"
+"POT-Creation-Date: 2021-08-13 01:22+0300\n"
 "PO-Revision-Date: 2021-07-31 15:07+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -332,6 +332,7 @@ msgid "Введите сообщение для отправки"
 msgstr ""
 
 #: handlers/users/admin_panel/main_handlers.py:27
+#: keyboards/default/admin_keyboards.py:11
 msgid "Панель администратора"
 msgstr ""
 
@@ -341,7 +342,7 @@ msgstr ""
 #: handlers/users/admin_panel/main_handlers.py:136
 #: handlers/users/admin_panel/main_handlers.py:172
 #: handlers/users/admin_panel/main_handlers.py:176
-#: handlers/users/house/create_news.py:107
+#: handlers/users/house/create_news.py:110
 #: handlers/users/house/public_house.py:192
 #: handlers/users/house/public_house.py:241
 #: handlers/users/house/public_house.py:283
@@ -353,8 +354,8 @@ msgstr ""
 #: handlers/users/request_to_chest/public_requests.py:47
 #: handlers/users/request_to_chest/public_requests.py:81
 #: handlers/users/request_to_chest/public_requests.py:122
-#: handlers/users/settings/settings_handlers.py:142
-#: handlers/users/settings/settings_handlers.py:173
+#: handlers/users/settings/settings_handlers.py:144
+#: handlers/users/settings/settings_handlers.py:175
 msgid "Произошла ошибка"
 msgstr ""
 
@@ -450,12 +451,12 @@ msgstr ""
 #: handlers/users/house/create_document.py:153
 #: handlers/users/house/public_house.py:387
 #: handlers/users/settings/edit_data.py:166
-#: handlers/users/settings/settings_handlers.py:87
+#: handlers/users/settings/settings_handlers.py:89
 msgid "Произошла ошибка. Попробуйте ещё раз"
 msgstr ""
 
 #: handlers/users/house/create_document.py:158
-#: handlers/users/house/create_news.py:111
+#: handlers/users/house/create_news.py:114
 #: handlers/users/post/create_promotion.py:154
 msgid "Вы можете выбрать этап через меню"
 msgstr ""
@@ -995,7 +996,7 @@ msgstr ""
 
 #: handlers/users/house/create_house.py:701
 #: handlers/users/post/public_post.py:275
-#: handlers/users/settings/settings_handlers.py:113
+#: handlers/users/settings/settings_handlers.py:115
 msgid "Произошла ошибка. Повторите попытку"
 msgstr ""
 
@@ -1091,11 +1092,11 @@ msgstr ""
 msgid "Произошла ошибка: "
 msgstr ""
 
-#: handlers/users/house/public_house.py:442
+#: handlers/users/house/public_house.py:443
 msgid "Новостей нет"
 msgstr ""
 
-#: handlers/users/house/public_house.py:477
+#: handlers/users/house/public_house.py:478
 msgid "Документов нет"
 msgstr ""
 
@@ -1535,33 +1536,33 @@ msgstr ""
 msgid "Вы можете выбрать нужный этап через меню"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:19
-#: handlers/users/settings/settings_handlers.py:55
+#: handlers/users/settings/settings_handlers.py:21
+#: handlers/users/settings/settings_handlers.py:57
 msgid "Пользовательская подписка"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:25
+#: handlers/users/settings/settings_handlers.py:27
 msgid "Настройки пользователя"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:32
+#: handlers/users/settings/settings_handlers.py:34
 msgid "Премиум подписка"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:42
+#: handlers/users/settings/settings_handlers.py:44
 msgid ""
 "У вас уже оформлена подписка.\n"
 "Она закончится - {end_date}"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:45
+#: handlers/users/settings/settings_handlers.py:47
 msgid ""
 "Вы можете оформить подписку за 1 грн. \n"
 "<b>**Для тестировщиков:**</b> Платежи <b>тестовые</b>.\n"
 "Никакие суммы взыматься не будут"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:48
+#: handlers/users/settings/settings_handlers.py:50
 msgid ""
 "Можете использовать следующие данные платежной карты: \n"
 "Номер: 4242 4242 4242 4242\n"
@@ -1569,49 +1570,57 @@ msgid ""
 "CVV: 123"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:52
+#: handlers/users/settings/settings_handlers.py:54
 msgid ""
 "Пользовательская подписка дает преимущества на тех кто ищет, и тех кто "
 "продает"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:84
+#: handlers/users/settings/settings_handlers.py:86
 msgid ""
 "Оплата прошла успешно.\n"
 "Ваша подписка активирована до {date}"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:99
+#: handlers/users/settings/settings_handlers.py:101
 msgid "Ваша пользовательская подписка активирована до {date}"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:101
+#: handlers/users/settings/settings_handlers.py:103
 msgid "Ваша пользовательская подписка не активирована"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:111
+#: handlers/users/settings/settings_handlers.py:113
 msgid "Ваша пользовательская подписка отменена"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:120
+#: handlers/users/settings/settings_handlers.py:122
 msgid "Вы уже имеете статус администратора"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:123
-#: handlers/users/settings/settings_handlers.py:154
+#: handlers/users/settings/settings_handlers.py:125
+#: handlers/users/settings/settings_handlers.py:156
 msgid "Введите токен"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:137
+#: handlers/users/settings/settings_handlers.py:139
 msgid "Теперь вы имеете статус администратора"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:156
+#: handlers/users/settings/settings_handlers.py:158
 msgid "У вас нет статуса администратора"
 msgstr ""
 
-#: handlers/users/settings/settings_handlers.py:170
+#: handlers/users/settings/settings_handlers.py:172
 msgid "Вы больше не администратор"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:184
+msgid "Выберите язык"
+msgstr ""
+
+#: handlers/users/settings/settings_handlers.py:193
+msgid "Язык обновлен. Выйдите этого меню чтобы обновления вступили в силу"
 msgstr ""
 
 #: keyboards/default/defaults.py:7
@@ -1692,7 +1701,7 @@ msgid "Добавить новую публикацию"
 msgstr ""
 
 #: keyboards/default/user_keyboards.py:31
-msgid "Мои публикации"
+msgid "Мои объявления"
 msgstr ""
 
 #: keyboards/default/user_keyboards.py:38
@@ -1875,6 +1884,10 @@ msgstr ""
 
 #: keyboards/default/user_keyboards.py:144
 msgid "Настройки подписки"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:145
+msgid "Язык"
 msgstr ""
 
 #: keyboards/default/user_keyboards.py:149
@@ -2689,5 +2702,11 @@ msgstr[2] ""
 #~ msgstr ""
 
 #~ msgid "Токен неправильный. Попробуйте снова или нажмите \"Пропустить\""
+#~ msgstr ""
+
+#~ msgid "Язык обновлен"
+#~ msgstr ""
+
+#~ msgid "Мои публикации"
 #~ msgstr ""
 

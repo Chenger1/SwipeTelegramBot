@@ -90,7 +90,7 @@ async def get_flat(call: types.CallbackQuery, callback_data: dict,
     await call.answer()
 
 
-@dp.message_handler(Text(equals=['Список домов', 'Houses list']))
+@dp.message_handler(Text(equals=['Список домов', 'List houses']))
 async def get_house_keyboard(message: types.Message, state: FSMContext):
     keyboard, path = await dispatcher('LEVEL_2_HOUSES', message.from_user.id)
     log.debug(path)

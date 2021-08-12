@@ -28,7 +28,7 @@ async def get_level_2_post_keyboard(is_admin) -> ReplyKeyboardMarkup:
         KeyboardButton(_('Сбросить фильтры'))
     ).add(
         KeyboardButton(_('Добавить новую публикацию')),
-        KeyboardButton(_('Мои публикации'))
+        KeyboardButton(_('Мои объявления'))
     )
     return markup
 
