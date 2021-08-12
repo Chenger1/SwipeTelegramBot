@@ -5,6 +5,8 @@ from aiogram.dispatcher import FSMContext
 from loader import dp, Conn, log
 
 from keyboards.default.dispatcher import dispatcher
+from keyboards.inline.user_keyboards import lang_markup
+from keyboards.callbacks.user_callback import LANG_CB
 
 from middlewares import _
 from utils.db_api.models import User
@@ -13,7 +15,7 @@ from utils.session.url_dispatcher import REL_URLS
 
 from data.config import PAYMENT_PROVIDER_TOKEN
 
-from states.state_groups import Subscription, InputAdminToken
+from states.state_groups import Subscription, InputAdminToken, SetLanguageState
 
 
 Subscription_price = types.LabeledPrice(label=_('Пользовательская подписка'), amount=1000)
@@ -173,5 +175,23 @@ async def off_admin_status(message: types.Message, state: FSMContext):
         await message.answer(_('Произошла ошибка'))
         for key, value in resp.items():
             log.info(f'{key} - {value}')
+    await state.finish()
+    await state.update_data(**state_data)
+
+
+@dp.message_handler(Text(equals=['Язык', 'Language']))
+async def set_language(message: types.Message):
+    await message.answer(_('Выберите язык'), reply_markup=lang_markup)
+    await SetLanguageState.LANG.set()
+
+
+@dp.callback_query_handler(LANG_CB.filter(action='lang'), state=SetLanguageState.LANG)
+async def set_language_callback(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
+    value = callback_data.get('lang')
+    user = await User.get(user_id=call.from_user.id)
+    user.language = value
+    await user.save()
+    await call.answer(_('Язык обновлен'))
+    state_data = await state.get_data()
     await state.finish()
     await state.update_data(**state_data)

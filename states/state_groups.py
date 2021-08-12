@@ -125,3 +125,6 @@ class Mailing(StatesGroup):
     STARTER = State()
     TEXT = State()
 
+
+class SetLanguageState(StatesGroup):
+    LANG = State()

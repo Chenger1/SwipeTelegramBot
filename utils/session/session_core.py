@@ -39,7 +39,8 @@ class BaseSessionManager:
         headers = None
         if user_id:
             user = await User.get(user_id=user_id)
-            headers = {'Authorization': f'Bearer {user.token}'}
+            headers = {'Authorization': f'Bearer {user.token}',
+                       'Accept-Language': user.language}
         return headers
 
     async def _process_authorization_token(self, user_id: Optional[int], token: Optional[str]):

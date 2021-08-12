@@ -141,8 +141,8 @@ async def get_level_4_create_house(is_admin: int) -> ReplyKeyboardMarkup:
 async def get_level_2_user_settings_keyboard(is_admin: int) -> ReplyKeyboardMarkup:
     markup = ReplyKeyboardMarkup(resize_keyboard=True).add(
         KeyboardButton(_('Изменить данные')),
-        KeyboardButton(_('Настройки подписки'))
-
+        KeyboardButton(_('Настройки подписки')),
+        KeyboardButton(_('Язык'))
     )
     if is_admin:
         markup.add(

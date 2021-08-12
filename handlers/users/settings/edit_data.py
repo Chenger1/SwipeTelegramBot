@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
 
-from keyboards.inline.create_post import get_create_post_confirm_keyboard , ITEM_CB
+from keyboards.inline.create_post import get_create_post_confirm_keyboard, ITEM_CB
 from loader import dp, Conn
 
 from keyboards.default.dispatcher import dispatcher, back_button, get_menu_label
@@ -14,7 +14,7 @@ from middlewares import _
 from states.state_groups import EditUserDate
 
 from handlers.users.utils import update_state
-from utils.db_api.models import File , User
+from utils.db_api.models import File, User
 from utils.session.url_dispatcher import REL_URLS
 
 
