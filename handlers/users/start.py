@@ -79,14 +79,14 @@ async def phone_number(message: types.Message, state: FSMContext):
         result = await authorize_user(user.user_id)
         if result:
             await message.answer(_('Вы вошли в систему как администратор'))
+            keyboard, path = await dispatcher('LEVEL_1', message.from_user.id)
             if created:
-                keyboard, path = await dispatcher('LEVEL_1', message.from_user.id)
                 await message.answer(_('Вы успешно зарегестрированы в системе'),
                                      reply_markup=keyboard)
+            else:
+                await message.answer(_('Вы уже в системе. Добро пожаловать'), reply_markup=keyboard)
                 await state.finish()
                 await state.update_data(path=path)
-            else:
-                await message.answer(_('Вы уже в системе. Добро пожаловать'))
         else:
             await message.answer('Произошла ошибка. Нажмите /start снова')
             await state.reset_state()

@@ -190,4 +190,4 @@ async def set_language_callback(call: types.CallbackQuery, callback_data: dict):
     user = await User.get(user_id=call.from_user.id)
     user.language = value
     await user.save()
-    await call.answer(_('Язык обновлен. Выйдите этого меню чтобы обновления вступили в силу'))
+    await call.answer(_('Язык обновлен. Выйдите этого меню чтобы обновления вступили в силу'), show_alert=True)
