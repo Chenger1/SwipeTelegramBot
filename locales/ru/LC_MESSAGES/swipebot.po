@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-08-13 23:16+0300\n"
+"POT-Creation-Date: 2021-08-14 00:09+0300\n"
 "PO-Revision-Date: 2021-07-31 15:07+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -652,7 +652,7 @@ msgstr ""
 #: handlers/users/house/create_flat.py:339
 #: handlers/users/house/create_flat.py:354
 #: handlers/users/house/create_flat.py:369
-msgid "Введите <b>номер</b>"
+msgid "Введите <b>число</b>, а не строку"
 msgstr ""
 
 #: handlers/users/house/create_flat.py:302
@@ -746,18 +746,24 @@ msgstr ""
 msgid "Информация о квартире изменена"
 msgstr ""
 
-#: handlers/users/house/create_flat.py:477
+#: handlers/users/house/create_flat.py:474
+#: handlers/users/house/create_flat.py:487
+#: handlers/users/post/filter_post.py:261 keyboards/default/dispatcher.py:108
+msgid "Возврат"
+msgstr ""
+
+#: handlers/users/house/create_flat.py:480
 msgid "Квартира добавлена"
 msgstr ""
 
-#: handlers/users/house/create_flat.py:487
+#: handlers/users/house/create_flat.py:491
 #: handlers/users/house/create_house.py:722
 #: handlers/users/post/create_post.py:430
 #: handlers/users/post/create_post.py:452
 msgid "Произошла ошибка. Повторите попытке"
 msgstr ""
 
-#: handlers/users/house/create_flat.py:489
+#: handlers/users/house/create_flat.py:493
 #: handlers/users/house/create_house.py:727
 #: handlers/users/post/create_post.py:456
 msgid "Вы можете выбрать нужные этап через меню"
@@ -1420,10 +1426,6 @@ msgstr ""
 msgid "Выберите желаемый тип планировки"
 msgstr ""
 
-#: handlers/users/post/filter_post.py:261 keyboards/default/dispatcher.py:108
-msgid "Возврат"
-msgstr ""
-
 #: handlers/users/post/filter_post.py:264
 msgid "Используйте меню чтобы выбрать етап фильтрации"
 msgstr ""
@@ -2028,8 +2030,9 @@ msgstr ""
 msgid "Евроремонт"
 msgstr ""
 
-#: keyboards/inline/create_flat.py:17
-msgid "Требуте ремонта"
+#: keyboards/inline/create_flat.py:17 keyboards/inline/filter_post.py:12
+#: keyboards/inline/filter_post.py:34
+msgid "Требует ремонта"
 msgstr ""
 
 #: keyboards/inline/create_flat.py:23
@@ -2123,8 +2126,8 @@ msgstr ""
 msgid "Прямая оплата"
 msgstr ""
 
-#: keyboards/inline/create_house.py:48 keyboards/inline/user_keyboards.py:190
-#: keyboards/inline/user_keyboards.py:245
+#: keyboards/inline/create_house.py:48 keyboards/inline/user_keyboards.py:186
+#: keyboards/inline/user_keyboards.py:241
 msgid "Квартиры"
 msgstr ""
 
@@ -2240,179 +2243,175 @@ msgstr ""
 msgid "Отдельная парковка"
 msgstr ""
 
-#: keyboards/inline/filter_post.py:12 keyboards/inline/filter_post.py:34
-msgid "Требует ремонта"
-msgstr ""
-
 #: keyboards/inline/filter_post.py:19
 msgid "Малосемейки"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:38 keyboards/inline/user_keyboards.py:76
-#: keyboards/inline/user_keyboards.py:96 keyboards/inline/user_keyboards.py:146
-#: keyboards/inline/user_keyboards.py:173
-#: keyboards/inline/user_keyboards.py:199
-#: keyboards/inline/user_keyboards.py:266
-#: keyboards/inline/user_keyboards.py:281
-#: keyboards/inline/user_keyboards.py:301
-#: keyboards/inline/user_keyboards.py:328
-#: keyboards/inline/user_keyboards.py:349
-#: keyboards/inline/user_keyboards.py:360
-#: keyboards/inline/user_keyboards.py:401
-#: keyboards/inline/user_keyboards.py:415
-#: keyboards/inline/user_keyboards.py:434
+#: keyboards/inline/user_keyboards.py:38 keyboards/inline/user_keyboards.py:72
+#: keyboards/inline/user_keyboards.py:92 keyboards/inline/user_keyboards.py:142
+#: keyboards/inline/user_keyboards.py:169
+#: keyboards/inline/user_keyboards.py:195
+#: keyboards/inline/user_keyboards.py:262
+#: keyboards/inline/user_keyboards.py:277
+#: keyboards/inline/user_keyboards.py:297
+#: keyboards/inline/user_keyboards.py:324
+#: keyboards/inline/user_keyboards.py:345
+#: keyboards/inline/user_keyboards.py:356
+#: keyboards/inline/user_keyboards.py:397
+#: keyboards/inline/user_keyboards.py:411
+#: keyboards/inline/user_keyboards.py:430
 msgid "Назад"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:41 keyboards/inline/user_keyboards.py:305
+#: keyboards/inline/user_keyboards.py:41 keyboards/inline/user_keyboards.py:301
 msgid "Новое"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:45 keyboards/inline/user_keyboards.py:310
+#: keyboards/inline/user_keyboards.py:45 keyboards/inline/user_keyboards.py:306
 msgid "Вперед"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:57 keyboards/inline/user_keyboards.py:161
-msgid "О квартире"
-msgstr ""
-
-#: keyboards/inline/user_keyboards.py:79 keyboards/inline/user_keyboards.py:99
+#: keyboards/inline/user_keyboards.py:75 keyboards/inline/user_keyboards.py:95
 msgid "Пожаловаться"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:84 keyboards/inline/user_keyboards.py:103
+#: keyboards/inline/user_keyboards.py:80 keyboards/inline/user_keyboards.py:99
 msgid "Убрать из избранного"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:91
+#: keyboards/inline/user_keyboards.py:87
 msgid "В избранное"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:115
+#: keyboards/inline/user_keyboards.py:111
 msgid "Неккоректная цена"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:119
+#: keyboards/inline/user_keyboards.py:115
 msgid "Неккоректное фото"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:123
+#: keyboards/inline/user_keyboards.py:119
 msgid "Неккоректное описание"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:149
+#: keyboards/inline/user_keyboards.py:145
 msgid "Применить"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:152
-#: keyboards/inline/user_keyboards.py:178
-#: keyboards/inline/user_keyboards.py:212
-#: keyboards/inline/user_keyboards.py:325
-#: keyboards/inline/user_keyboards.py:382
+#: keyboards/inline/user_keyboards.py:148
+#: keyboards/inline/user_keyboards.py:174
+#: keyboards/inline/user_keyboards.py:208
+#: keyboards/inline/user_keyboards.py:321
+#: keyboards/inline/user_keyboards.py:378
 msgid "Удалить"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:165
+#: keyboards/inline/user_keyboards.py:157
+msgid "О квартире"
+msgstr ""
+
+#: keyboards/inline/user_keyboards.py:161
 msgid "Заказать продвижение"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:168
+#: keyboards/inline/user_keyboards.py:164
 msgid "Убрать продвижение"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:176
-#: keyboards/inline/user_keyboards.py:209
-#: keyboards/inline/user_keyboards.py:322
+#: keyboards/inline/user_keyboards.py:172
+#: keyboards/inline/user_keyboards.py:205
+#: keyboards/inline/user_keyboards.py:318
 msgid "Редактировать"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:194
-#: keyboards/inline/user_keyboards.py:259
+#: keyboards/inline/user_keyboards.py:190
+#: keyboards/inline/user_keyboards.py:255
 msgid "Документы"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:215
+#: keyboards/inline/user_keyboards.py:211
 msgid "Добавить корпус"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:220
+#: keyboards/inline/user_keyboards.py:216
 msgid "Добавить секцию"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:225
+#: keyboards/inline/user_keyboards.py:221
 msgid "Добавить этаж"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:231
+#: keyboards/inline/user_keyboards.py:227
 msgid "Корпуса"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:236
+#: keyboards/inline/user_keyboards.py:232
 msgid "Секции"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:240
+#: keyboards/inline/user_keyboards.py:236
 msgid "Этажи"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:249
+#: keyboards/inline/user_keyboards.py:245
 msgid "Добавить квартиру"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:252
+#: keyboards/inline/user_keyboards.py:248
 msgid "Новости"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:256
+#: keyboards/inline/user_keyboards.py:252
 msgid "Добавить новость"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:263
+#: keyboards/inline/user_keyboards.py:259
 msgid "Добавить документ"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:277
+#: keyboards/inline/user_keyboards.py:273
 msgid "Забронировать"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:340
+#: keyboards/inline/user_keyboards.py:336
 msgid "Отменить бронь"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:343
+#: keyboards/inline/user_keyboards.py:339
 msgid "Дом"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:369
+#: keyboards/inline/user_keyboards.py:365
 msgid "Клиент"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:371
+#: keyboards/inline/user_keyboards.py:367
 msgid "Агент"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:373
+#: keyboards/inline/user_keyboards.py:369
 msgid "Нотариус"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:375
+#: keyboards/inline/user_keyboards.py:371
 msgid "Отдел продаж"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:391
+#: keyboards/inline/user_keyboards.py:387
 msgid "Одобрить"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:395
-#: keyboards/inline/user_keyboards.py:428
+#: keyboards/inline/user_keyboards.py:391
+#: keyboards/inline/user_keyboards.py:424
 msgid "Отказать"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:409
+#: keyboards/inline/user_keyboards.py:405
 msgid "Убрать из списка нотариусов"
 msgstr ""
 
-#: keyboards/inline/user_keyboards.py:423
+#: keyboards/inline/user_keyboards.py:419
 msgid "Удовлетворить"
 msgstr ""
 
@@ -2735,5 +2734,11 @@ msgstr[2] ""
 #~ msgstr ""
 
 #~ msgid "Мои публикации"
+#~ msgstr ""
+
+#~ msgid "Введите <b>номер</b>"
+#~ msgstr ""
+
+#~ msgid "Требуте ремонта"
 #~ msgstr ""
 
