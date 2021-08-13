@@ -20,15 +20,19 @@ class BaseSessionManager:
         self._wrong_hook_pattern = re.compile('http:\/\/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}\/')
         # wrong pattern is 'http://188.225.43.69' without port
 
-    async def _prepare_url(self, path: str) -> str:
+    async def _prepare_url(self, path: str, user_id: int) -> str:
         """
         Gets path like '/main/resource/' and returns 'http://127.0.0.1:0000/main/resource/'
         :param path: relative
         :return: str - absolute path
         """
+        locale = 'en'
+        if user_id:
+            user = await User.get(user_id=user_id)
+            locale = user.language
         if self._wrong_hook_pattern.findall(path):
             path = self._wrong_hook_pattern.split(path)[-1]
-        return f'{self._WEBHOOK_ENDPOINT}/{path}'
+        return f'{self._WEBHOOK_ENDPOINT}/{locale}/{path}'
 
     async def _get_authorization_header(self, user_id: int = None) -> Optional[Dict[str, str]]:
         """
