@@ -58,7 +58,7 @@ async def save_filter(message: types.Message, state: FSMContext):
         await state.finish()
         await state.update_data(**data)
     else:
-        logging.error(resp)
+        log.error(resp)
         await message.answer(_('Произошла ошибка. Попробуйте снова'))
         await message.answer(_('Подробный код ошибки: {code}'.format(code=resp)))
 

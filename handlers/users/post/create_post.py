@@ -21,6 +21,8 @@ from handlers.users.utils import update_state
 
 import os
 
+from typing import Optional
+
 
 house_des = HouseForCreatePost()
 flat_des = FlatForCreatePost()
@@ -28,9 +30,17 @@ post_des = PostDeserializer()
 
 
 async def list_items(user_id: int, url: str, deserializer: BaseDeserializer,
-                     keyboard, error_text: str, action: str):
-    resp = await Conn.get(url, user_id=user_id)
-    if resp:
+                     keyboard, error_text: str, action: str, params: Optional[dict] = None):
+    resp = await Conn.get(url, user_id=user_id, params=params)
+    if resp.get('results'):
+        if action == 'add_house':
+            new_resp = {'results': []}
+            for item in resp['results']:
+                if item.get('flat_count') > 0:  # If house doesnt have flats - wont display this house
+                    new_resp['results'].append(item)
+            resp = new_resp
+            if not resp:
+                _('У вас нет домов с квартирами'), keyboard([]), False
         data = await deserializer.make_list(resp)
         text = ''
         for index, item in enumerate(data, start=1):
@@ -109,13 +119,18 @@ async def go_to_house(message: types.Message, state: FSMContext):
 @dp.message_handler(Text(equals=['Перейти к квартире', 'Go to flat']), state=CreatePost)
 async def go_to_flat(message: types.Message, state: FSMContext):
     data = await state.get_data()
+    if not data.get('create_house') or not data['create_house'].get('house'):
+        await message.answer(_('Сперва выберите дом'))
+        return
+    params = {'house_pk': data['create_house']['house']}
     error_text = _('Квартир нет. Добавьте квартиру, преждем чем создавать объявление')
     text, keyboard_cor, status = await list_items(user_id=message.from_user.id,
-                                                  url=REL_URLS['flats'],
+                                                  url=REL_URLS['flats_public'],
                                                   deserializer=flat_des,
                                                   keyboard=get_item_for_create_post,
                                                   error_text=error_text,
-                                                  action='add_flat')
+                                                  action='add_flat',
+                                                  params=params)
     if not status:
         await message.answer(text)
         keyboard_cor.close()
@@ -278,11 +293,12 @@ async def add_house(call: types.CallbackQuery, callback_data: dict, state: FSMCo
 
         error_text = _('Квартир нет. Добавьте квартиру, преждем чем работать с объявлением')
         text, keyboard_cor, status = await list_items(user_id=call.from_user.id,
-                                                      url=REL_URLS['flats'],
+                                                      url=REL_URLS['flats_public'],
                                                       deserializer=flat_des,
                                                       keyboard=get_item_for_create_post,
                                                       error_text=error_text,
-                                                      action='add_flat')
+                                                      action='add_flat',
+                                                      params={'house__pk': str(pk)})
         if not status:
             await call.message.answer(text)
             keyboard_cor.close()
@@ -291,6 +307,10 @@ async def add_house(call: types.CallbackQuery, callback_data: dict, state: FSMCo
         if state_data.get('post_info'):
             text = _('Сейчас: {flat}').format(flat=state_data['post_info']['flat'])
             await call.message.answer(text)
+        if not text:
+            await call.message.answer(_('В этом доме ещё нет квартир'))
+            keyboard_cor.close()
+            return
         await call.message.answer(text, reply_markup=await keyboard_cor)
         await CreatePost.FLAT.set()
     else:
@@ -414,6 +434,9 @@ async def get_confirm(call: types.CallbackQuery, callback_data: dict, state: FSM
                     await call.answer(_('Объявление изменено'), show_alert=True)
                     data.pop('create_post')
                     await state.finish()
+                    keyboard, path = await dispatcher('LEVEL_1', user_id=call.from_user.id)
+                    data['path'] = path
+                    await call.message.answer(_('Возврат на главное меню'), reply_markup=keyboard)
                     await state.update_data(**data)
             else:
                 resp, status = await Conn.post(REL_URLS['posts'], data=post_data, user_id=call.from_user.id)
@@ -421,6 +444,9 @@ async def get_confirm(call: types.CallbackQuery, callback_data: dict, state: FSM
                     await call.answer(_('Объявление создано'), show_alert=True)
                     data.pop('create_post')
                     await state.finish()
+                    keyboard, path = await dispatcher('LEVEL_1', user_id=call.from_user.id)
+                    data['path'] = path
+                    await call.message.answer(_('Возврат на главное меню'), reply_markup=keyboard)
                     await state.update_data(**data)
                 else:
                     await call.answer(_('Произошла ошибка. Повторите попытке'))
