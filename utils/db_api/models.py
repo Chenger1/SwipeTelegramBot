@@ -16,10 +16,3 @@ class File(Model):
     file_id = fields.CharField(max_length=255)
     parent_id = fields.IntField(null=True)
     file_path = fields.TextField(null=True)
-
-
-class AdminToken(Model):
-    token = fields.CharField(max_length=100)
-
-    def __str__(self):
-        return self.token
