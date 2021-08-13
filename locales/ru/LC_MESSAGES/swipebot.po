@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-08-13 19:01+0300\n"
+"POT-Creation-Date: 2021-08-13 23:16+0300\n"
 "PO-Revision-Date: 2021-07-31 15:07+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -50,9 +50,9 @@ msgid ""
 msgstr ""
 
 #: deserializers/house.py:41 deserializers/post.py:35 deserializers/user.py:9
-#: deserializers/user.py:10 handlers/users/post/create_post.py:137
-#: handlers/users/post/create_post.py:167
-#: handlers/users/post/create_post.py:170 handlers/users/post/filter_post.py:69
+#: deserializers/user.py:10 handlers/users/post/create_post.py:152
+#: handlers/users/post/create_post.py:182
+#: handlers/users/post/create_post.py:185 handlers/users/post/filter_post.py:69
 #: handlers/users/post/filter_post.py:70 handlers/users/post/filter_post.py:80
 #: handlers/users/post/filter_post.py:81 handlers/users/post/filter_post.py:90
 #: handlers/users/post/filter_post.py:100
@@ -404,7 +404,7 @@ msgstr ""
 #: handlers/users/house/create_document.py:53
 #: handlers/users/house/create_flat.py:51
 #: handlers/users/house/create_house.py:55
-#: handlers/users/post/create_post.py:70
+#: handlers/users/post/create_post.py:80
 #: handlers/users/post/create_promotion.py:49
 msgid "Вы не указали: \n"
 msgstr ""
@@ -441,7 +441,7 @@ msgstr ""
 #: handlers/users/house/create_flat.py:441
 #: handlers/users/house/create_house.py:51
 #: handlers/users/house/create_house.py:672
-#: handlers/users/post/create_post.py:66 handlers/users/post/create_post.py:386
+#: handlers/users/post/create_post.py:76 handlers/users/post/create_post.py:406
 #: handlers/users/post/create_promotion.py:45
 #: handlers/users/post/create_promotion.py:121
 #: handlers/users/settings/edit_data.py:38
@@ -627,12 +627,12 @@ msgstr ""
 #: handlers/users/house/create_house.py:540
 #: handlers/users/house/create_house.py:552
 #: handlers/users/house/create_house.py:564
-#: handlers/users/post/create_post.py:104
-#: handlers/users/post/create_post.py:125
-#: handlers/users/post/create_post.py:147
-#: handlers/users/post/create_post.py:157
-#: handlers/users/post/create_post.py:317
-#: handlers/users/post/create_post.py:346
+#: handlers/users/post/create_post.py:114
+#: handlers/users/post/create_post.py:140
+#: handlers/users/post/create_post.py:162
+#: handlers/users/post/create_post.py:172
+#: handlers/users/post/create_post.py:337
+#: handlers/users/post/create_post.py:366
 msgid "Сейчас: {value}"
 msgstr ""
 
@@ -666,7 +666,7 @@ msgid ""
 msgstr ""
 
 #: handlers/users/house/create_flat.py:317
-#: handlers/users/post/create_post.py:330
+#: handlers/users/post/create_post.py:350
 msgid "Введите цену"
 msgstr ""
 
@@ -752,14 +752,14 @@ msgstr ""
 
 #: handlers/users/house/create_flat.py:487
 #: handlers/users/house/create_house.py:722
-#: handlers/users/post/create_post.py:410
-#: handlers/users/post/create_post.py:426
+#: handlers/users/post/create_post.py:430
+#: handlers/users/post/create_post.py:452
 msgid "Произошла ошибка. Повторите попытке"
 msgstr ""
 
 #: handlers/users/house/create_flat.py:489
 #: handlers/users/house/create_house.py:727
-#: handlers/users/post/create_post.py:430
+#: handlers/users/post/create_post.py:456
 msgid "Вы можете выбрать нужные этап через меню"
 msgstr ""
 
@@ -784,7 +784,7 @@ msgid "Предпочитаемый способ оплаты\n"
 msgstr ""
 
 #: handlers/users/house/create_house.py:69
-#: handlers/users/post/create_post.py:82
+#: handlers/users/post/create_post.py:92
 msgid "Описание\n"
 msgstr ""
 
@@ -912,8 +912,8 @@ msgid "Есть ли в вашем доме охрана?"
 msgstr ""
 
 #: handlers/users/house/create_house.py:294
-#: handlers/users/post/create_post.py:177
-#: handlers/users/post/create_post.py:371
+#: handlers/users/post/create_post.py:192
+#: handlers/users/post/create_post.py:391
 msgid "Добавьте изображение"
 msgstr ""
 
@@ -1105,149 +1105,167 @@ msgstr ""
 msgid "Документов нет"
 msgstr ""
 
-#: handlers/users/post/create_post.py:72
+#: handlers/users/post/create_post.py:43
+msgid "У вас нет домов с квартирами"
+msgstr ""
+
+#: handlers/users/post/create_post.py:82
 msgid "Дом\n"
 msgstr ""
 
-#: handlers/users/post/create_post.py:74
+#: handlers/users/post/create_post.py:84
 msgid "Квартиру\n"
 msgstr ""
 
-#: handlers/users/post/create_post.py:76
+#: handlers/users/post/create_post.py:86
 msgid "Метод оплаты\n"
 msgstr ""
 
-#: handlers/users/post/create_post.py:78
+#: handlers/users/post/create_post.py:88
 msgid "Цену\n"
 msgstr ""
 
-#: handlers/users/post/create_post.py:80
+#: handlers/users/post/create_post.py:90
 msgid "Способ коммуникации с вами\n"
 msgstr ""
 
-#: handlers/users/post/create_post.py:84
+#: handlers/users/post/create_post.py:94
 msgid "Фото к объявлению\n"
 msgstr ""
 
-#: handlers/users/post/create_post.py:91 handlers/users/post/create_post.py:220
-#: handlers/users/post/create_post.py:247
+#: handlers/users/post/create_post.py:101
+#: handlers/users/post/create_post.py:235
+#: handlers/users/post/create_post.py:262
 msgid "Домов нет. Добавьте дом, преждем чем создавать объявление"
 msgstr ""
 
-#: handlers/users/post/create_post.py:102
-#: handlers/users/post/create_post.py:258
+#: handlers/users/post/create_post.py:112
+#: handlers/users/post/create_post.py:273
 msgid "Выберите дом"
 msgstr ""
 
-#: handlers/users/post/create_post.py:112
+#: handlers/users/post/create_post.py:123
+msgid "Сперва выберите дом"
+msgstr ""
+
+#: handlers/users/post/create_post.py:126
 msgid "Квартир нет. Добавьте квартиру, преждем чем создавать объявление"
 msgstr ""
 
-#: handlers/users/post/create_post.py:123
-#: handlers/users/post/create_post.py:290
+#: handlers/users/post/create_post.py:138
+#: handlers/users/post/create_post.py:306
 msgid "Выберите квартиру"
 msgstr ""
 
-#: handlers/users/post/create_post.py:138
+#: handlers/users/post/create_post.py:153
 msgid ""
 "Текущая цена: {price}\n"
 "Введите новую цену"
 msgstr ""
 
-#: handlers/users/post/create_post.py:148
-#: handlers/users/post/create_post.py:315
+#: handlers/users/post/create_post.py:163
+#: handlers/users/post/create_post.py:335
 msgid "Выберите метод оплаты"
 msgstr ""
 
-#: handlers/users/post/create_post.py:158
-#: handlers/users/post/create_post.py:344
+#: handlers/users/post/create_post.py:173
+#: handlers/users/post/create_post.py:364
 msgid "Выберите метод коммуникации"
 msgstr ""
 
-#: handlers/users/post/create_post.py:168
+#: handlers/users/post/create_post.py:183
 msgid ""
 "Текущее описание\n"
 " {desc}"
 msgstr ""
 
-#: handlers/users/post/create_post.py:217
+#: handlers/users/post/create_post.py:232
 msgid "Редактируйте информацию"
 msgstr ""
 
-#: handlers/users/post/create_post.py:231
+#: handlers/users/post/create_post.py:246
 msgid ""
 "Выберите дом\n"
 "Сейчас {house}"
 msgstr ""
 
-#: handlers/users/post/create_post.py:243
+#: handlers/users/post/create_post.py:258
 msgid "Заполните форму для создания объявления"
 msgstr ""
 
-#: handlers/users/post/create_post.py:273
+#: handlers/users/post/create_post.py:288
 msgid "Выбранный дом:\n"
 msgstr ""
 
-#: handlers/users/post/create_post.py:279
+#: handlers/users/post/create_post.py:294
 msgid "Квартир нет. Добавьте квартиру, преждем чем работать с объявлением"
 msgstr ""
 
-#: handlers/users/post/create_post.py:292
+#: handlers/users/post/create_post.py:308
 msgid "Сейчас: {flat}"
 msgstr ""
 
-#: handlers/users/post/create_post.py:297
+#: handlers/users/post/create_post.py:311
+msgid "В этом доме ещё нет квартир"
+msgstr ""
+
+#: handlers/users/post/create_post.py:317
 msgid "Такого дома нет в системе. Выберите другой"
 msgstr ""
 
-#: handlers/users/post/create_post.py:309
+#: handlers/users/post/create_post.py:329
 msgid "Выбранная квартира:\n"
 msgstr ""
 
-#: handlers/users/post/create_post.py:320
+#: handlers/users/post/create_post.py:340
 msgid "Нет такой квартиры в системе. Выберите другую"
 msgstr ""
 
-#: handlers/users/post/create_post.py:329
+#: handlers/users/post/create_post.py:349
 msgid "Метод оплаты добавлен"
 msgstr ""
 
-#: handlers/users/post/create_post.py:332
+#: handlers/users/post/create_post.py:352
 msgid "Сейчас {price}"
 msgstr ""
 
-#: handlers/users/post/create_post.py:343
+#: handlers/users/post/create_post.py:363
 msgid "Цена добавлена"
 msgstr ""
 
-#: handlers/users/post/create_post.py:349
+#: handlers/users/post/create_post.py:369
 msgid "Неправильный формат ввода"
 msgstr ""
 
-#: handlers/users/post/create_post.py:358
+#: handlers/users/post/create_post.py:378
 msgid "Способ связи добавлен"
 msgstr ""
 
-#: handlers/users/post/create_post.py:361
+#: handlers/users/post/create_post.py:381
 msgid ""
 "Сейчас:\n"
 " {desc}"
 msgstr ""
 
-#: handlers/users/post/create_post.py:370
+#: handlers/users/post/create_post.py:390
 msgid "Описание добавлено"
 msgstr ""
 
-#: handlers/users/post/create_post.py:379
+#: handlers/users/post/create_post.py:399
 #: handlers/users/settings/edit_data.py:136
 msgid "Вы не добавили изображение"
 msgstr ""
 
-#: handlers/users/post/create_post.py:414
+#: handlers/users/post/create_post.py:434
 msgid "Объявление изменено"
 msgstr ""
 
-#: handlers/users/post/create_post.py:421
+#: handlers/users/post/create_post.py:439
+#: handlers/users/post/create_post.py:449
+msgid "Возврат на главное меню"
+msgstr ""
+
+#: handlers/users/post/create_post.py:444
 msgid "Объявление создано"
 msgstr ""
 
@@ -1402,7 +1420,11 @@ msgstr ""
 msgid "Выберите желаемый тип планировки"
 msgstr ""
 
-#: handlers/users/post/filter_post.py:263
+#: handlers/users/post/filter_post.py:261 keyboards/default/dispatcher.py:108
+msgid "Возврат"
+msgstr ""
+
+#: handlers/users/post/filter_post.py:264
 msgid "Используйте меню чтобы выбрать етап фильтрации"
 msgstr ""
 
@@ -1654,10 +1676,6 @@ msgstr ""
 
 #: keyboards/default/dispatcher.py:44
 msgid "Дома"
-msgstr ""
-
-#: keyboards/default/dispatcher.py:108
-msgid "Возврат"
 msgstr ""
 
 #: keyboards/default/user_keyboards.py:9
