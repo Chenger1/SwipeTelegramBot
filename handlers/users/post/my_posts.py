@@ -19,7 +19,7 @@ from handlers.users.utils import handle_list
 post_des = PostDeserializer()
 
 
-@dp.message_handler(Text(equals=['Мои публикации', 'My ads']))
+@dp.message_handler(Text(equals=['Мои объявления', 'My ads']))
 async def my_posts(message: types.Message, state: FSMContext):
     keyboard, path = await dispatcher('LEVEL_2_POSTS', message.from_user.id)
     await message.answer(_('Список моих публикаций'), reply_markup=keyboard)
