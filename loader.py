@@ -13,7 +13,7 @@ from logger import get_logger
 
 
 bot = Bot(token=config.BOT_TOKEN, parse_mode=types.ParseMode.HTML)
-storage = RedisStorage('localhost', 6379, db=5)
+storage = RedisStorage(config.REDIS_HOST, 6379, db=5)
 dp = Dispatcher(bot, storage=storage)
 Conn = SessionManager()
 db = Tortoise()
