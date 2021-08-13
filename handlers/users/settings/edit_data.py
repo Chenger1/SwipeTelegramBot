@@ -3,7 +3,7 @@ from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
 
 from keyboards.inline.create_post import get_create_post_confirm_keyboard, ITEM_CB
-from loader import dp, Conn
+from loader import dp, Conn, log
 
 from keyboards.default.dispatcher import dispatcher, back_button, get_menu_label
 from keyboards.inline.user_keyboards import edit_user_role_keyboard
@@ -89,7 +89,7 @@ async def edit_data(message: types.Message, state: FSMContext):
     await message.answer(_('Введите имя и фамилию через пробел.\n' +
                            'Сейчас - <b>{name}</b>').format(name=full_name or no_data), reply_markup=keyboard)
     await EditUserDate.NAME.set()
-    await state.update_data(path=path, edit_info={}, user_info=info_data)
+    await state.update_data(path=path, edit_data={}, user_info=info_data)
 
 
 @dp.message_handler(state=EditUserDate.NAME)
@@ -102,7 +102,7 @@ async def set_full_name(message: types.Message, state: FSMContext):
     await update_state(state, last_name, 'last_name', 'edit_data')
     data = await state.get_data()
     await message.answer(_('Введите ваш email.\n' +
-                           'Сейчас: <b>{email}</b>').format(email=data.get('email', _('Не указано'))))
+                           'Сейчас: <b>{email}</b>').format(email=data['user_info'].get('email', _('Не указано'))))
     await EditUserDate.EMAIL.set()
 
 
@@ -115,7 +115,8 @@ async def set_email(message: types.Message, state: FSMContext):
     await update_state(state, answer, 'email', 'edit_data')
     data = await state.get_data()
     await message.answer(_('Выбериет вашу пользовательскую роль.\n' +
-                           'Сейчас: <b>{role}</b>').format(role=data.get('role')), reply_markup=edit_user_role_keyboard)
+                           'Сейчас: <b>{role}</b>').format(role=data['user_info'].get('role', _('Не указано'))),
+                         reply_markup=edit_user_role_keyboard)
     await EditUserDate.ROLE.set()
 
 
@@ -150,12 +151,16 @@ async def get_confirm_user(call: types.CallbackQuery, callback_data: dict, state
     if value == 'YES':
         data = await state.get_data()
         user_data = data.get('edit_data')
-        photo = await File.get(file_id=user_data.get('photo'))
-        image = await call.bot.get_file(photo.file_id)
         user = await User.get(user_id=call.from_user.id)
-        with open(image.file_path, 'rb') as rb_image:
-            user_data['photo'] = rb_image
-            url = f'{REL_URLS["users"]}{user.swipe_id}/'
+        url = f'{REL_URLS["users"]}{user.swipe_id}/'
+
+        photo = await File.get_or_none(file_id=user_data.get('photo'))
+        if photo:
+            image = await call.bot.get_file(photo.file_id)
+            with open(image.file_path, 'rb') as rb_image:
+                user_data['photo'] = rb_image
+                resp = await Conn.patch(url, data=user_data, user_id=call.from_user.id)
+        else:
             resp = await Conn.patch(url, data=user_data, user_id=call.from_user.id)
         if not resp.get('Error'):
             await call.answer(_('Данные обновлены'), show_alert=True)
@@ -163,6 +168,7 @@ async def get_confirm_user(call: types.CallbackQuery, callback_data: dict, state
             await state.finish()
             await state.update_data(**data)
         else:
+            log.error(resp)
             await call.answer(_('Произошла ошибка. Попробуйте ещё раз'))
             await call.answer(resp.get('Error'), show_alert=True)
     else:
