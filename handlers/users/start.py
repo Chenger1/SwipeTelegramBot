@@ -44,8 +44,14 @@ async def lang(call: types.CallbackQuery, callback_data: dict, state: FSMContext
     if user:
         user.language = language
         await user.save()
-    await call.message.answer(_('Отправьте ваш номер для регистрации'),
-                              reply_markup=await defaults.get_contact_button())
+    await call.message.answer(_('Подтвердите/Confirm'), reply_markup=defaults.starter_confirm)
+    await StartState.CONFIRM.set()
+
+
+@dp.message_handler(state=StartState.CONFIRM)
+async def confirm_starter(message: types.Message):
+    await message.answer(_('Отправьте ваш номер для регистрации'),
+                         reply_markup=await defaults.get_contact_button())
     await StartState.PHONE.set()
 
 

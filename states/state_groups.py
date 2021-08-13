@@ -2,6 +2,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 
 
 class StartState(StatesGroup):
+    CONFIRM = State()
     PHONE = State()
     LANG = State()
     CHECK_TOKEN = State()

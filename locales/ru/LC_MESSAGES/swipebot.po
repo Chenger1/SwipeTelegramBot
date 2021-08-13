@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-08-13 01:22+0300\n"
+"POT-Creation-Date: 2021-08-13 19:01+0300\n"
 "PO-Revision-Date: 2021-07-31 15:07+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -62,6 +62,7 @@ msgstr ""
 #: handlers/users/post/filter_post.py:230 handlers/users/post/public_post.py:82
 #: handlers/users/settings/edit_data.py:77
 #: handlers/users/settings/edit_data.py:105
+#: handlers/users/settings/edit_data.py:118
 msgid "Не указано"
 msgstr ""
 
@@ -287,35 +288,39 @@ msgid ""
 msgstr ""
 
 #: handlers/users/start.py:47
+msgid "Подтвердите/Confirm"
+msgstr ""
+
+#: handlers/users/start.py:53
 msgid "Отправьте ваш номер для регистрации"
 msgstr ""
 
-#: handlers/users/start.py:58 handlers/users/start.py:84
-#: handlers/users/start.py:114
+#: handlers/users/start.py:64 handlers/users/start.py:90
+#: handlers/users/start.py:120
 msgid "Вы успешно зарегестрированы в системе"
 msgstr ""
 
-#: handlers/users/start.py:63 handlers/users/start.py:119
+#: handlers/users/start.py:69 handlers/users/start.py:125
 msgid "Произошла ошибка. Нажмите /start снова"
 msgstr ""
 
-#: handlers/users/start.py:70
+#: handlers/users/start.py:76
 msgid "Пожалуйста, отправьте ваш номер для регистрации"
 msgstr ""
 
-#: handlers/users/start.py:81
+#: handlers/users/start.py:87
 msgid "Вы вошли в систему как администратор"
 msgstr ""
 
-#: handlers/users/start.py:89
+#: handlers/users/start.py:93
 msgid "Вы уже в системе. Добро пожаловать"
 msgstr ""
 
-#: handlers/users/start.py:95
+#: handlers/users/start.py:101
 msgid "Вы можете ввести токен администратора или нажать \"/cancel\""
 msgstr ""
 
-#: handlers/users/start.py:122
+#: handlers/users/start.py:128
 msgid "Токен неправильный. Попробуйте снова или нажмите \"/cancel\""
 msgstr ""
 
@@ -440,7 +445,7 @@ msgstr ""
 #: handlers/users/post/create_promotion.py:45
 #: handlers/users/post/create_promotion.py:121
 #: handlers/users/settings/edit_data.py:38
-#: handlers/users/settings/edit_data.py:142
+#: handlers/users/settings/edit_data.py:143
 msgid "Подтверждаете?"
 msgstr ""
 
@@ -450,7 +455,7 @@ msgstr ""
 
 #: handlers/users/house/create_document.py:153
 #: handlers/users/house/public_house.py:387
-#: handlers/users/settings/edit_data.py:166
+#: handlers/users/settings/edit_data.py:172
 #: handlers/users/settings/settings_handlers.py:89
 msgid "Произошла ошибка. Попробуйте ещё раз"
 msgstr ""
@@ -1234,7 +1239,7 @@ msgid "Описание добавлено"
 msgstr ""
 
 #: handlers/users/post/create_post.py:379
-#: handlers/users/settings/edit_data.py:135
+#: handlers/users/settings/edit_data.py:136
 msgid "Вы не добавили изображение"
 msgstr ""
 
@@ -1487,7 +1492,7 @@ msgid "Введите ваш email"
 msgstr ""
 
 #: handlers/users/settings/edit_data.py:60
-#: handlers/users/settings/edit_data.py:127
+#: handlers/users/settings/edit_data.py:128
 msgid "Добавьте фото профиля"
 msgstr ""
 
@@ -1528,11 +1533,11 @@ msgid ""
 "Сейчас: <b>{role}</b>"
 msgstr ""
 
-#: handlers/users/settings/edit_data.py:161
+#: handlers/users/settings/edit_data.py:166
 msgid "Данные обновлены"
 msgstr ""
 
-#: handlers/users/settings/edit_data.py:169
+#: handlers/users/settings/edit_data.py:175
 msgid "Вы можете выбрать нужный этап через меню"
 msgstr ""
 
@@ -1624,10 +1629,14 @@ msgid "Язык обновлен. Выйдите этого меню чтобы 
 msgstr ""
 
 #: keyboards/default/defaults.py:7
+msgid "Подтвердить/Confirm"
+msgstr ""
+
+#: keyboards/default/defaults.py:12
 msgid "Отправить номер телефона"
 msgstr ""
 
-#: keyboards/default/defaults.py:14
+#: keyboards/default/defaults.py:19
 msgid "Пропустить"
 msgstr ""
 
