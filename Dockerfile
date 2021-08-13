@@ -10,4 +10,5 @@ RUN pip install --no-cache-dir --upgrade pip \
 && pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
+RUN pybabel compile -d locales -D swipebot
 CMD ["python3", "app.py"]
