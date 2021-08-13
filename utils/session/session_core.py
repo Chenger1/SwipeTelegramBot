@@ -32,6 +32,8 @@ class BaseSessionManager:
             locale = user.language
         if self._wrong_hook_pattern.findall(path):
             path = self._wrong_hook_pattern.split(path)[-1]
+        if 'media' in path:  # media url doesnt have i18n prefix
+            return f'{self._WEBHOOK_ENDPOINT}/{path}'
         return f'{self._WEBHOOK_ENDPOINT}/{locale}/{path}'
 
     async def _get_authorization_header(self, user_id: int = None) -> Optional[Dict[str, str]]:
