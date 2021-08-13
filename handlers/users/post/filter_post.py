@@ -252,12 +252,13 @@ async def filter_state(call: types.CallbackQuery, callback_data: dict, state: FS
     value = callback_data.get('value')
     if value == 'YES':
         params = await state.get_data()
-        keyboard, path = await dispatcher('LEVEL_2_POSTS', call.from_user.id)
+        keyboard, path = await dispatcher('LEVEL_1', call.from_user.id)
         await handle_list(call, page='1', keyboard=get_keyboard_for_list, params=params, key='posts_public',
                           detail_action='post_detail', list_action='post_list', deserializer=post_des,
                           new_callback_answer=True)
         await state.finish()
         params['path'] = path
+        await call.message.answer(_('Возврат'), reply_markup=keyboard)
         await state.update_data(**params)
     else:
         await call.message.answer(_('Используйте меню чтобы выбрать етап фильтрации'))
