@@ -14,7 +14,7 @@ state_keyboard = InlineKeyboardMarkup().add(
                                                                value='ROUGH')),
     InlineKeyboardButton(_('Евроремонт'), callback_data=ITEM_CB.new(action='add_state',
                                                                     value='EURO')),
-    InlineKeyboardButton(_('Требуте ремонта'), callback_data=ITEM_CB.new(action='add_state',
+    InlineKeyboardButton(_('Требует ремонта'), callback_data=ITEM_CB.new(action='add_state',
                                                                          value='NEED'))
 )
 

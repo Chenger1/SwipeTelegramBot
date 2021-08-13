@@ -54,10 +54,6 @@ async def get_keyboard_for_post_detail(page: str, pk: int, flat_pk: int, key: st
                                        user_id: int = None, favorites: list = None) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     markup.add(
-        InlineKeyboardButton(text=_('О квартире'),
-                             callback_data=user_callback.get_detail_callback(action='flat_detail',
-                                                                             pk=flat_pk))
-    ).add(
         InlineKeyboardButton(emoji.emojize(':thumbs_up:'),
                              callback_data=user_callback.LIKE_DISLIKE_CB.new(action='like_post',
                                                                              pk=pk,

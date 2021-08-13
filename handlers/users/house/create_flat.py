@@ -236,7 +236,7 @@ async def edit_flat(call: types.CallbackQuery, callback_data: dict, state: FSMCo
     keyboard = await create_flat.get_floors_keyboard(floor_resp['results'])
     text = ''
     for index, item in enumerate(floor_resp['results'], start=1):
-        text += f'{index}. {item["floor_full_name"]}\n'
+        text += f'{index}. {item["full_name"]}\n'
     await call.message.answer(text, reply_markup=keyboard)
     await CreateFlat.FLOOR.set()
     await state.update_data(path=path, flat_info=resp, create_flat=flat_data)
@@ -254,7 +254,7 @@ async def add_flat(call: types.CallbackQuery, callback_data: dict, state: FSMCon
         floor_keyboard = await create_flat.get_floors_keyboard(floor_resp['results'])
         text = ''
         for index, item in enumerate(floor_resp['results'], start=1):
-            text += f'{index}. {item["floor_full_name"]}'
+            text += f'{index}. {item["full_name"]}'
         await call.message.answer(_('Выберите этаж'), reply_markup=keyboard)
         await call.message.answer(text, reply_markup=floor_keyboard)
         await CreateFlat.FLOOR.set()
@@ -291,7 +291,7 @@ async def flat_number(message: types.Message, state: FSMContext):
         await message.answer(text)
         await CreateFlat.SQUARE.set()
     except ValueError:
-        await message.answer(_('Введите <b>номер</b>'))
+        await message.answer(_('Введите <b>число</b>, а не строку'))
 
 
 @dp.message_handler(state=CreateFlat.SQUARE)
@@ -306,7 +306,7 @@ async def flat_square(message: types.Message, state: FSMContext):
         await message.answer(text)
         await CreateFlat.KITCHEN_SQUARE.set()
     except ValueError:
-        await message.answer(_('Введите <b>номер</b>'))
+        await message.answer(_('Введите <b>число</b>, а не строку'))
 
 
 @dp.message_handler(state=CreateFlat.KITCHEN_SQUARE)
@@ -321,7 +321,7 @@ async def flat_kitchen_square(message: types.Message, state: FSMContext):
         await message.answer(text)
         await CreateFlat.PRICE.set()
     except ValueError:
-        await message.answer(_('Введите <b>номер</b>'))
+        await message.answer(_('Введите <b>число</b>, а не строку'))
 
 
 @dp.message_handler(state=CreateFlat.PRICE)
@@ -336,7 +336,7 @@ async def flat_price(message: types.Message, state: FSMContext):
         await message.answer(text)
         await CreateFlat.PRICE_PER_METRE.set()
     except ValueError:
-        await message.answer(_('Введите <b>номер</b>'))
+        await message.answer(_('Введите <b>число</b>, а не строку'))
 
 
 @dp.message_handler(state=CreateFlat.PRICE_PER_METRE)
@@ -351,7 +351,7 @@ async def flat_price_pre_metre(message: types.Message, state: FSMContext):
         await message.answer(text)
         await CreateFlat.ROOMS.set()
     except ValueError:
-        await message.answer(_('Введите <b>номер</b>'))
+        await message.answer(_('Введите <b>число</b>, а не строку'))
 
 
 @dp.message_handler(state=CreateFlat.ROOMS)
@@ -366,7 +366,7 @@ async def flat_rooms(message: types.Message, state: FSMContext):
         await message.answer(text, reply_markup=create_flat.state_keyboard)
         await CreateFlat.STATE.set()
     except ValueError:
-        await message.answer(_('Введите <b>номер</b>'))
+        await message.answer(_('Введите <b>число</b>, а не строку'))
 
 
 @dp.callback_query_handler(POST_FILTER_CB.filter(action='add_state'), state=CreateFlat.STATE)
@@ -470,6 +470,9 @@ async def flat_save(call: types.CallbackQuery, callback_data: dict, state: FSMCo
                         if key not in keys_to_delete:
                             new_dict[key] = value
                     await state.finish()
+                    keyboard, path = await dispatcher('LEVEL_1', user_id=call.from_user.id)
+                    await call.message.answer(_('Возврат'), reply_markup=keyboard)
+                    new_dict['path'] = path
                     await state.update_data(**new_dict)
             else:
                 resp, status = await Conn.post(REL_URLS['flats'], data=flat_data, user_id=call.from_user.id)
@@ -480,8 +483,9 @@ async def flat_save(call: types.CallbackQuery, callback_data: dict, state: FSMCo
                         if key not in keys_to_delete:
                             new_dict[key] = value
                     await state.finish()
-                    await state.update_data(**new_dict)
-                    await state.finish()
+                    keyboard, path = await dispatcher('LEVEL_1', user_id=call.from_user.id)
+                    await call.message.answer(_('Возврат'), reply_markup=keyboard)
+                    new_dict['path'] = path
                     await state.update_data(**new_dict)
                 else:
                     await call.answer(_('Произошла ошибка. Повторите попытке'))
