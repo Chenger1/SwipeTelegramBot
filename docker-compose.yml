@@ -14,20 +14,8 @@ services:
         container_name: "swipe_api-redis"
         hostname: redis
         volumes:
-            - "redis_config:/usr/local/etc/redis"
             - "redis_data:/data"
         command: "redis-server"
 
 volumes:
-    redis_config:
-        driver: local
-        driver_opts: 
-            type: 'none'
-            o: 'bind'
-            device: './redis_config'
     redis_data:
-        driver: local
-        driver_opts: 
-            type: 'none'
-            o: 'bind'
-            device: './redis-data'
