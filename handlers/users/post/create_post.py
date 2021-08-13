@@ -264,7 +264,7 @@ async def add_post(message: types.Message, state: FSMContext):
 @dp.callback_query_handler(DETAIL_CB.filter(action='add_house'), state=CreatePost.HOUSE)
 async def add_house(call: types.CallbackQuery, callback_data: dict, state: FSMContext):
     state_data = await state.get_data()
-    logging.info(callback_data)
+    log.info(callback_data)
     pk = callback_data.get('pk')
     url = f'{REL_URLS["houses"]}{pk}/'
     resp = await Conn.get(url, user_id=call.from_user.id)
@@ -401,7 +401,7 @@ async def get_confirm(call: types.CallbackQuery, callback_data: dict, state: FSM
             await image.download()
             main_image.file_path = image.file_path
             await main_image.save()
-        with open(main_image.file_path.file_path, 'rb') as rb_image:
+        with open(main_image.file_path, 'rb') as rb_image:
             post_data['main_image'] = rb_image
             if data.get('post_info'):
                 url = f'{REL_URLS["posts"]}{data["post_info"]["pk"]}/'
