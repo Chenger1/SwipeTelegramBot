@@ -5,7 +5,6 @@ class StartState(StatesGroup):
     CONFIRM = State()
     PHONE = State()
     LANG = State()
-    CHECK_TOKEN = State()
 
 
 class FilterPost(StatesGroup):

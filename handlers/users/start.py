@@ -81,48 +81,21 @@ async def phone_number(message: types.Message, state: FSMContext):
     if user.language != data.get('language'):
         user.language = data.get('language', message.from_user.locale)
         await user.save()
-    if user.is_admin:
-        result = await authorize_user(user.user_id)
-        if result:
+    result = await authorize_user(user.user_id)
+    if result:
+        keyboard, path = await dispatcher('LEVEL_1', message.from_user.id)
+        if user.is_admin:
             await message.answer(_('Вы вошли в систему как администратор'))
-            keyboard, path = await dispatcher('LEVEL_1', message.from_user.id)
             if created:
                 await message.answer(_('Вы успешно зарегестрированы в системе'),
                                      reply_markup=keyboard)
             else:
                 await message.answer(_('Вы уже в системе. Добро пожаловать'), reply_markup=keyboard)
-                await state.finish()
-                await state.update_data(path=path)
         else:
-            await message.answer('Произошла ошибка. Нажмите /start снова')
-            await state.reset_state()
-    else:
-        await state.set_data({'user': user.user_id})
-        await message.answer(_('Вы можете ввести токен администратора или нажать "/cancel"'),
-                             reply_markup=defaults.remove_markup)
-        await StartState.CHECK_TOKEN.set()
-
-
-@dp.message_handler(state=StartState.CHECK_TOKEN)
-async def check_admin_token(message: types.Message, state: FSMContext):
-    """ If user write token - check it. If token right - set user as admin """
-    token = message.text
-    user = await User.get(user_id=message.from_user.id)
-    url = f'{REL_URLS["users"]}{user.swipe_id}/'
-    resp = await Conn.patch(url, data={'is_staff': True, 'admin_token': token}, user_id=message.from_user.id)
-    if resp.get('pk'):
-        user.is_admin = True
-        await user.save()
-        result = await authorize_user(user.user_id)
-        if result:
-            log.info(f'User: {user.user_id} is admin now')
-            keyboard, path = await dispatcher('LEVEL_1', message.from_user.id)
             await message.answer(_('Вы успешно зарегестрированы в системе'),
                                  reply_markup=keyboard)
-            await state.finish()
-            await state.update_data(path=path)
-        else:
-            await message.answer(_('Произошла ошибка. Нажмите /start снова'))
-            await state.reset_state()
+        await state.finish()
+        await state.update_data(path=path)
     else:
-        await message.answer(_('Токен неправильный. Попробуйте снова или нажмите "/cancel"'))
+        await message.answer('Произошла ошибка. Нажмите /start снова')
+        await state.reset_state()
