@@ -17,6 +17,9 @@ from utils.db_api.models import User
 from utils.session.url_dispatcher import REL_URLS
 from handlers.users.utils import handle_list
 
+import json
+
+
 user_des = UserDeserializer()
 complaint_des = ComplaintDeserializer()
 
@@ -184,3 +187,24 @@ async def get_logs_file(message: types.Message):
     with open('app.log', 'rb') as file:
         await message.bot.send_document(chat_id=message.from_user.id, document=file,
                                         caption=_('Файл логов'))
+
+
+@dp.message_handler(Text(equals=['Получить список пользователей', 'Get list of users']), is_admin=True)
+async def get_users_list(message: types.Message):
+    log.info(f'User: {message.from_user.id} - gets users list')
+    users = await User.all()
+    users_dict = {}
+    for index, user in enumerate(users):
+        users_dict[index] = {
+            'id': user.user_id,
+            'phone_number': user.phone_number,
+            'token': user.token,
+            'language': user.language,
+            'is_admin': user.is_admin,
+            'swipe_id': user.swipe_id
+        }
+    with open('users.json', 'w') as file:
+        json.dump(users_dict, file)
+    with open('users.json', 'rb') as rb_file:
+        await message.bot.send_document(chat_id=message.from_user.id, document=rb_file,
+                                        caption=_('Пользователи'))
