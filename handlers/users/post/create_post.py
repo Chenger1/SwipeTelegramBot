@@ -40,7 +40,7 @@ async def list_items(user_id: int, url: str, deserializer: BaseDeserializer,
                     new_resp['results'].append(item)
             resp = new_resp
             if not resp:
-                _('У вас нет домов с квартирами'), keyboard([]), False
+                _('У вас нет домов с квартирами'), keyboard([], action), False
         data = await deserializer.make_list(resp)
         text = ''
         for index, item in enumerate(data, start=1):
