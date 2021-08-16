@@ -47,7 +47,7 @@ async def list_items(user_id: int, url: str, deserializer: BaseDeserializer,
             text += f'{index}. {item.data}\n'
         return text, keyboard(data, action), True
     else:
-        return error_text, keyboard([]), False
+        return error_text, keyboard([], action), False
 
 
 @dp.message_handler(Text(equals=['Вернуться', 'Back']), state=CreatePost)
