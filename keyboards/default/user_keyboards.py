@@ -168,6 +168,8 @@ async def get_level_2_admin_panel(is_admin: int) -> ReplyKeyboardMarkup:
         KeyboardButton(_('Получить логи')),
         KeyboardButton(_('Получить список пользователей')),
     ).add(
+        KeyboardButton(_('Восстановить пользователей через json'))
+    ).add(
         KeyboardButton(_('Вернуться'))
     )
 
@@ -253,5 +255,11 @@ async def get_level_4_add_doc(is_admin: int) -> ReplyKeyboardMarkup:
         KeyboardButton(_('Перейти к названию')),
         KeyboardButton(_('Перейти к файлу'))
     ).add(
+        KeyboardButton(_('Вернуться'))
+    )
+
+
+async def get_restore_keyboard(is_admin: int) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(resize_keyboard=True).add(
         KeyboardButton(_('Вернуться'))
     )

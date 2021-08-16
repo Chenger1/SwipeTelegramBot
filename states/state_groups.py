@@ -128,3 +128,7 @@ class Mailing(StatesGroup):
 
 class SetLanguageState(StatesGroup):
     LANG = State()
+
+
+class Restore(StatesGroup):
+    file = State()

@@ -16,6 +16,7 @@ from utils.db_api.models import User
 
 from utils.session.url_dispatcher import REL_URLS
 from handlers.users.utils import handle_list
+from states.state_groups import Restore
 
 import json
 
@@ -196,7 +197,7 @@ async def get_users_list(message: types.Message):
     users_dict = {}
     for index, user in enumerate(users):
         users_dict[index] = {
-            'id': user.user_id,
+            'user_id': user.user_id,
             'phone_number': user.phone_number,
             'token': user.token,
             'language': user.language,
@@ -208,3 +209,40 @@ async def get_users_list(message: types.Message):
     with open('users.json', 'rb') as rb_file:
         await message.bot.send_document(chat_id=message.from_user.id, document=rb_file,
                                         caption=_('Пользователи'))
+
+
+@dp.message_handler(Text(equals=['Вернуться', 'Back']), state=Restore)
+async def restore_back(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        keyboard, path = await dispatcher('LEVEL_2_ADMIN_PANEL', message.from_user.id)
+        await state.finish()
+        data['path'] = path
+        await message.answer(_('Возврат в админ панель'), reply_markup=keyboard)
+
+
+@dp.message_handler(Text(equals=['Восстановить пользователей через json', 'Restore users via json']), is_admin=True)
+async def restore_users(message: types.Message, state: FSMContext):
+    keyboard, path = await dispatcher('LEVEL_3_JSON', message.from_user.id)
+    await message.answer(_('Загрузите файла типа json'), reply_markup=keyboard)
+    await Restore.file.set()
+    await state.update_data(path=path)
+
+
+@dp.message_handler(state=Restore.file, content_types=types.ContentType.DOCUMENT)
+async def get_json(message: types.Message, state: FSMContext):
+    file_id = message.document.file_id
+    file = await message.bot.get_file(file_id)
+    await file.download()
+    with open(file.file_path, 'r') as file:
+        user_data = json.load(file)
+    for key, value in user_data.items():
+        await User.get_or_create(user_id=value.get('user_id'),
+                                 defaults={'phone_number': value.get('phone_number'),
+                                           'swipe_id': value.get('swipe_id'),
+                                           'language': value.get('language'),
+                                           'token': value.get('token'),
+                                           'is_admin': value.get('is_admin')})
+    keyboard, path = await dispatcher('LEVEL_2_ADMIN_PANEL', message.from_user.id)
+    await message.answer(_('Восстановлено'), reply_markup=keyboard)
+    await state.finish()
+    await state.update_data(path=path)
