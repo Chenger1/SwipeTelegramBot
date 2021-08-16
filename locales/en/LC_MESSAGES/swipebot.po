@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-08-14 00:09+0300\n"
+"POT-Creation-Date: 2021-08-16 14:43+0300\n"
 "PO-Revision-Date: 2021-07-31 15:07+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -368,11 +368,11 @@ msgid "Отправьте ваш номер для регистрации"
 msgstr "Send your phone number to sign up"
 
 #: handlers/users/start.py:64 handlers/users/start.py:90
-#: handlers/users/start.py:120
+#: handlers/users/start.py:95
 msgid "Вы успешно зарегестрированы в системе"
 msgstr "You have been signed up successfully"
 
-#: handlers/users/start.py:69 handlers/users/start.py:125
+#: handlers/users/start.py:69
 msgid "Произошла ошибка. Нажмите /start снова"
 msgstr "Error. Please, make '/start' again"
 
@@ -380,7 +380,7 @@ msgstr "Error. Please, make '/start' again"
 msgid "Пожалуйста, отправьте ваш номер для регистрации"
 msgstr "Please, send you phone to sign up"
 
-#: handlers/users/start.py:87
+#: handlers/users/start.py:88
 msgid "Вы вошли в систему как администратор"
 msgstr "You have logged in as an administrator"
 
@@ -388,21 +388,11 @@ msgstr "You have logged in as an administrator"
 msgid "Вы уже в системе. Добро пожаловать"
 msgstr "You are already in system. Welcome"
 
-#: handlers/users/start.py:101
-#, fuzzy
-msgid "Вы можете ввести токен администратора или нажать \"/cancel\""
-msgstr "You can send admin token or '/cancel'"
-
-#: handlers/users/start.py:128
-#, fuzzy
-msgid "Токен неправильный. Попробуйте снова или нажмите \"/cancel\""
-msgstr "Token is wrong. Try again or '/cancel'"
-
 #: handlers/users/utils.py:82
 msgid "Больше ничего нет"
 msgstr "Nothing more"
 
-#: handlers/users/house/public_house.py:408 handlers/users/utils.py:119
+#: handlers/users/house/public_house.py:406 handlers/users/utils.py:119
 msgid "Ничего нет"
 msgstr "Nothing more"
 
@@ -410,24 +400,24 @@ msgstr "Nothing more"
 msgid "Введите сообщение для отправки"
 msgstr "Input message to send"
 
-#: handlers/users/admin_panel/main_handlers.py:27
+#: handlers/users/admin_panel/main_handlers.py:31
 #: keyboards/default/admin_keyboards.py:11
 msgid "Панель администратора"
 msgstr "Admin panel"
 
-#: handlers/users/admin_panel/main_handlers.py:58
-#: handlers/users/admin_panel/main_handlers.py:74
-#: handlers/users/admin_panel/main_handlers.py:107
-#: handlers/users/admin_panel/main_handlers.py:136
-#: handlers/users/admin_panel/main_handlers.py:172
+#: handlers/users/admin_panel/main_handlers.py:62
+#: handlers/users/admin_panel/main_handlers.py:78
+#: handlers/users/admin_panel/main_handlers.py:111
+#: handlers/users/admin_panel/main_handlers.py:140
 #: handlers/users/admin_panel/main_handlers.py:176
+#: handlers/users/admin_panel/main_handlers.py:180
 #: handlers/users/house/create_news.py:110
-#: handlers/users/house/public_house.py:192
-#: handlers/users/house/public_house.py:241
-#: handlers/users/house/public_house.py:283
-#: handlers/users/house/public_house.py:303
-#: handlers/users/house/public_house.py:336
-#: handlers/users/house/public_house.py:369
+#: handlers/users/house/public_house.py:190
+#: handlers/users/house/public_house.py:239
+#: handlers/users/house/public_house.py:281
+#: handlers/users/house/public_house.py:301
+#: handlers/users/house/public_house.py:334
+#: handlers/users/house/public_house.py:367
 #: handlers/users/post/create_promotion.py:180
 #: handlers/users/post/public_post.py:301
 #: handlers/users/request_to_chest/public_requests.py:47
@@ -438,15 +428,15 @@ msgstr "Admin panel"
 msgid "Произошла ошибка"
 msgstr "Error"
 
-#: handlers/users/admin_panel/main_handlers.py:67
+#: handlers/users/admin_panel/main_handlers.py:71
 msgid "Пользователь убран из списка нотариусов"
 msgstr "User has been removed from notary list"
 
-#: handlers/users/admin_panel/main_handlers.py:126
+#: handlers/users/admin_panel/main_handlers.py:130
 msgid "Объявление заблокировано"
 msgstr "Post has been banned"
 
-#: handlers/users/admin_panel/main_handlers.py:129
+#: handlers/users/admin_panel/main_handlers.py:133
 msgid ""
 "<b>** Системное сообщение **</b>Ваша публикации для квартиры {flat} в "
 "доме {house}была заблокирована по причине {message}"
@@ -454,7 +444,7 @@ msgstr ""
 "<b>** System message **</b>Your post for {flat} in house {house} was "
 "banned by reason: {message}"
 
-#: handlers/users/admin_panel/main_handlers.py:162
+#: handlers/users/admin_panel/main_handlers.py:166
 msgid ""
 "<b>** Системное сообщение **</b>Ваша жалоба на объявление для квартиры "
 "{flat} в доме {house}была отвергнута"
@@ -462,13 +452,31 @@ msgstr ""
 "<b>** System message **</b>Your complaint for flat: {flat} in house "
 "{house} was disapproved"
 
-#: handlers/users/admin_panel/main_handlers.py:167
+#: handlers/users/admin_panel/main_handlers.py:171
 msgid "В жалобе отказано"
 msgstr "Complaint disapproved"
 
-#: handlers/users/admin_panel/main_handlers.py:186
+#: handlers/users/admin_panel/main_handlers.py:190
 msgid "Файл логов"
 msgstr "Log file"
+
+#: handlers/users/admin_panel/main_handlers.py:211
+#, fuzzy
+msgid "Пользователи"
+msgstr "Settings"
+
+#: handlers/users/admin_panel/main_handlers.py:220
+msgid "Возврат в админ панель"
+msgstr "Back to admin panel"
+
+#: handlers/users/admin_panel/main_handlers.py:226
+msgid "Загрузите файла типа json"
+msgstr "Upload json file"
+
+#: handlers/users/admin_panel/main_handlers.py:246
+#, fuzzy
+msgid "Восстановлено"
+msgstr "Restored"
 
 #: handlers/users/house/create_document.py:46
 #: handlers/users/house/create_news.py:42
@@ -535,7 +543,7 @@ msgid "Документ добавлен"
 msgstr "Document has been added"
 
 #: handlers/users/house/create_document.py:153
-#: handlers/users/house/public_house.py:387
+#: handlers/users/house/public_house.py:385
 #: handlers/users/settings/edit_data.py:172
 #: handlers/users/settings/settings_handlers.py:89
 msgid "Произошла ошибка. Попробуйте ещё раз"
@@ -556,43 +564,52 @@ msgid "Площадь\n"
 msgstr "Square"
 
 #: handlers/users/house/create_flat.py:57
-msgid "Площадь кухни"
+#, fuzzy
+msgid "Площадь кухни\n"
 msgstr "Kitchen square"
 
-#: handlers/users/house/create_flat.py:59
-msgid "Цену"
-msgstr "Price"
+#: handlers/users/house/create_flat.py:59 handlers/users/post/create_post.py:88
+msgid "Цену\n"
+msgstr "Price\n"
 
 #: handlers/users/house/create_flat.py:61
-msgid "Цену за кв. метр"
+#, fuzzy
+msgid "Цену за кв. метр\n"
 msgstr "Price per metre"
 
 #: handlers/users/house/create_flat.py:63
-msgid "Количество комнат"
+#, fuzzy
+msgid "Количество комнат\n"
 msgstr "Number of rooms"
 
 #: handlers/users/house/create_flat.py:65
-msgid "Состояние"
+#, fuzzy
+msgid "Состояние\n"
 msgstr "State"
 
 #: handlers/users/house/create_flat.py:67
-msgid "Формат собственности"
+#, fuzzy
+msgid "Формат собственности\n"
 msgstr "Foundation doc"
 
 #: handlers/users/house/create_flat.py:69
-msgid "Тип"
-msgstr "Type"
+#: handlers/users/post/create_promotion.py:53
+msgid "Тип\n"
+msgstr "Type\n"
 
 #: handlers/users/house/create_flat.py:71
-msgid "Планировку"
+#, fuzzy
+msgid "Планировку\n"
 msgstr "Plan"
 
 #: handlers/users/house/create_flat.py:73
-msgid "Наличие или отсутствие балкона"
+#, fuzzy
+msgid "Наличие или отсутствие балкона\n"
 msgstr "Is there a balcony?"
 
 #: handlers/users/house/create_flat.py:75
-msgid "Схему квартиры"
+#, fuzzy
+msgid "Схему квартиры\n"
 msgstr "Flat schema"
 
 #: handlers/users/house/create_flat.py:89
@@ -855,7 +872,7 @@ msgstr "Info about flat has been changed"
 
 #: handlers/users/house/create_flat.py:474
 #: handlers/users/house/create_flat.py:487
-#: handlers/users/post/filter_post.py:261 keyboards/default/dispatcher.py:108
+#: handlers/users/post/filter_post.py:261 keyboards/default/dispatcher.py:111
 msgid "Возврат"
 msgstr "Back"
 
@@ -1172,57 +1189,57 @@ msgstr "List houses"
 msgid "Мои дома"
 msgstr "My houses"
 
-#: handlers/users/house/public_house.py:190
+#: handlers/users/house/public_house.py:188
 msgid "Дом был удален"
 msgstr "House has been deleted"
 
-#: handlers/users/house/public_house.py:244
+#: handlers/users/house/public_house.py:242
 msgid ""
 "Квартира забронирована. Запрос на добавление в шахматку отправлен "
 "администратору дома"
 msgstr "Flat booked. Request to chest has been sent to house administrator"
 
-#: handlers/users/house/public_house.py:250
+#: handlers/users/house/public_house.py:248
 msgid "Список забронированных квартир"
 msgstr "List of booked flats"
 
-#: handlers/users/house/public_house.py:286
+#: handlers/users/house/public_house.py:284
 msgid "Бронь снята"
 msgstr "No booked now"
 
-#: handlers/users/house/public_house.py:300
+#: handlers/users/house/public_house.py:298
 msgid "Корпус добавлен"
 msgstr "Building has been created"
 
-#: handlers/users/house/public_house.py:324
+#: handlers/users/house/public_house.py:322
 msgid "Нет корпусов. Сперва добавьте их"
 msgstr "There are no buildings. Add them first."
 
-#: handlers/users/house/public_house.py:333
+#: handlers/users/house/public_house.py:331
 msgid "Секция добавлена"
 msgstr "Section has been created"
 
-#: handlers/users/house/public_house.py:357
+#: handlers/users/house/public_house.py:355
 msgid "Нет секций. Добавьте их сперва"
 msgstr "There are no sections. Add them first"
 
-#: handlers/users/house/public_house.py:366
+#: handlers/users/house/public_house.py:364
 msgid "Этаж добавлен"
 msgstr "Floor has been created"
 
-#: handlers/users/house/public_house.py:419
+#: handlers/users/house/public_house.py:417
 msgid "Объект удален"
 msgstr "Objects has been deleted"
 
-#: handlers/users/house/public_house.py:426
+#: handlers/users/house/public_house.py:424
 msgid "Произошла ошибка: "
 msgstr "Error"
 
-#: handlers/users/house/public_house.py:443
+#: handlers/users/house/public_house.py:441
 msgid "Новостей нет"
 msgstr "No news"
 
-#: handlers/users/house/public_house.py:478
+#: handlers/users/house/public_house.py:476
 msgid "Документов нет"
 msgstr "No documents"
 
@@ -1241,10 +1258,6 @@ msgstr "Flat\n"
 #: handlers/users/post/create_post.py:86
 msgid "Метод оплаты\n"
 msgstr "Payment method\n"
-
-#: handlers/users/post/create_post.py:88
-msgid "Цену\n"
-msgstr "Price\n"
 
 #: handlers/users/post/create_post.py:90
 msgid "Способ коммуникации с вами\n"
@@ -1403,10 +1416,6 @@ msgstr "Post has been created"
 #: handlers/users/post/create_promotion.py:51
 msgid "Фразу\n"
 msgstr "Phrase\n"
-
-#: handlers/users/post/create_promotion.py:53
-msgid "Тип\n"
-msgstr "Type\n"
 
 #: handlers/users/post/create_promotion.py:59
 msgid "Выберите фразу"
@@ -1833,19 +1842,19 @@ msgstr "Send phone number"
 msgid "Пропустить"
 msgstr "Skip"
 
-#: keyboards/default/dispatcher.py:41
+#: keyboards/default/dispatcher.py:44
 msgid "Главное меню"
 msgstr "Main menu"
 
-#: keyboards/default/dispatcher.py:42 keyboards/default/user_keyboards.py:8
+#: keyboards/default/dispatcher.py:45 keyboards/default/user_keyboards.py:8
 msgid "Список публикаций"
 msgstr "List ads"
 
-#: keyboards/default/dispatcher.py:43 keyboards/default/user_keyboards.py:24
+#: keyboards/default/dispatcher.py:46 keyboards/default/user_keyboards.py:24
 msgid "Фильтрация объявлений"
 msgstr "Post filter"
 
-#: keyboards/default/dispatcher.py:44
+#: keyboards/default/dispatcher.py:47
 msgid "Дома"
 msgstr "House"
 
@@ -1872,13 +1881,14 @@ msgstr "Settings"
 #: keyboards/default/user_keyboards.py:94
 #: keyboards/default/user_keyboards.py:136
 #: keyboards/default/user_keyboards.py:156
-#: keyboards/default/user_keyboards.py:170
-#: keyboards/default/user_keyboards.py:184
-#: keyboards/default/user_keyboards.py:193
-#: keyboards/default/user_keyboards.py:206
-#: keyboards/default/user_keyboards.py:233
-#: keyboards/default/user_keyboards.py:244
-#: keyboards/default/user_keyboards.py:255
+#: keyboards/default/user_keyboards.py:173
+#: keyboards/default/user_keyboards.py:187
+#: keyboards/default/user_keyboards.py:196
+#: keyboards/default/user_keyboards.py:209
+#: keyboards/default/user_keyboards.py:236
+#: keyboards/default/user_keyboards.py:247
+#: keyboards/default/user_keyboards.py:258
+#: keyboards/default/user_keyboards.py:264
 msgid "Вернуться"
 msgstr "Back"
 
@@ -1908,12 +1918,12 @@ msgstr "Filter"
 
 #: keyboards/default/user_keyboards.py:40
 #: keyboards/default/user_keyboards.py:65
-#: keyboards/default/user_keyboards.py:220
+#: keyboards/default/user_keyboards.py:223
 msgid "Перейти к цене"
 msgstr "Go to price"
 
 #: keyboards/default/user_keyboards.py:42
-#: keyboards/default/user_keyboards.py:217
+#: keyboards/default/user_keyboards.py:220
 msgid "Перейти к площади"
 msgstr "Go to square"
 
@@ -1941,11 +1951,11 @@ msgstr "Save filter"
 
 #: keyboards/default/user_keyboards.py:60
 #: keyboards/default/user_keyboards.py:102
-#: keyboards/default/user_keyboards.py:176
-#: keyboards/default/user_keyboards.py:201
-#: keyboards/default/user_keyboards.py:212
-#: keyboards/default/user_keyboards.py:239
-#: keyboards/default/user_keyboards.py:250
+#: keyboards/default/user_keyboards.py:179
+#: keyboards/default/user_keyboards.py:204
+#: keyboards/default/user_keyboards.py:215
+#: keyboards/default/user_keyboards.py:242
+#: keyboards/default/user_keyboards.py:253
 msgid "Сохранить"
 msgstr "Save"
 
@@ -1967,12 +1977,12 @@ msgstr "Go to communication"
 
 #: keyboards/default/user_keyboards.py:70
 #: keyboards/default/user_keyboards.py:112
-#: keyboards/default/user_keyboards.py:242
+#: keyboards/default/user_keyboards.py:245
 msgid "Перейти к описанию"
 msgstr "Go to description"
 
 #: keyboards/default/user_keyboards.py:71
-#: keyboards/default/user_keyboards.py:181
+#: keyboards/default/user_keyboards.py:184
 msgid "Перейти к фото"
 msgstr "Go to photo"
 
@@ -1989,7 +1999,7 @@ msgid "Добавить дом"
 msgstr "Add house"
 
 #: keyboards/default/user_keyboards.py:104
-#: keyboards/default/user_keyboards.py:252
+#: keyboards/default/user_keyboards.py:255
 msgid "Перейти к названию"
 msgstr "Go to name"
 
@@ -2010,8 +2020,8 @@ msgid "Перейти к статусу"
 msgstr "Go to state"
 
 #: keyboards/default/user_keyboards.py:115
-#: keyboards/default/user_keyboards.py:204
-#: keyboards/default/user_keyboards.py:227
+#: keyboards/default/user_keyboards.py:207
+#: keyboards/default/user_keyboards.py:230
 msgid "Перейти к типу"
 msgstr "Go to type"
 
@@ -2032,7 +2042,7 @@ msgid "Перейти к газопроводу"
 msgstr "Go to gas"
 
 #: keyboards/default/user_keyboards.py:122
-#: keyboards/default/user_keyboards.py:229
+#: keyboards/default/user_keyboards.py:232
 msgid "Перейти к отоплению"
 msgstr "Go to heating"
 
@@ -2114,75 +2124,83 @@ msgstr "Mailing"
 msgid "Получить логи"
 msgstr "Get logs"
 
-#: keyboards/default/user_keyboards.py:178
+#: keyboards/default/user_keyboards.py:169
+msgid "Получить список пользователей"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:171
+msgid "Восстановить пользователей через json"
+msgstr ""
+
+#: keyboards/default/user_keyboards.py:181
 msgid "Перейти к имени и фамилии"
 msgstr "Go to full name"
 
-#: keyboards/default/user_keyboards.py:179
+#: keyboards/default/user_keyboards.py:182
 msgid "Перейти к электронной почте"
 msgstr "Go to email"
 
-#: keyboards/default/user_keyboards.py:182
+#: keyboards/default/user_keyboards.py:185
 msgid "Перейти к роли"
 msgstr "Go to role"
 
-#: keyboards/default/user_keyboards.py:190
+#: keyboards/default/user_keyboards.py:193
 msgid "Получить подписку"
 msgstr "Get subscription"
 
-#: keyboards/default/user_keyboards.py:191
+#: keyboards/default/user_keyboards.py:194
 msgid "Проверить статус подписки"
 msgstr "Check subscription status"
 
-#: keyboards/default/user_keyboards.py:195
+#: keyboards/default/user_keyboards.py:198
 msgid "Отменить подписку"
 msgstr "Cancel subscription"
 
-#: keyboards/default/user_keyboards.py:203
+#: keyboards/default/user_keyboards.py:206
 msgid "Перейти к фразе"
 msgstr "Go to phrase"
 
-#: keyboards/default/user_keyboards.py:214
+#: keyboards/default/user_keyboards.py:217
 msgid "Перейти к этажу"
 msgstr "Go to floor"
 
-#: keyboards/default/user_keyboards.py:216
+#: keyboards/default/user_keyboards.py:219
 msgid "Перейти к номеру"
 msgstr "Go to number"
 
-#: keyboards/default/user_keyboards.py:218
+#: keyboards/default/user_keyboards.py:221
 msgid "Перейти к площади кухи"
 msgstr "Go to kitchen square"
 
-#: keyboards/default/user_keyboards.py:221
+#: keyboards/default/user_keyboards.py:224
 msgid "Перейти к цене за кв. метр"
 msgstr "Go to price per metre"
 
-#: keyboards/default/user_keyboards.py:222
+#: keyboards/default/user_keyboards.py:225
 msgid "Перейти к числу комнат"
 msgstr "Go to number of rooms"
 
-#: keyboards/default/user_keyboards.py:224
+#: keyboards/default/user_keyboards.py:227
 msgid "Перейти к состоянию"
 msgstr "Go to state"
 
-#: keyboards/default/user_keyboards.py:225
+#: keyboards/default/user_keyboards.py:228
 msgid "Перейти к типу собственности"
 msgstr "Go to foundation doc"
 
-#: keyboards/default/user_keyboards.py:228
+#: keyboards/default/user_keyboards.py:231
 msgid "Перейти к балкону"
 msgstr "Go to balcony"
 
-#: keyboards/default/user_keyboards.py:231
+#: keyboards/default/user_keyboards.py:234
 msgid "Перейти к схеме"
 msgstr "Go to schema"
 
-#: keyboards/default/user_keyboards.py:241
+#: keyboards/default/user_keyboards.py:244
 msgid "Перейти к заголовку"
 msgstr "Go to title"
 
-#: keyboards/default/user_keyboards.py:253
+#: keyboards/default/user_keyboards.py:256
 msgid "Перейти к файлу"
 msgstr "Go to file"
 
@@ -2905,4 +2923,16 @@ msgstr[1] ""
 
 #~ msgid "Требуте ремонта"
 #~ msgstr "Need repair"
+
+#~ msgid "Вы можете ввести токен администратора или нажать \"/cancel\""
+#~ msgstr "You can send admin token or '/cancel'"
+
+#~ msgid "Токен неправильный. Попробуйте снова или нажмите \"/cancel\""
+#~ msgstr "Token is wrong. Try again or '/cancel'"
+
+#~ msgid "Цену"
+#~ msgstr "Price"
+
+#~ msgid "Тип"
+#~ msgstr "Type"
 
