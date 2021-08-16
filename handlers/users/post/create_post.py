@@ -39,8 +39,8 @@ async def list_items(user_id: int, url: str, deserializer: BaseDeserializer,
                 if item.get('flat_count') > 0:  # If house doesnt have flats - wont display this house
                     new_resp['results'].append(item)
             resp = new_resp
-            if not resp:
-                _('У вас нет домов с квартирами'), keyboard([], action), False
+            if not resp.get('results'):
+                return _('У вас нет домов с квартирами'), keyboard([], action), False
         data = await deserializer.make_list(resp)
         text = ''
         for index, item in enumerate(data, start=1):
@@ -69,7 +69,7 @@ async def back(message: types.Message, state: FSMContext):
 @dp.message_handler(Text(equals=['Сохранить', 'Save']), state=CreatePost)
 async def save_post_button(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    post_data = data.get('create_post')
+    post_data = data.get('create_post', {})
     keys = ('house', 'flat', 'payment_options', 'communications',
             'price', 'description', 'main_image')
     if all(key in post_data for key in keys):

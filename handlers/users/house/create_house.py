@@ -44,7 +44,7 @@ async def back(message: types.Message, state: FSMContext):
 @dp.message_handler(Text(equals=['Сохранить', 'Save']), state=CreateHouse)
 async def save_house(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    house_data = data.get('create_house')
+    house_data = data.get('create_house', {})
     keys = ('name', 'address', 'city', 'tech', 'territory', 'payment_options',
             'description')
     if all(key in house_data for key in keys):

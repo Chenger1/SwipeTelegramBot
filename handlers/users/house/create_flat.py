@@ -39,7 +39,7 @@ async def back(message: types.Message, state: FSMContext):
 @dp.message_handler(Text(equals=['Сохранить', 'Save']), state=CreateFlat)
 async def save_flat(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    flat_data = data.get('create_flat')
+    flat_data = data.get('create_flat', {})
     keys = ('number', 'square', 'kitchen_square', 'price', 'price_per_metre',
             'number_of_rooms', 'state', 'foundation_doc', 'type', 'plan',
             'balcony', 'schema', 'floor')
@@ -54,25 +54,25 @@ async def save_flat(message: types.Message, state: FSMContext):
         if not flat_data.get('square'):
             text += _('Площадь\n')
         if not flat_data.get('kitchen_square'):
-            text += _('Площадь кухни')
+            text += _('Площадь кухни\n')
         if not flat_data.get('price'):
-            text += _('Цену')
+            text += _('Цену\n')
         if not flat_data.get('price_per_metre'):
-            text += _('Цену за кв. метр')
+            text += _('Цену за кв. метр\n')
         if not flat_data.get('number_of_rooms'):
-            text += _('Количество комнат')
+            text += _('Количество комнат\n')
         if not flat_data.get('state'):
-            text += _('Состояние')
+            text += _('Состояние\n')
         if not flat_data.get('foundation_doc'):
-            text += _('Формат собственности')
+            text += _('Формат собственности\n')
         if not flat_data.get('type'):
-            text += _('Тип')
+            text += _('Тип\n')
         if not flat_data.get('plan'):
-            text += _('Планировку')
+            text += _('Планировку\n')
         if not flat_data.get('balcony'):
-            text += _('Наличие или отсутствие балкона')
+            text += _('Наличие или отсутствие балкона\n')
         if not flat_data.get('schema'):
-            text += _('Схему квартиры')
+            text += _('Схему квартиры\n')
         await message.answer(text)
 
 
@@ -96,7 +96,7 @@ async def go_to_flat_floor(message: types.Message, state: FSMContext):
 async def go_to_flat_number(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите номер')
-    if state_data['flat_info']:
+    if state_data.get('flat_info'):
         text += _('\nСейчас: {value}').format(value=state_data['create_flat']['number'])
     await message.answer(text)
     await CreateFlat.NUMBER.set()
@@ -106,7 +106,7 @@ async def go_to_flat_number(message: types.Message, state: FSMContext):
 async def go_to_flat_square(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите площадь')
-    if state_data['flat_info']:
+    if state_data.get('flat_info'):
         text += _('\nСейчас: {value}').format(value=state_data['create_flat']['square'])
     await message.answer(text)
     await CreateFlat.SQUARE.set()
@@ -116,7 +116,7 @@ async def go_to_flat_square(message: types.Message, state: FSMContext):
 async def go_to_flat_kitchen_square(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите площадь кухни')
-    if state_data['flat_info']:
+    if state_data.get('flat_info'):
         text += _('\nСейчас: {value}').format(value=state_data['create_flat']['kitchen_square'])
     await message.answer(text)
     await CreateFlat.KITCHEN_SQUARE.set()
@@ -126,7 +126,7 @@ async def go_to_flat_kitchen_square(message: types.Message, state: FSMContext):
 async def go_to_flat_price(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите цену')
-    if state_data['flat_info']:
+    if state_data.get('flat_info'):
         text += _('\nСейчас: {value}').format(value=state_data['create_flat']['price'])
     await message.answer(text)
     await CreateFlat.PRICE.set()
@@ -136,7 +136,7 @@ async def go_to_flat_price(message: types.Message, state: FSMContext):
 async def go_to_flat_price_per_metre(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите цену за квадратный метр')
-    if state_data['flat_info']:
+    if state_data.get('flat_info'):
         text += _('\nСейчас: {value}').format(value=state_data['create_flat']['price_per_metre'])
     await message.answer(text)
     await CreateFlat.PRICE_PER_METRE.set()
@@ -146,7 +146,7 @@ async def go_to_flat_price_per_metre(message: types.Message, state: FSMContext):
 async def go_to_flat_number_of_rooms(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите число комнат')
-    if state_data['flat_info']:
+    if state_data.get('flat_info'):
         text += _('\nСейчас: {value}').format(value=state_data['create_flat']['number_of_rooms'])
     await message.answer(text)
     await CreateFlat.ROOMS.set()
@@ -156,7 +156,7 @@ async def go_to_flat_number_of_rooms(message: types.Message, state: FSMContext):
 async def go_to_flat_state(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите состояние')
-    if state_data['flat_info']:
+    if state_data.get('flat_info'):
         text += _('\nСейчас: {value}').format(value=state_data['flat_info']['state_display'])
     await message.answer(text, reply_markup=create_flat.state_keyboard)
     await CreateFlat.STATE.set()
@@ -166,7 +166,7 @@ async def go_to_flat_state(message: types.Message, state: FSMContext):
 async def go_to_flat_foundation_doc(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите формат собственности')
-    if state_data['flat_info']:
+    if state_data.get('flat_info'):
         text += _('\nСейчас: {value}').format(value=state_data['flat_info']['foundation_doc_display'])
     await message.answer(text, reply_markup=create_flat.foundation_doc_keyboard)
     await CreateFlat.DOC.set()
@@ -176,7 +176,7 @@ async def go_to_flat_foundation_doc(message: types.Message, state: FSMContext):
 async def go_to_flat_type(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Укажите тип')
-    if state_data['flat_info']:
+    if state_data.get('flat_info'):
         text += _('\nСейчас: {value}').format(value=state_data['flat_info']['type_display'])
     await message.answer(text, reply_markup=create_flat.flat_type_keyboard)
     await CreateFlat.TYPE.set()
@@ -186,7 +186,7 @@ async def go_to_flat_type(message: types.Message, state: FSMContext):
 async def go_to_flat_balcony(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     text = _('Есть ли балкон/лоджия?')
-    if state_data['flat_info']:
+    if state_data.get('flat_info'):
         text += _('\nСейчас: {value}').format(value=state_data['flat_info']['balcony_display'])
     await message.answer(text, reply_markup=create_flat.balcony_keyboard)
     await CreateFlat.BALCONY.set()

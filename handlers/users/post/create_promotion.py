@@ -39,7 +39,7 @@ async def back(message: types.Message, state: FSMContext):
 @dp.message_handler(Text(equals=['Сохранить', 'Save']), state=CreatePromotion)
 async def save_promotion_button(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    post_data = data.get('create_promotion')
+    post_data = data.get('create_promotion', {})
     keys = ('phrase', 'type', 'post')
     if all(key in post_data for key in keys):
         text = _('Подтверждаете?')

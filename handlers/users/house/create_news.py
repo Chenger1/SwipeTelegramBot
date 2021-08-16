@@ -3,10 +3,10 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import Text
 
 from loader import dp, Conn, log
-
 from keyboards.callbacks.user_callback import DETAIL_CB
 from keyboards.default.dispatcher import dispatcher, back_button, get_menu_label
 from keyboards.inline.create_house import confirm_keyboard, ITEM_CB
+
 
 from states.state_groups import CreateNewsItem
 
