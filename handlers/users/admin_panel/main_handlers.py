@@ -25,7 +25,7 @@ user_des = UserDeserializer()
 complaint_des = ComplaintDeserializer()
 
 
-@dp.message_handler(Text(equals=['Панель администратора', 'Admin Panel']), is_admin=True)
+@dp.message_handler(Text(equals=['Панель администратора', 'Admin panel']), is_admin=True)
 async def admin_panel(message: types.Message, state: FSMContext):
     keyboard, path = await dispatcher('LEVEL_2_ADMIN_PANEL', message.from_user.id)
     await message.answer(_('Панель администратора'), reply_markup=keyboard)

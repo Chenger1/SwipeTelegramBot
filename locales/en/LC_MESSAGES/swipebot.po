@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-08-16 14:43+0300\n"
+"POT-Creation-Date: 2021-08-18 15:23+0300\n"
 "PO-Revision-Date: 2021-07-31 15:07+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -2103,12 +2103,10 @@ msgid "Отключить режим администратора"
 msgstr "Remove admin status"
 
 #: keyboards/default/user_keyboards.py:153
-#, fuzzy
 msgid "Ввести токен администратора"
-msgstr "You can send admin token or '/cancel'"
+msgstr "Input admin token"
 
 #: keyboards/default/user_keyboards.py:163
-#, fuzzy
 msgid "Список нотариусов"
 msgstr "List houses"
 
@@ -2126,11 +2124,11 @@ msgstr "Get logs"
 
 #: keyboards/default/user_keyboards.py:169
 msgid "Получить список пользователей"
-msgstr ""
+msgstr "Get list of users"
 
 #: keyboards/default/user_keyboards.py:171
 msgid "Восстановить пользователей через json"
-msgstr ""
+msgstr "Restore users via json"
 
 #: keyboards/default/user_keyboards.py:181
 msgid "Перейти к имени и фамилии"

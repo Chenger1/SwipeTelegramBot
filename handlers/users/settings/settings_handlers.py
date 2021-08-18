@@ -115,7 +115,7 @@ async def cancel_subscription(message: types.Message):
         await message.answer(_('Произошла ошибка. Повторите попытку'))
 
 
-@dp.message_handler(Text(equals=['Ввести токен администратора', 'Add admin token']))
+@dp.message_handler(Text(equals=['Ввести токен администратора', 'Input admin token']))
 async def add_admin_token(message: types.Message):
     user = await User.get(user_id=message.from_user.id)
     if user.is_admin:
